@@ -4,11 +4,11 @@ Nine stages. Each ends with something runnable, a demo command you run
 yourself, and a review gate. Do not start a stage before the previous gate has
 passed. Append to `docs/MEMORY.md` at every gate.
 
-**Current stage: 0**
+**Current stage: 2**
 
 ---
 
-## Stage 0 — Scaffold
+## Stage 0 — Scaffold ✅
 
 pnpm workspace, TypeScript strict config, Vitest, ESLint, `.env.example`, and a
 CI workflow that only lints and tests this repo. No product code.
@@ -17,7 +17,7 @@ CI workflow that only lints and tests this repo. No product code.
 - Gate: builds from a clean clone on another team member's machine
 - Owner: _____
 
-## Stage 1 — Sample RAG app
+## Stage 1 — Sample RAG app ✅
 
 A small app in `examples/sample-rag-app/` implementing the app contract in
 `docs/DESIGN.md` over about 20 documents, with a Dockerfile. This exists so

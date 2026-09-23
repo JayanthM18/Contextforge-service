@@ -13,8 +13,10 @@ pass or fail on the PR before the change is merged.
 
 ## Status
 
-**Stage 0 of 9 — scaffold.** The workspace, TypeScript strict config, test
-runner, linter and CI are in place. There is no product functionality yet.
+**Stage 1 of 9 complete.** The workspace, TypeScript strict config, test
+runner, linter and CI are in place, and `examples/sample-rag-app` is a working
+reference application implementing the app contract. The tool itself — config
+loader, runner, evaluator, comparator, report — does not exist yet.
 See `docs/TASKS.md` for the staged plan and the current stage.
 
 ## Requirements
@@ -33,6 +35,15 @@ pnpm typecheck   # tsc --build --force
 pnpm build       # tsc --build
 ```
 
+To see the reference app run without needing an API key:
+
+```sh
+cd examples/sample-rag-app
+PROVIDER=local docker compose -f docker-compose.eval.yml up --build
+curl -X POST localhost:8000/query -H 'content-type: application/json' \
+  -d '{"question":"What is the refund window?"}'
+```
+
 Copy `.env.example` to `.env` and fill in the keys you need. `.env` is
 git-ignored; secrets come from the environment only and are never baked into
 an image.
@@ -44,7 +55,7 @@ packages/shared   types shared across packages
 packages/cli      the core: config, dataset, runner, evaluator client, compare, report
 packages/action   thin GitHub Action wrapper over the core
 evaluator/        Python and Ragas, JSON in and JSON out (stage 3)
-examples/         sample RAG app and a reference contextforge.yml (stage 1)
+examples/         sample RAG app implementing the app contract
 benchmark/        frozen test cases and per-commit baselines (stage 4 onwards)
 ```
 

@@ -1,0 +1,7 @@
+node_modules
+test
+tsconfig.json
+README.md
+docker-compose.eval.yml
+.dockerignore
+Dockerfile

@@ -12,12 +12,13 @@
   "scripts": {
     "build": "tsc --build",
     "clean": "tsc --build --clean",
-    "typecheck": "tsc --build --force",
+    "typecheck": "tsc --build --force && tsc -p examples/sample-rag-app/tsconfig.json",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "lint": "eslint . && prettier --check .",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "sample-app": "node examples/sample-rag-app/src/index.ts"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",

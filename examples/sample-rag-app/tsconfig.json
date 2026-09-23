@@ -1,0 +1,16 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    // Node 26 runs TypeScript directly, so this project is never emitted; it
+    // is typechecked only. That is what lets the image carry no build step and
+    // no dependencies.
+    "composite": false,
+    "incremental": false,
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    // Node strips types, it does not compile them, so TypeScript-only runtime
+    // syntax (enums, namespaces, parameter properties) must not appear.
+    "erasableSyntaxOnly": true
+  },
+  "include": ["src/**/*.ts", "test/**/*.ts"]
+}

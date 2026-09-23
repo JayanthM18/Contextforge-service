@@ -3,7 +3,14 @@
   "compilerOptions": {
     "composite": false,
     "incremental": false,
-    "noEmit": true
+    "noEmit": true,
+    "allowImportingTsExtensions": true
   },
-  "include": ["packages/*/src/**/*.ts", "packages/*/test/**/*.ts", "*.ts"]
+  "include": [
+    "packages/*/src/**/*.ts",
+    "packages/*/test/**/*.ts",
+    "examples/*/src/**/*.ts",
+    "examples/*/test/**/*.ts",
+    "*.ts"
+  ]
 }

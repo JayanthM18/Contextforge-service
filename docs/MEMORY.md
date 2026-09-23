@@ -20,11 +20,82 @@ an entry here before the pull request is opened.
 
 ## Current state
 
-- **Stage:** 0 — scaffold, complete and awaiting the gate review
-- **Works:** `pnpm install`, `pnpm test`, `pnpm lint`, `pnpm typecheck`, `pnpm build`
-  from a clean tree. 14 tests across 3 files. No product functionality.
-- **Known gaps:** no CLI binary, no config loader, no sample app, no evaluator
+- **Stage:** 1 — sample RAG app, complete and awaiting the gate review
+- **Works:** the scaffold, plus a reference RAG app in `examples/sample-rag-app`
+  that implements the app contract and runs in Docker. 69 tests across 8 files.
+- **Known gaps:** no CLI binary, no config loader, no evaluator, no runner
 - **Measured noise floor:** not measured yet (stage 6)
+
+---
+
+## 2026-09-23 — stage 1 — sample RAG app
+
+**Changed:** `examples/sample-rag-app/` — 21 knowledge-base documents, eight
+source modules (`config`, `chunk`, `corpus`, `embed`, `retrieve`, `generate`,
+`pipeline`, `server`, plus `log` and `index`), five test files, a `Dockerfile`,
+`docker-compose.eval.yml` and a README. Workspace wiring updated so the example
+is linted, typechecked and tested by the root scripts.
+**Why:** stage 1 in `docs/TASKS.md` — something real for every later stage to
+build, run, query and measure against.
+**Decisions:**
+- **The app is TypeScript, not Python.** `docs/RULES.md` says "Python only
+  inside `evaluator/`". A RAG app would normally be Python, but the runner only
+  ever speaks HTTP to it, so the language is invisible and the rule holds
+  without costing anything. Flagged because it is the surprising choice.
+- **No build step and no dependencies.** Node 26 executes TypeScript directly,
+  so the image is `FROM node:26.8.1-trixie-slim`, a copy of `src` and `docs`,
+  and `CMD node src/index.ts` — 360MB, no `npm install` in the build. The
+  project is `noEmit` with `erasableSyntaxOnly`, so the typechecker enforces
+  that only strippable syntax is used. Imports therefore use `.ts` extensions,
+  which is why `tsconfig.eslint.json` needed `allowImportingTsExtensions`.
+- **A second, offline provider (`PROVIDER=local`).** Hashed TF-IDF embeddings
+  and extractive answers, no key and no network. Stages 3 to 7 need to run the
+  full loop hundreds of times while being developed; doing that against a real
+  API is slow and expensive. It is stubbed deliberately and the README says in
+  as many words that a number produced with it is not a quality measurement.
+- **The server listens before the index is built** and answers `/health` with
+  `503 {"status":"starting"}` until ready, so the runner's health poll gets an
+  answer instead of a refused connection. The contract only fixes the ready
+  response, so this does not contradict `docs/DESIGN.md`.
+- **Determinism where ids are concerned.** Files are read in sorted order and
+  retrieval ties break on chunk id. ContextForge compares retrieved context ids
+  between runs, so an id that drifts would read as a regression that never
+  happened.
+- Chunk ids are `<file>#c<n>` numbered from 1, matching the `policy.md#c12`
+  form in `docs/DESIGN.md`.
+- A bad environment variable exits `2` and names the variable, verified by
+  running the container.
+**Deferred:** a `PROMPT_STYLE` switch for the "sloppy prompt" regression in
+stage 9 — stage 9 describes those as branches, so the prompt gets edited on a
+branch rather than pre-wired here. Reranking, streaming and any persistence of
+the index are out of scope; the index is rebuilt in memory at every start,
+which takes about a second on the offline provider.
+**Notes:**
+- **Not verified end to end against OpenAI.** No `OPENAI_API_KEY` is available
+  in this environment, so the `openai` provider's request and response handling
+  is covered by types and by reading the API docs, not by a live call. The
+  first person with a key should run `OPENAI_API_KEY=... docker compose -f
+  docker-compose.eval.yml up --build` before stage 3 depends on it.
+- The offline retriever needed two fixes that were not obvious. Without crude
+  suffix stripping, "refund" never matched "refunds" and it retrieved almost
+  nothing. Without IDF weighting, every document that cross-references
+  `returns-and-refunds.md` scored as a refund document — the cross-references
+  in the knowledge base put the word into eight unrelated files.
+- Spot check of the offline provider on six questions with an obvious correct
+  document: **right document at rank 1 in 4 of 6, in the top 5 in 6 of 6.**
+  Raising the hash space from 1024 to 16384 dimensions changed neither number,
+  so collisions are not the limit and 1024 was kept. The two rank-1 misses are
+  lexically fair: "refund window" appears verbatim in `subscription-plans.md`
+  and "Express delivery" in `exchanges.md`.
+- Two of the first test failures were wrong expectations of mine, not bugs: the
+  overlap tail cuts at the first word boundary inside the tail, and a 100-char
+  chunk size swallowed both paragraphs of the overlap fixture so no overlap was
+  ever exercised.
+- Verified by running, not by assuming: container built, `/health` returned
+  `200 {"status":"ok"}`, `/query` returned the exact contract shape with
+  `contexts[].id` like `subscription-plans.md#c2`, malformed bodies returned
+  `400`, unknown routes `404`, the Compose healthcheck reached `healthy`, and
+  `docker compose down` left no stray containers.
 
 ---
 
