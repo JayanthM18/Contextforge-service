@@ -1,0 +1,10 @@
+dist/
+coverage/
+node_modules/
+pnpm-lock.yaml
+
+# Hand-wrapped prose. These are the specs, not code; the formatter must not
+# reflow them out from under a reviewer reading a diff.
+docs/
+CLAUDE.md
+README.md

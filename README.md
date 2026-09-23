@@ -1,0 +1,69 @@
+# ContextForge
+
+CI regression testing for RAG applications.
+
+A change to a RAG pipeline — chunking, embeddings, retrieval, reranking,
+prompts, models — can make answers measurably worse while the application
+still starts, serves traffic and passes every unit test. Nothing raises an
+error, so the drop is invisible until users complain.
+
+ContextForge runs a frozen evaluation set against the pull request branch,
+compares the scores to a stored baseline from the merge base, and reports
+pass or fail on the PR before the change is merged.
+
+## Status
+
+**Stage 0 of 9 — scaffold.** The workspace, TypeScript strict config, test
+runner, linter and CI are in place. There is no product functionality yet.
+See `docs/TASKS.md` for the staged plan and the current stage.
+
+## Requirements
+
+- Node 20 or newer (developed on Node 26; `.nvmrc` pins 26)
+- pnpm 10 — `corepack enable pnpm`, or run it through `npx pnpm@10`
+- Docker and Docker Compose (needed from stage 1 onwards)
+
+## Getting started
+
+```sh
+pnpm install
+pnpm test        # vitest
+pnpm lint        # eslint + prettier --check
+pnpm typecheck   # tsc --build --force
+pnpm build       # tsc --build
+```
+
+Copy `.env.example` to `.env` and fill in the keys you need. `.env` is
+git-ignored; secrets come from the environment only and are never baked into
+an image.
+
+## Layout
+
+```
+packages/shared   types shared across packages
+packages/cli      the core: config, dataset, runner, evaluator client, compare, report
+packages/action   thin GitHub Action wrapper over the core
+evaluator/        Python and Ragas, JSON in and JSON out (stage 3)
+examples/         sample RAG app and a reference contextforge.yml (stage 1)
+benchmark/        frozen test cases and per-commit baselines (stage 4 onwards)
+```
+
+The core knows nothing about GitHub; the Action is a thin wrapper. That split
+is what keeps the tool portable to another CI system later.
+
+## Documentation
+
+Read in this order. `CLAUDE.md` is the working agreement for the repo.
+
+| File | What it is |
+|---|---|
+| `docs/PRD.md` | Problem, goals, users, MVP scope |
+| `docs/ARCHITECTURE.md` | App flow, tech stack, folder structure |
+| `docs/RULES.md` | Principles, technology rules, coding standards |
+| `docs/DESIGN.md` | App contract, config schema, benchmark and report formats |
+| `docs/TASKS.md` | Staged plan, exit criteria, current stage |
+| `docs/MEMORY.md` | Log of changes and decisions |
+
+## Licence
+
+MIT

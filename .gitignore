@@ -1,0 +1,16 @@
+node_modules/
+dist/
+coverage/
+*.tsbuildinfo
+
+# Secrets never enter the repo (docs/RULES.md). .env.example documents the names.
+.env
+.env.*
+!.env.example
+
+# Run output. Benchmarks under benchmark/ are committed; scratch results are not.
+results.json
+*.local.json
+.vitest/
+
+.DS_Store
