@@ -20,11 +20,81 @@ an entry here before the pull request is opened.
 
 ## Current state
 
-- **Stage:** 1 — sample RAG app, complete and awaiting the gate review
-- **Works:** the scaffold, plus a reference RAG app in `examples/sample-rag-app`
-  that implements the app contract and runs in Docker. 69 tests across 8 files.
-- **Known gaps:** no CLI binary, no config loader, no evaluator, no runner
+- **Stage:** 2 — config loader, complete and awaiting the gate review
+- **Works:** the scaffold, the reference RAG app, and a `contextforge` binary
+  with a working `validate` command. 109 tests across 11 files.
+- **Known gaps:** no evaluator, no dataset generation, no runner, no comparator
 - **Measured noise floor:** not measured yet (stage 6)
+
+---
+
+## 2026-09-23 — stage 2 — config loader
+
+**Changed:** `packages/cli/src/config/{schema,load}.ts`,
+`packages/cli/src/commands/validate.ts`, `packages/cli/src/{cli,bin,index}.ts`,
+three test files, `examples/contextforge.yml`, `examples/testcases.json`, and
+`docs/DESIGN.md` sections 2, 3 and 4.
+**Why:** stage 2 in `docs/TASKS.md` — parse and validate `contextforge.yml`
+with errors that name the offending key.
+
+**Decisions:**
+- **The judge endpoint is configuration, not a constant.** `judge.base_url` and
+  `judge.api_key_env` were added to `docs/DESIGN.md` section 2. This came out of
+  the question of what to use while no OpenAI key is available: Ollama speaks
+  the OpenAI protocol, so a local judge and a user's own key are the same code
+  path with different config. There is no provider branch to remove later
+  because there is never one to write. `base_url` is independently justified —
+  Azure, proxies and gateways all need it.
+- `api_key_env` names the variable; the secret itself never enters the file.
+- **`docs/PRD.md` was deliberately left alone.** It defers local-model judges
+  past the MVP, and that still holds: the MVP ships `provider: openai` by
+  default and makes no quality claims about local judges. `base_url` permitting
+  one is a consequence, not an advertised feature.
+- **Paths in the config resolve against the config file's directory**, not the
+  working directory, so a config means the same thing wherever it is run from.
+  `docs/DESIGN.md` was silent on this; the rule is now written down there.
+- `Config` lives in `packages/cli`, not `packages/shared`, against the earlier
+  plan. It is inferred from the Zod schema, and moving it to `shared` would put
+  Zod in a package that does not otherwise need it. Nothing is redeclared, so
+  the `docs/RULES.md` rule is satisfied. Revisit if the Action ever parses config.
+- Cross-field rules live in `superRefine`; filesystem and environment checks
+  live in `load.ts`. The schema stays pure and is tested without any I/O.
+- `validate` prints the resolved config rather than just "ok": most config
+  surprises are a default the user did not know was there.
+
+**Deferred:** the `run`, `compare`, `report` and `dataset` subcommands — stage 2
+is `validate` only. `examples/testcases.json` is a three-case handwritten
+example so the reference config validates today; the real 40-case set is
+generated into `benchmark/testcases.json` in stage 4.
+
+**Notes:**
+- **A real bug in `docs/DESIGN.md`, now fixed.** The fingerprint covered
+  `judge` but not the embedding model, even though `answer_relevancy` is
+  computed from embeddings. Changing the embedding model would have silently
+  reused stale baseline scores and reported a wrong verdict. `embeddings` is
+  now fingerprinted, and the staleness table treats a change to it like a judge
+  change: re-score the stored answers, do not rebuild the app.
+- **The noise floor belongs to the judge, not to ContextForge** —
+  `docs/DESIGN.md` section 4 now says so. If stage 6 measures the floor with
+  one judge and the tool ships defaults calibrated for another, the defaults
+  are wrong. Whichever judge produces the stage 9 numbers gets named in the
+  write-up.
+- Zod 4 reports an unknown key against the *containing* object, with the
+  offending names in a separate `keys` field. A naive mapper would therefore
+  report `app` instead of `app.judge_model`, which is exactly what this stage's
+  gate forbids. `describeIssue` expands those by hand.
+- `judge-box:11434` parses as a valid URL — scheme `judge-box:` — so a URL
+  check alone is not enough; the scheme is checked separately. Both failures
+  now give one message, since the user made the same mistake either way.
+- The CLI is a compiled package whose imports use `.js`, unlike the sample app,
+  so `node src/bin.ts` does not work. `pnpm --filter cli dev` builds first.
+- Verified by running, not assuming: the demo command exits `0` and prints the
+  resolved config; five hand-broken configs (unknown key, threshold naming a
+  non-metric, out-of-range `startup_timeout`, malformed `base_url`,
+  `answer_relevancy` with no embeddings) each named the offending key; a
+  missing config file exits `2`, not `1`.
+- Fixed while checking failure output: a config outside the working directory
+  was displayed as `../../../../tmp/...`. It now shows the absolute path.
 
 ---
 

@@ -15,9 +15,16 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc --build"
+    "build": "tsc --build",
+    "dev": "tsc --build && node dist/bin.js"
   },
   "dependencies": {
-    "@contextforge/shared": "workspace:*"
+    "@contextforge/shared": "workspace:*",
+    "commander": "^15.0.0",
+    "yaml": "^2.9.1",
+    "zod": "^4.6.5"
+  },
+  "bin": {
+    "contextforge": "./dist/bin.js"
   }
 }

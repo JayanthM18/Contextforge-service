@@ -4,7 +4,7 @@ Nine stages. Each ends with something runnable, a demo command you run
 yourself, and a review gate. Do not start a stage before the previous gate has
 passed. Append to `docs/MEMORY.md` at every gate.
 
-**Current stage: 2**
+**Current stage: 3**
 
 ---
 
@@ -27,7 +27,7 @@ every later stage has something real to test against.
 - Gate: the response matches the contract exactly, including `contexts[].id`
 - Owner: _____
 
-## Stage 2 — Config loader
+## Stage 2 — Config loader ✅
 
 Parse and validate `contextforge.yml` per `docs/DESIGN.md` section 2, with
 errors that name the offending key.

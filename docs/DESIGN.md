@@ -78,10 +78,17 @@ dataset:
 evaluation:
   metrics: [context_precision, context_recall, faithfulness, answer_relevancy]
   judge:
-    provider: openai
+    provider: openai          # the wire protocol, not the vendor
     model: gpt-4o-mini
+    base_url: null            # any OpenAI-compatible endpoint; null uses the default
+    api_key_env: OPENAI_API_KEY   # names the variable, never holds the secret
     temperature: 0
     seed: 42
+  embeddings:                 # answer_relevancy is computed from these
+    provider: openai
+    model: text-embedding-3-small
+    base_url: null
+    api_key_env: OPENAI_API_KEY
   runs: 1                     # repeat count; >1 averages to reduce noise
   concurrency: 4
 
@@ -113,9 +120,25 @@ Validation rules:
 - every key under `thresholds.*` appears in `evaluation.metrics`
 - `dataset.path` exists unless the command is `dataset generate`
 - `startup_timeout` between 10 and 900
+- `base_url` is an absolute `http` or `https` URL when set
+- `api_key_env` names an environment variable that must be present, unless it
+  is `null` for an endpoint that needs no key
+- `evaluation.embeddings` is required whenever `answer_relevancy` is in
+  `evaluation.metrics`
 
 `mean_drop` catches "this PR made it worse"; `absolute_floor` catches "never
 ship below this". Both apply.
+
+Every path in the config — `app.compose_file`, `dataset.path`,
+`dataset.source_docs`, `baseline.store` — resolves against the directory
+holding the config file, not the working directory, so a config means the same
+thing wherever it is run from.
+
+`base_url` and `api_key_env` exist because the endpoint is not always OpenAI's:
+Azure OpenAI, a corporate proxy, a self-hosted gateway and a local server all
+speak the same protocol on a different address. The secret itself never appears
+in the config — `api_key_env` names the variable that holds it, per
+`docs/RULES.md`.
 
 ## 3. Benchmark format
 
@@ -164,6 +187,7 @@ stored text; answers cannot be recomputed without rebuilding the app.
     "dataset_hash": "sha256:...",
     "app_hash": "sha256:...",
     "judge": { "model": "gpt-4o-mini", "temperature": 0, "seed": 42 },
+    "embeddings": { "model": "text-embedding-3-small" },
     "tool_version": "0.3.0"
   },
   "runs": 3,
@@ -187,9 +211,17 @@ stored text; answers cannot be recomputed without rebuilding the app.
 |---|---|
 | Nothing differs | Use stored scores directly |
 | `judge` differs | Re-score the stored answers with the current judge |
+| `embeddings` differs | Re-score the stored answers with the current embeddings |
 | `dataset_hash` differs | Benchmark unusable — dual mode |
 | `app_hash` differs (deps, Dockerfile, compose) | Dual mode |
 | `tool_version` major differs | Dual mode |
+
+`embeddings` is fingerprinted for the same reason `judge` is: `answer_relevancy`
+is computed from embeddings, so changing that model changes the score. Without
+it, swapping the embedding model would silently reuse stale baseline scores and
+report a verdict that is simply wrong. Like a judge change it invalidates the
+stored scores but not the stored answers, so the fix is to re-score the stored
+text rather than rebuild the app.
 
 ### Baseline selection
 
@@ -222,6 +254,12 @@ A run produces a verdict object:
 Noise matters: metrics are LLM-judged and vary between identical runs. Default
 thresholds must sit above the measured noise floor recorded in
 `docs/MEMORY.md` during stage 6.
+
+A noise floor belongs to the judge and embedding model that produced it, not to
+ContextForge. `docs/MEMORY.md` therefore records which judge and embeddings a
+measurement used, shipped defaults are calibrated against the shipped default
+judge, and a user running a different judge recalibrates their own thresholds.
+Any published result names the judge that produced it.
 
 ## 5. Report
 

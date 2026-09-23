@@ -13,10 +13,10 @@ pass or fail on the PR before the change is merged.
 
 ## Status
 
-**Stage 1 of 9 complete.** The workspace, TypeScript strict config, test
-runner, linter and CI are in place, and `examples/sample-rag-app` is a working
-reference application implementing the app contract. The tool itself — config
-loader, runner, evaluator, comparator, report — does not exist yet.
+**Stage 2 of 9 complete.** The workspace and CI are in place,
+`examples/sample-rag-app` is a working reference application implementing the
+app contract, and the `contextforge` binary validates `contextforge.yml`. The
+evaluator, dataset generation, runner, comparator and report do not exist yet.
 See `docs/TASKS.md` for the staged plan and the current stage.
 
 ## Requirements
@@ -43,6 +43,17 @@ PROVIDER=local docker compose -f docker-compose.eval.yml up --build
 curl -X POST localhost:8000/query -H 'content-type: application/json' \
   -d '{"question":"What is the refund window?"}'
 ```
+
+To check a configuration:
+
+```sh
+pnpm --filter @contextforge/cli dev -- validate --config examples/contextforge.yml
+```
+
+The judge endpoint is configuration, not a constant. `evaluation.judge.base_url`
+points at any OpenAI-compatible endpoint — OpenAI, Azure, a proxy, a gateway or
+a self-hosted server — and `api_key_env` names the environment variable holding
+the key, which never appears in the config file.
 
 Copy `.env.example` to `.env` and fill in the keys you need. `.env` is
 git-ignored; secrets come from the environment only and are never baked into
