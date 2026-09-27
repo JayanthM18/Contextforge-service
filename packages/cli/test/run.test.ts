@@ -13,7 +13,9 @@ import path from "node:path";
 import { EXIT_CODE, type ResultsFile, type RunResult, runResultSchema } from "@contextforge/shared";
 import { beforeEach, describe, expect, it } from "vitest";
 
+import { benchmarkCommand } from "../src/commands/benchmark.js";
 import { runCommand } from "../src/commands/run.js";
+import { ContextForgeError } from "../src/util/errors.js";
 import { type Exec, exec as realExec } from "../src/util/exec.js";
 import { silentLogger } from "./helpers.js";
 
@@ -175,7 +177,138 @@ async function results(): Promise<ResultsFile> {
   ) as ResultsFile;
 }
 
+describe("benchmark", () => {
+  it("stores HEAD's scored results under its SHA", async () => {
+    const docker = fakeDocker({ baseline: 0.9, candidate: 0.9 });
+    const sha = await git("rev-parse", "HEAD");
+
+    const file = await benchmarkCommand({
+      configPath: path.join(repo, "contextforge.yml"),
+      exec: docker.exec,
+      fetch: docker.fetch,
+      logger: silentLogger,
+      env: { PATH: process.env.PATH },
+      user: null,
+    });
+
+    expect(file).toBe(path.join(repo, "benchmark", "baseline", `${sha}.json`));
+    const stored = runResultSchema.parse(JSON.parse(await readFile(file, "utf8")));
+    expect(stored.commit).toBe(sha);
+    expect(stored.summary.faithfulness).toBe(0.9);
+    expect(docker.log).toEqual(["up baseline", "down baseline", "score"]);
+  });
+
+  it("refuses a dirty working tree, because the file would misdescribe the commit", async () => {
+    await write("contextforge.yml", `${CONFIG()}\n# edited`);
+    const docker = fakeDocker({ baseline: 0.9, candidate: 0.9 });
+
+    await expect(
+      benchmarkCommand({
+        configPath: path.join(repo, "contextforge.yml"),
+        exec: docker.exec,
+        fetch: docker.fetch,
+        logger: silentLogger,
+        env: { PATH: process.env.PATH },
+        user: null,
+      }),
+    ).rejects.toThrow(ContextForgeError);
+    expect(docker.log).toEqual([]);
+  });
+});
+
 describe("run", () => {
+  it("cached: builds only the candidate when a matching benchmark exists", async () => {
+    const docker = fakeDocker({ baseline: 0.9, candidate: 0.9 });
+    await benchmarkCommand({
+      configPath: path.join(repo, "contextforge.yml"),
+      exec: docker.exec,
+      fetch: docker.fetch,
+      logger: silentLogger,
+      env: { PATH: process.env.PATH },
+      user: null,
+    });
+    await git("add", ".");
+    await git("commit", "--quiet", "-m", "benchmark [skip ci]");
+    await feature();
+    docker.log.length = 0;
+
+    const outcome = await runCommand(runOptions(docker));
+
+    expect(outcome).toMatchObject({ exitCode: EXIT_CODE.pass, mode: "cached" });
+    expect(docker.log).toEqual(["up candidate", "down candidate", "score"]);
+    expect((await results()).verdict.notes.join(" ")).toContain("scores were reused");
+  });
+
+  it("cached: finds a benchmark committed after the merge base on the base branch", async () => {
+    // The feature branches off *before* the benchmark commit lands on main.
+    const docker = fakeDocker({ baseline: 0.9, candidate: 0.9 });
+    await git("switch", "--quiet", "--create", "feature");
+    await write("app.txt", "change");
+    await git("add", ".");
+    await git("commit", "--quiet", "-m", "change");
+    await git("switch", "--quiet", "main");
+    await benchmarkCommand({
+      configPath: path.join(repo, "contextforge.yml"),
+      exec: docker.exec,
+      fetch: docker.fetch,
+      logger: silentLogger,
+      env: { PATH: process.env.PATH },
+      user: null,
+    });
+    await git("add", ".");
+    await git("commit", "--quiet", "-m", "benchmark [skip ci]");
+    await git("switch", "--quiet", "feature");
+    docker.log.length = 0;
+
+    const outcome = await runCommand(runOptions(docker));
+
+    expect(outcome.mode).toBe("cached");
+    expect(docker.log).not.toContain("up baseline");
+  });
+
+  it("cached falls back to dual when no benchmark exists, and says so", async () => {
+    await feature();
+    const docker = fakeDocker({ baseline: 0.9, candidate: 0.9 });
+
+    const outcome = await runCommand(runOptions(docker));
+
+    expect(outcome.mode).toBe("dual");
+    expect(docker.log).toEqual([
+      "up candidate",
+      "down candidate",
+      "up baseline",
+      "down baseline",
+      "score",
+      "score",
+    ]);
+    expect((await results()).verdict.notes.join(" ")).toContain("no stored benchmark");
+  });
+
+  it("re-scores the stored answers when only the judge changed", async () => {
+    const docker = fakeDocker({ baseline: 0.9, candidate: 0.9 });
+    await benchmarkCommand({
+      configPath: path.join(repo, "contextforge.yml"),
+      exec: docker.exec,
+      fetch: docker.fetch,
+      logger: silentLogger,
+      env: { PATH: process.env.PATH },
+      user: null,
+    });
+    await git("add", ".");
+    await git("commit", "--quiet", "-m", "benchmark [skip ci]");
+    await feature();
+    await write("contextforge.yml", CONFIG("qwen3:14b"));
+    await git("commit", "--quiet", "-am", "switch judge");
+    docker.log.length = 0;
+
+    const outcome = await runCommand(runOptions(docker));
+
+    expect(outcome.mode).toBe("rejudged");
+    expect(docker.log).toEqual(["up candidate", "down candidate", "score", "score"]);
+    const file = await results();
+    expect(file.baseline.fingerprint.judge.model).toBe("qwen3:14b");
+  });
+
   it("dual: a regression exits 1 and names the metric", async () => {
     await feature();
     const docker = fakeDocker({ baseline: 0.9, candidate: 0.5 });
@@ -187,6 +320,33 @@ describe("run", () => {
     expect(file.verdict.status).toBe("fail");
     expect(file.verdict.metrics[0]).toMatchObject({ name: "faithfulness", status: "fail" });
     expect(file.verdict.regressed_cases).toEqual(["a", "b", "c"]);
+  });
+
+  it("cached and dual agree on the same change (the stage 7 gate)", async () => {
+    const scores = { baseline: 0.9, candidate: 0.7 };
+    const docker = fakeDocker(scores);
+    await benchmarkCommand({
+      configPath: path.join(repo, "contextforge.yml"),
+      exec: docker.exec,
+      fetch: docker.fetch,
+      logger: silentLogger,
+      env: { PATH: process.env.PATH },
+      user: null,
+    });
+    await git("add", ".");
+    await git("commit", "--quiet", "-m", "benchmark [skip ci]");
+    await feature();
+
+    const cached = await runCommand(runOptions(fakeDocker(scores), { mode: "cached" }));
+    const cachedVerdict = (await results()).verdict;
+    const dual = await runCommand(runOptions(fakeDocker(scores), { mode: "dual" }));
+    const dualVerdict = (await results()).verdict;
+
+    expect(cached.mode).toBe("cached");
+    expect(dual.mode).toBe("dual");
+    expect(cachedVerdict.status).toBe(dualVerdict.status);
+    expect(cachedVerdict.metrics).toEqual(dualVerdict.metrics);
+    expect(cachedVerdict.regressed_cases).toEqual(dualVerdict.regressed_cases);
   });
 
   it("dual: builds and scores both sides and writes their results", async () => {

@@ -1,0 +1,78 @@
+# The reference config with the judge on a self-hosted, OpenAI-compatible
+# server — for example Ollama on another machine, reached over Tailscale.
+#
+# Before using it, replace `judge-box` below with that machine's address.
+# Prefer its Tailscale IP (100.x.y.z): containers do not always resolve
+# MagicDNS names.
+#
+# Nothing else changes: the evaluator speaks the same protocol to Ollama as to
+# OpenAI, so this is configuration, not a code path. Scores from this judge are
+# not comparable with scores from gpt-4o-mini, and its noise floor must be
+# measured separately (docs/DESIGN.md section 4).
+#
+# To have the sample app answer through the same server rather than OpenAI,
+# export before running:
+#
+#   PROVIDER=openai OPENAI_API_KEY=ollama \
+#   OPENAI_BASE_URL=http://judge-box:11434/v1 \
+#   GENERATION_MODEL=qwen3:14b EMBEDDING_MODEL=nomic-embed-text
+#
+# or PROVIDER=local to keep the app offline and only test the plumbing.
+
+version: 1
+
+app:
+  compose_file: sample-rag-app/docker-compose.eval.yml
+  service: rag-app
+  port: 8000
+  health_path: /health
+  query_path: /query
+  # Local models are slower to answer than a hosted API.
+  startup_timeout: 300
+  query_timeout: 180
+  env_passthrough:
+    [PROVIDER, OPENAI_API_KEY, OPENAI_BASE_URL, GENERATION_MODEL, EMBEDDING_MODEL, TOP_K]
+
+dataset:
+  path: testcases.json
+  source_docs: sample-rag-app/docs/knowledge-base
+  size: 40
+
+evaluation:
+  metrics: [context_precision, context_recall, faithfulness, answer_relevancy]
+  judge:
+    provider: openai
+    model: qwen3:14b
+    base_url: http://judge-box:11434/v1
+    api_key_env: null
+    temperature: 0
+    seed: 42
+  embeddings:
+    provider: openai
+    model: nomic-embed-text
+    base_url: http://judge-box:11434/v1
+    api_key_env: null
+  runs: 1
+  # One GPU serves every request; more than a couple in flight only queues.
+  concurrency: 2
+
+baseline:
+  mode: cached
+  store: ../benchmark/baseline-local-judge
+  rebuild_if_missing: true
+
+thresholds:
+  mean_drop:
+    context_precision: 0.05
+    context_recall: 0.05
+    faithfulness: 0.05
+    answer_relevancy: 0.05
+  absolute_floor:
+    faithfulness: 0.70
+  case_drop: 0.30
+  max_regressed_cases: 3
+
+report:
+  pr_comment: true
+  check_status: true
+  html_artifact: true

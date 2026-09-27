@@ -9,6 +9,7 @@ import { Command } from "commander";
 
 import { EXIT_CODE, type ExitCode } from "@contextforge/shared";
 
+import { benchmarkCommand } from "./commands/benchmark.js";
 import { compareCommand } from "./commands/compare.js";
 import { datasetGenerateCommand } from "./commands/dataset.js";
 import { runCommand } from "./commands/run.js";
@@ -152,6 +153,19 @@ export function buildProgram(): Command {
         exitCode = outcome.exitCode;
       },
     );
+
+  program
+    .command("benchmark")
+    .description("Score HEAD and store it as the baseline for pull requests (push-to-main flow)")
+    .requiredOption("--config <path>", "path to contextforge.yml")
+    .action(async (options: { config: string }) => {
+      await benchmarkCommand({
+        configPath: options.config,
+        exec,
+        logger: logger(),
+        env: process.env,
+      });
+    });
 
   return program;
 }

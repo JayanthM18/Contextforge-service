@@ -9,6 +9,8 @@ import path from "node:path";
 
 import { EXIT_CODE, type ExitCode, type Mode, type RunResult } from "@contextforge/shared";
 
+import { findStoredBenchmark, ANCESTOR_LIMIT } from "../benchmark/store.js";
+import { decideBaseline } from "../benchmark/decide.js";
 import { buildRunResult, writeJson } from "../compare/results.js";
 import { compare } from "../compare/verdict.js";
 import { ensureEvaluatorImage, type EvaluatorOptions } from "../evaluator/client.js";
@@ -142,21 +144,79 @@ export async function runCommand(options: RunOptions): Promise<RunOutcome> {
   const score = async (records: AnsweredSide["records"]) =>
     scoreSide(records, ctx.dataset.cases, config, await scorer(), options);
 
-  // --- the baseline --------------------------------------------------------
-  // Cached mode, which reuses a stored benchmark, arrives in stage 7. Until
-  // then both sides are always built, and the report says so.
-  if ((options.mode ?? config.baseline.mode) === "cached") {
-    notes.push("cached mode is not available yet, so both sides were run");
+  // --- the baseline: stored, re-scored, or rebuilt --------------------------
+  const requested = options.mode ?? config.baseline.mode;
+  let mode: Mode = "dual";
+  let baseline: RunResult | undefined;
+
+  if (requested === "cached") {
+    const stored = await findStoredBenchmark({
+      git,
+      logger,
+      mergeBase: baselineSha,
+      storeRel: ctx.storeRel,
+      storeDir: ctx.storeDir,
+      baseRef,
+    });
+
+    if (stored === null) {
+      if (!config.baseline.rebuild_if_missing) {
+        throw new ContextForgeError(
+          "RESULTS_INVALID",
+          `No stored benchmark for ${short(baselineSha)} or its ancestors`,
+          {
+            remedy:
+              "Run `contextforge benchmark` on the base branch, or set baseline.rebuild_if_missing: true.",
+          },
+        );
+      }
+      notes.push(
+        `no stored benchmark for ${short(baselineSha)} or its ${String(ANCESTOR_LIMIT)} nearest ancestors, so both sides were run`,
+      );
+    } else {
+      if (stored.distance > 0) {
+        notes.push(
+          `the nearest stored benchmark is ${short(stored.sha)}, ${String(stored.distance)} commits before the merge base ${short(baselineSha)}`,
+        );
+      }
+      const decision = decideBaseline(
+        stored.result.fingerprint,
+        currentFingerprint(candidateSide.appHash),
+      );
+      notes.push(decision.reason);
+      mode = decision.mode;
+
+      if (mode === "cached") baseline = stored.result;
+      if (mode === "rejudged") {
+        const blank = stored.result.results.map((r) => ({
+          ...r,
+          scores: {},
+          scores_stddev: {},
+          score_errors: {},
+        }));
+        baseline = buildRunResult({
+          commit: stored.result.commit,
+          fingerprint: currentFingerprint(stored.result.fingerprint.app_hash),
+          records: await score(blank),
+          runs: config.evaluation.runs,
+          metrics,
+          notes: [...stored.result.notes, "re-scored from stored answers"],
+        });
+      }
+    }
   }
-  const mode: Mode = "dual";
-  const baselineSide = await answerAt("baseline", baselineSha, false);
-  const baseline = buildRunResult({
-    commit: baselineSha,
-    fingerprint: currentFingerprint(baselineSide.appHash),
-    records: await score(baselineSide.records),
-    runs: config.evaluation.runs,
-    metrics,
-  });
+
+  if (baseline === undefined) {
+    mode = "dual";
+    const side = await answerAt("baseline", baselineSha, false);
+    baseline = buildRunResult({
+      commit: baselineSha,
+      fingerprint: currentFingerprint(side.appHash),
+      records: await score(side.records),
+      runs: config.evaluation.runs,
+      metrics,
+    });
+  }
 
   const candidate = buildRunResult({
     commit: candidateLabel,

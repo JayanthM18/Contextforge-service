@@ -1,0 +1,77 @@
+# Push to main: score the new commit and store it as the baseline pull requests
+# compare against (docs/ARCHITECTURE.md, "Flow: push to main"). One file per
+# commit under benchmark/baseline/, committed with [skip ci].
+name: benchmark
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Queue rather than cancel: every commit on main deserves its benchmark.
+concurrency:
+  group: benchmark-main
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+env:
+  # The config to benchmark. Set the repository variable CONTEXTFORGE_CONFIG to
+  # use another, e.g. one pointing the judge at a self-hosted endpoint.
+  CONTEXTFORGE_CONFIG: ${{ vars.CONTEXTFORGE_CONFIG || 'examples/contextforge.yml' }}
+  # Secrets cannot appear in `if:` directly; exposing presence as env can.
+  HAS_TAILSCALE: ${{ secrets.TS_OAUTH_CLIENT_ID != '' }}
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 26
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+
+      # Optional: reach a judge on a private tailnet. Skipped unless the
+      # TS_OAUTH_CLIENT_ID and TS_OAUTH_SECRET secrets exist. The runner joins
+      # as an ephemeral tag:ci node and leaves when the job ends.
+      - name: Join the tailnet
+        if: env.HAS_TAILSCALE == 'true'
+        uses: tailscale/github-action@v3
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
+          tags: tag:ci
+
+      - name: Benchmark this commit
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: node packages/cli/dist/bin.js benchmark --config "$CONTEXTFORGE_CONFIG"
+
+      - name: Commit the benchmark
+        run: |
+          git config user.name "contextforge[bot]"
+          git config user.email "contextforge[bot]@users.noreply.github.com"
+          git add benchmark/baseline
+          if git diff --cached --quiet; then
+            echo "nothing to commit"
+            exit 0
+          fi
+          git commit -m "chore: benchmark ${GITHUB_SHA::7} [skip ci]"
+          # main may have moved while this ran. Files are per commit, so a
+          # rebase never conflicts; retry a few times before giving up.
+          for attempt in 1 2 3; do
+            git pull --rebase origin main && git push origin HEAD:main && exit 0
+            sleep $((attempt * 5))
+          done
+          echo "::error::could not push the benchmark after 3 attempts"
+          exit 1
