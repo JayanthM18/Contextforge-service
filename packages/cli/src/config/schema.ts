@@ -110,6 +110,16 @@ const baseSchema = z.strictObject({
   thresholds: z.strictObject({
     mean_drop: thresholdMap.default({}),
     absolute_floor: thresholdMap.default({}),
+    /**
+     * How far one case's score may fall before that case counts as regressed.
+     * Provisional: single-case judge scores are far noisier than means, and
+     * this default is replaced by the spread measured in stage 6.
+     */
+    case_drop: z
+      .number()
+      .min(0, { error: "must be between 0 and 1" })
+      .max(1, { error: "must be between 0 and 1" })
+      .default(0.3),
     max_regressed_cases: z.number().int().min(0).default(3),
   }),
 

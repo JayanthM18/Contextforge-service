@@ -10,7 +10,7 @@ import { mkdtemp, readFile, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 
-import { type RunResult, runResultSchema } from "@contextforge/shared";
+import { EXIT_CODE, type ResultsFile, type RunResult, runResultSchema } from "@contextforge/shared";
 import { beforeEach, describe, expect, it } from "vitest";
 
 import { runCommand } from "../src/commands/run.js";
@@ -169,7 +169,26 @@ async function written(name: string): Promise<RunResult> {
   );
 }
 
+async function results(): Promise<ResultsFile> {
+  return JSON.parse(
+    await readFile(path.join(repo, ".contextforge", "results.json"), "utf8"),
+  ) as ResultsFile;
+}
+
 describe("run", () => {
+  it("dual: a regression exits 1 and names the metric", async () => {
+    await feature();
+    const docker = fakeDocker({ baseline: 0.9, candidate: 0.5 });
+
+    const outcome = await runCommand(runOptions(docker, { mode: "dual" }));
+
+    expect(outcome.exitCode).toBe(EXIT_CODE.regression);
+    const file = await results();
+    expect(file.verdict.status).toBe("fail");
+    expect(file.verdict.metrics[0]).toMatchObject({ name: "faithfulness", status: "fail" });
+    expect(file.verdict.regressed_cases).toEqual(["a", "b", "c"]);
+  });
+
   it("dual: builds and scores both sides and writes their results", async () => {
     await feature();
     const docker = fakeDocker({ baseline: 0.9, candidate: 0.8 });

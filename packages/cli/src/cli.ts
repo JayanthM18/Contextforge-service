@@ -9,6 +9,7 @@ import { Command } from "commander";
 
 import { EXIT_CODE, type ExitCode } from "@contextforge/shared";
 
+import { compareCommand } from "./commands/compare.js";
 import { datasetGenerateCommand } from "./commands/dataset.js";
 import { runCommand } from "./commands/run.js";
 import { validateCommand } from "./commands/validate.js";
@@ -91,6 +92,30 @@ export function buildProgram(): Command {
         env: process.env,
       });
     });
+
+  program
+    .command("compare")
+    .description("Compare two run results and print a verdict")
+    .argument("<baseline>", "baseline result JSON")
+    .argument("<candidate>", "candidate result JSON")
+    .requiredOption("--config <path>", "path to contextforge.yml (for thresholds)")
+    .option("--output <path>", "also write a results.json for `contextforge report`")
+    .action(
+      async (
+        baselinePath: string,
+        candidatePath: string,
+        options: { config: string; output?: string },
+      ) => {
+        exitCode = await compareCommand({
+          baselinePath,
+          candidatePath,
+          configPath: options.config,
+          ...(options.output === undefined ? {} : { outputPath: options.output }),
+          logger: logger(),
+          env: process.env,
+        });
+      },
+    );
 
   program
     .command("run")

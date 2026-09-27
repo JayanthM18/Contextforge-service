@@ -2,7 +2,7 @@
  * `contextforge run --config <path> [--candidate HEAD] [--baseline <ref>] [--mode cached|dual]`
  *
  * The pull-request flow from docs/ARCHITECTURE.md: build the candidate, find
- * or build a baseline, score both, write results.
+ * or build a baseline, score both, compare, write results.
  */
 
 import path from "node:path";
@@ -10,6 +10,7 @@ import path from "node:path";
 import { EXIT_CODE, type ExitCode, type Mode, type RunResult } from "@contextforge/shared";
 
 import { buildRunResult, writeJson } from "../compare/results.js";
+import { compare } from "../compare/verdict.js";
 import { ensureEvaluatorImage, type EvaluatorOptions } from "../evaluator/client.js";
 import { buildFingerprint } from "../runner/fingerprint.js";
 import { answerSide, scoreSide, type AnsweredSide } from "../runner/side.js";
@@ -166,9 +167,20 @@ export async function runCommand(options: RunOptions): Promise<RunOutcome> {
     notes,
   });
 
-  // A verdict needs the comparator, which arrives in stage 6.
+  // --- verdict --------------------------------------------------------------
+  const verdict = compare(baseline, candidate, config, mode, notes);
   await writeJson(path.join(options.outputDir, "baseline.json"), baseline);
   await writeJson(path.join(options.outputDir, "candidate.json"), candidate);
-  logger.info("wrote scored results for both sides", { mode, output: options.outputDir });
-  return { exitCode: EXIT_CODE.pass, outputDir: options.outputDir, mode };
+  await writeJson(path.join(options.outputDir, "results.json"), { verdict, baseline, candidate });
+
+  logger.info(`verdict: ${verdict.status.toUpperCase()}`, {
+    mode,
+    regressed: verdict.regressed_cases.length,
+    output: options.outputDir,
+  });
+  return {
+    exitCode: verdict.status === "pass" ? EXIT_CODE.pass : EXIT_CODE.regression,
+    outputDir: options.outputDir,
+    mode,
+  };
 }
