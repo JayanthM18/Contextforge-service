@@ -1,0 +1,49 @@
+# Pull request: build the candidate, compare against the merge base's stored
+# benchmark, comment, and pass or fail the check (docs/ARCHITECTURE.md,
+# "Flow: pull request"). Make this check required in branch protection to
+# block merges that regress quality.
+name: pr-check
+
+on:
+  pull_request:
+
+concurrency:
+  group: pr-check-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: write
+
+env:
+  HAS_TAILSCALE: ${{ secrets.TS_OAUTH_CLIENT_ID != '' }}
+
+jobs:
+  contextforge:
+    runs-on: ubuntu-latest
+    steps:
+      # The pull request's own head, not GitHub's synthetic merge commit, so
+      # the baseline is the merge base and a PR is not blamed for changes that
+      # landed on main after it branched (docs/DESIGN.md section 3).
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Fetch the base branch
+        run: git fetch --no-tags origin "${{ github.base_ref }}:refs/remotes/origin/${{ github.base_ref }}"
+
+      # Optional, as in benchmark.yml: reach a judge on a private tailnet.
+      - name: Join the tailnet
+        if: env.HAS_TAILSCALE == 'true'
+        uses: tailscale/github-action@v3
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
+          tags: tag:ci
+
+      - uses: ./packages/action
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        with:
+          config: ${{ vars.CONTEXTFORGE_CONFIG || 'examples/contextforge.yml' }}

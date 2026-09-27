@@ -12,6 +12,7 @@ import { EXIT_CODE, type ExitCode } from "@contextforge/shared";
 import { benchmarkCommand } from "./commands/benchmark.js";
 import { compareCommand } from "./commands/compare.js";
 import { datasetGenerateCommand } from "./commands/dataset.js";
+import { type ReportFormat, reportCommand } from "./commands/report.js";
 import { runCommand } from "./commands/run.js";
 import { validateCommand } from "./commands/validate.js";
 import { exec } from "./util/exec.js";
@@ -36,6 +37,13 @@ function resolveLogLevel(raw: string | undefined): LogLevel {
 function parseMode(raw: string): "cached" | "dual" {
   if (raw !== "cached" && raw !== "dual") {
     throw new ContextForgeError("CONFIG_INVALID", `--mode "${raw}" must be "cached" or "dual"`);
+  }
+  return raw;
+}
+
+function parseFormat(raw: string): ReportFormat {
+  if (raw !== "md" && raw !== "html" && raw !== "json") {
+    throw new ContextForgeError("CONFIG_INVALID", `--format "${raw}" must be md, html or json`);
   }
   return raw;
 }
@@ -153,6 +161,20 @@ export function buildProgram(): Command {
         exitCode = outcome.exitCode;
       },
     );
+
+  program
+    .command("report")
+    .description("Render a results.json as Markdown, HTML or JSON")
+    .argument("<results>", "results.json written by `contextforge run` or `compare --output`")
+    .option("--format <format>", "md | html | json", parseFormat, "md")
+    .option("--output <file>", "write to a file instead of stdout")
+    .action(async (resultsPath: string, options: { format: ReportFormat; output?: string }) => {
+      await reportCommand({
+        resultsPath,
+        format: options.format,
+        ...(options.output === undefined ? {} : { outputPath: options.output }),
+      });
+    });
 
   program
     .command("benchmark")

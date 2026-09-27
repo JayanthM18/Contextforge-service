@@ -5,6 +5,7 @@
  * or build a baseline, score both, compare, write results.
  */
 
+import { writeFile } from "node:fs/promises";
 import path from "node:path";
 
 import { EXIT_CODE, type ExitCode, type Mode, type RunResult } from "@contextforge/shared";
@@ -14,6 +15,8 @@ import { decideBaseline } from "../benchmark/decide.js";
 import { buildRunResult, writeJson } from "../compare/results.js";
 import { compare } from "../compare/verdict.js";
 import { ensureEvaluatorImage, type EvaluatorOptions } from "../evaluator/client.js";
+import { renderHtml } from "../report/html.js";
+import { renderMarkdown } from "../report/markdown.js";
 import { buildFingerprint } from "../runner/fingerprint.js";
 import { answerSide, scoreSide, type AnsweredSide } from "../runner/side.js";
 import { assertDockerAvailable } from "../util/docker.js";
@@ -231,7 +234,12 @@ export async function runCommand(options: RunOptions): Promise<RunOutcome> {
   const verdict = compare(baseline, candidate, config, mode, notes);
   await writeJson(path.join(options.outputDir, "baseline.json"), baseline);
   await writeJson(path.join(options.outputDir, "candidate.json"), candidate);
-  await writeJson(path.join(options.outputDir, "results.json"), { verdict, baseline, candidate });
+  const results = { verdict, baseline, candidate };
+  await writeJson(path.join(options.outputDir, "results.json"), results);
+  await writeFile(path.join(options.outputDir, "report.md"), renderMarkdown(results));
+  if (config.report.html_artifact) {
+    await writeFile(path.join(options.outputDir, "report.html"), renderHtml(results));
+  }
 
   logger.info(`verdict: ${verdict.status.toUpperCase()}`, {
     mode,
