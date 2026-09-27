@@ -15,13 +15,20 @@ systems later.
 | Dataset manager | `packages/cli/src/dataset` | Generate the test set once via Ragas, load the frozen set, hash it |
 | Runner | `packages/cli/src/runner` | Build and start app containers, health-check, query, tear down |
 | Evaluator client | `packages/cli/src/evaluator` | Send JSON to the Ragas container, receive per-case scores |
-| Comparator | `packages/cli/src/compare` | Diff two result sets, flag regressed cases, apply thresholds |
-| Reporter | `packages/cli/src/report` | Render Markdown, JSON and HTML; post the PR comment via Octokit |
+| Comparator | `packages/cli/src/compare` | Diff two result sets, flag regressed cases, apply thresholds, measure noise |
+| Benchmark store | `packages/cli/src/benchmark` | Find the stored benchmark for a merge base; decide stored, re-scored or dual |
+| Reporter | `packages/cli/src/report` | Render Markdown, JSON and HTML |
 | Evaluator service | `evaluator/` | Python and Ragas, JSON in and JSON out, no Git or CI awareness |
-| Action wrapper | `packages/action` | Map Action inputs to CLI flags, set the check status |
+| Action wrapper | `packages/action` | Map Action inputs to CLI flags, post the sticky PR comment, set the check status |
 
-Comparator and reporter are pure functions over data. All I/O lives in the
-runner, evaluator client and config loader.
+Comparator, reporter and the benchmark decision are pure functions over data.
+All I/O lives in the runner, evaluator client, config loader and benchmark
+store, and everything that shells out goes through one injectable `Exec`, so
+each is tested without Docker.
+
+Posting the PR comment lives in the Action, not the Reporter. The core renders
+the report; only the Action knows it is on GitHub. That is the layering this
+document starts with, and it keeps the core portable.
 
 ## Modes
 
@@ -67,14 +74,15 @@ mode must produce the same verdict as dual mode on the same pull request.
 
 | Layer | Choice | Why |
 |---|---|---|
-| Language (core) | TypeScript, Node 20 | GitHub Actions ecosystem is JS-native; Octokit is first class |
+| Language (core) | TypeScript, Node 20+ (developed and run on 26) | GitHub Actions ecosystem is JS-native |
 | CLI | Commander.js | Subcommands, flags, help output |
 | Config | YAML plus Zod | Human-editable config, runtime validation with typed output |
 | Evaluation | Ragas (Python 3.11) | Reference-free RAG metrics; runs in its own container |
 | Containers | Docker, Docker Compose | Reproducible environments for baseline and candidate |
-| CI | GitHub Actions, Octokit | Where the report needs to appear |
+| CI | GitHub Actions, REST via `fetch` | Where the report needs to appear. Three API calls did not justify Octokit |
 | Tests | Vitest (TS), pytest (Python) | Fast, watch mode, good TS support |
-| Package manager | pnpm workspaces | Monorepo with cli, action and shared packages |
+| Package manager | pnpm workspaces | Monorepo with cli, action, shared and the sample app |
+| Action type | Composite | Builds the same CLI developers run; no bundled second artefact to drift |
 
 ## Folder structure
 
@@ -92,32 +100,36 @@ contextforge/
   packages/
     cli/
       src/
-        commands/        # validate, dataset, run, compare
+        commands/        # validate, dataset, run, benchmark, compare, report
         config/          # schema.ts, load.ts
         dataset/         # generate.ts, freeze.ts, hash.ts
-        runner/          # compose.ts, health.ts, query.ts
-        evaluator/       # client.ts, types.ts
-        compare/         # diff.ts, thresholds.ts, verdict.ts
-        report/          # markdown.ts, html.ts, github.ts
-        util/
+        runner/          # compose.ts, health.ts, query.ts, side.ts, fingerprint.ts
+        evaluator/       # client.ts, types.ts, aggregate.ts
+        compare/         # diff.ts, thresholds.ts, verdict.ts, summary.ts, noise.ts
+        benchmark/       # decide.ts, store.ts
+        report/          # markdown.ts, html.ts, format.ts
+        util/            # errors, logger, exec, docker, git, version
       test/
     action/
-      action.yml
-      src/index.ts
+      action.yml         # composite: build, run, comment, upload, set the check
+      src/               # index.ts, comment.ts — the sticky comment
     shared/
-      src/types.ts       # result and benchmark types shared across packages
+      src/types.ts       # result and benchmark schemas shared across packages
   evaluator/
-    Dockerfile
-    app/                 # Ragas wrapper, JSON in and out
+    Dockerfile           # runtime and test targets
+    app/                 # Ragas wrapper: score and generate, JSON in and out
     tests/
+    fixtures/
   examples/
     sample-rag-app/      # reference app implementing the contract
     contextforge.yml
+    contextforge.local-judge.yml
+  scripts/               # measure-noise.mjs, validate-regressions.sh
   benchmark/
     testcases.json
     baseline/<sha>.json
   .github/workflows/
-    ci.yml               # lint and test this repo
+    ci.yml               # lint and test this repo, TypeScript and Python
     benchmark.yml        # push to main, writes the baseline
     pr-check.yml         # pull request, runs the regression check
 ```

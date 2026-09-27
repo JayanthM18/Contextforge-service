@@ -68,6 +68,7 @@ app:
   health_path: /health
   query_path: /query
   startup_timeout: 120        # seconds
+  query_timeout: 60           # seconds per question; a timeout fails that case only
   env_passthrough: [OPENAI_API_KEY]
 
 dataset:
@@ -105,6 +106,7 @@ thresholds:
     answer_relevancy: 0.05
   absolute_floor:
     faithfulness: 0.70
+  case_drop: 0.30             # a case regresses if any metric falls further than this
   max_regressed_cases: 3
 
 report:
@@ -172,7 +174,19 @@ One file per commit, so concurrent merges never conflict.
 
 Frozen means frozen. Regenerating changes the exam, so any comparison across
 the change is meaningless. Regenerate deliberately, in its own pull request,
-and record it in `docs/MEMORY.md`.
+and record it in `docs/MEMORY.md`. `dataset generate` refuses to replace an
+existing file without `--overwrite`.
+
+In a generated set, `reference_context_ids` holds **source document ids**
+(`returns-and-refunds.md`), not chunk ids. Chunk ids belong to the app and
+change whenever its chunking changes — which is exactly the kind of change
+ContextForge exists to test — so a frozen set that named chunks would go stale
+the first time anyone touched chunking. A human editing the set may still use
+chunk ids when they know them to be stable.
+
+The dataset hash in a fingerprint covers `cases` only, in canonical JSON, so
+reformatting the file or regenerating its timestamp does not invalidate every
+stored benchmark, but changing a question does.
 
 ### `baseline/<sha>.json`
 
@@ -244,12 +258,37 @@ A run produces a verdict object:
       "delta": -0.12, "threshold": -0.05, "status": "fail" }
   ],
   "regressed_cases": ["tc-004", "tc-011", "tc-027"],
+  "regressions": [
+    { "case_id": "tc-004", "reasons": ["context_recall fell from 0.90 to 0.40"] }
+  ],
   "notes": ["judge unchanged", "3 of 40 cases regressed"]
 }
 ```
 
 `status` is `fail` if any metric breaches `mean_drop`, any metric falls below
 `absolute_floor`, or the regressed-case count exceeds `max_regressed_cases`.
+
+How each part is computed:
+
+- **Paired means for `mean_drop`.** A metric's baseline and candidate means are
+  taken over the same cases: those both sides answered and the judge scored on
+  both sides. Comparing means over different sets of cases would let a case the
+  candidate failed to answer quietly drop out of its average and flatter it.
+- **`absolute_floor`** applies to the candidate's mean over every case it
+  scored.
+- **A regressed case** is one where the candidate app failed to answer and the
+  baseline did not, or where any metric fell by more than `case_drop`. A score
+  the judge could not produce (`null`) is not a regression; it is counted in
+  the notes.
+- **A threshold with nothing to measure fails.** If `mean_drop` or
+  `absolute_floor` names a metric and no pair of scores exists for it, the
+  metric fails with that reason rather than passing silently.
+- **Incomparable inputs are a tool error, not a verdict.** Two results with
+  different `dataset_hash` or a different judge fingerprint cannot be compared
+  and exit `2`.
+
+`case_drop` defaults to `0.30` provisionally — single-case judge scores are far
+noisier than means — until stage 6 measures the real spread.
 
 Noise matters: metrics are LLM-judged and vary between identical runs. Default
 thresholds must sit above the measured noise floor recorded in
@@ -278,11 +317,128 @@ status so branch protection can block a merge.
 
 ```
 contextforge validate            --config <path>
-contextforge dataset generate    --config <path> --size <n>
-contextforge run                 --config <path> [--candidate HEAD] [--baseline <sha>] [--mode cached|dual]
-contextforge compare             <baseline.json> <candidate.json> --config <path>
-contextforge report              <results.json> --format md|html|json
+contextforge dataset generate    --config <path> [--size <n>] [--overwrite]
+contextforge run                 --config <path> [--candidate HEAD] [--baseline <ref>] [--mode cached|dual]
+                                 [--base-branch main] [--output .contextforge] [--answers-only]
+contextforge benchmark           --config <path>
+contextforge compare             <baseline.json> <candidate.json> --config <path> [--output <results.json>]
+contextforge report              <results.json> --format md|html|json [--output <file>]
 ```
 
 Every command exits `0` on pass, `1` on regression, `2` on a tool error, so CI
 can distinguish "quality regressed" from "the tool broke".
+
+- `run` builds the candidate and resolves the baseline to the merge base with
+  `--base-branch` unless `--baseline` names one. `--candidate HEAD` uses the
+  working tree, uncommitted changes included and noted; any other ref is built
+  from a clean worktree. It writes `baseline.json`, `candidate.json`,
+  `results.json`, `report.md` and — when `report.html_artifact` is set —
+  `report.html` to `--output`.
+- `run --answers-only` queries both sides and stops: no judge, no verdict. It
+  exists to check the app side works before spending judge calls.
+- `benchmark` is the push-to-main half of cached mode: it scores `HEAD` and
+  writes `<baseline.store>/<sha>.json`. It refuses a dirty working tree,
+  because the file would describe a commit that does not contain the code that
+  produced it. Committing the file is the workflow's job.
+- `compare` and `report` never call the judge and need no API key.
+
+## 7. Evaluator interface
+
+The evaluator is a Python container (`evaluator/`) wrapping Ragas. The
+TypeScript core talks to it only through JSON files on a mounted directory —
+never by importing Python — so either side can change without the other
+noticing, and the evaluator knows nothing about Git, CI or the app.
+
+```
+docker run --rm -v <workdir>:/work contextforge-evaluator:<version> \
+  score --input /work/request.json --output /work/response.json
+```
+
+With no `--input` / `--output` it reads stdin and writes stdout. Logs go to
+stderr only.
+
+### Score request
+
+```json
+{
+  "task": "score",
+  "metrics": ["context_precision", "context_recall", "faithfulness", "answer_relevancy"],
+  "judge": { "model": "gpt-4o-mini", "base_url": null, "api_key_env": "OPENAI_API_KEY",
+             "temperature": 0, "seed": 42 },
+  "embeddings": { "model": "text-embedding-3-small", "base_url": null,
+                  "api_key_env": "OPENAI_API_KEY" },
+  "concurrency": 4,
+  "cases": [
+    { "case_id": "tc-001", "question": "What is the refund window?",
+      "ground_truth": "30 days from delivery.",
+      "answer": "Refunds are accepted within 30 days of delivery.",
+      "contexts": ["Customers may request a refund within 30 days..."] }
+  ]
+}
+```
+
+The request names the key variable, never the key. The core passes that one
+variable into the container's environment and nothing else.
+
+### Score response
+
+```json
+{
+  "evaluator": { "ragas_version": "0.4.3", "judge_model": "gpt-4o-mini",
+                 "embeddings_model": "text-embedding-3-small" },
+  "results": [
+    { "case_id": "tc-001",
+      "scores": { "faithfulness": 0.91, "answer_relevancy": null },
+      "errors": { "answer_relevancy": "judge returned no usable questions" } }
+  ]
+}
+```
+
+- Every requested metric appears in `scores` for every case. A metric that
+  could not be computed is `null`, never a guessed number, and carries a reason
+  in `errors`. Ragas returns `NaN` in several such situations; the evaluator
+  converts every `NaN` to `null` plus a reason, because a `NaN` that reaches a
+  mean silently poisons it.
+- Results come back in request order.
+- `context_precision` is Ragas's reference-based variant, since every case has
+  a ground truth.
+- Temperature and seed are passed explicitly on every judge call. Ragas's own
+  default temperature is `0.01`, not `0`.
+
+### Generate request and response
+
+`generate` drafts a test set for a human to review (stage 4). The core reads
+`dataset.source_docs` and sends the documents in the request, so the container
+needs no second mount.
+
+```json
+{ "task": "generate", "size": 20,
+  "judge": { "model": "gpt-4o-mini", "base_url": null, "api_key_env": "OPENAI_API_KEY",
+             "temperature": 0, "seed": 42 },
+  "embeddings": { "model": "text-embedding-3-small", "base_url": null,
+                  "api_key_env": "OPENAI_API_KEY" },
+  "documents": [ { "id": "returns-and-refunds.md", "text": "..." } ] }
+```
+
+```json
+{ "generator": { "tool": "ragas", "version": "0.4.3", "model": "gpt-4o-mini" },
+  "cases": [ { "question": "...", "ground_truth": "...",
+               "reference_document_ids": ["returns-and-refunds.md"], "hops": "single" } ] }
+```
+
+Generation uses the judge endpoint. Empty and duplicate questions are dropped
+and counted in the log. The core numbers the cases `tc-001`… and writes
+`testcases.json`.
+
+### Exit codes
+
+`0` when the response was written, even if some metrics are `null`. `2` for a
+malformed request, a missing key variable, or an unreachable judge — anything
+that means the scores cannot be trusted as a whole.
+
+### Networking
+
+On Linux the container runs with host networking, so a judge reachable from
+the host — `localhost`, a LAN address, a Tailscale address — is reachable
+unchanged. Elsewhere it runs on the default bridge with `host.docker.internal`
+mapped to the host.
