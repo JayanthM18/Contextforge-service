@@ -7,9 +7,10 @@
 
 import { Command } from "commander";
 
-import { EXIT_CODE } from "@contextforge/shared";
+import { EXIT_CODE, type ExitCode } from "@contextforge/shared";
 
 import { datasetGenerateCommand } from "./commands/dataset.js";
+import { runCommand } from "./commands/run.js";
 import { validateCommand } from "./commands/validate.js";
 import { exec } from "./util/exec.js";
 import { ContextForgeError, isContextForgeError } from "./util/errors.js";
@@ -30,6 +31,13 @@ function resolveLogLevel(raw: string | undefined): LogLevel {
   return raw;
 }
 
+function parseMode(raw: string): "cached" | "dual" {
+  if (raw !== "cached" && raw !== "dual") {
+    throw new ContextForgeError("CONFIG_INVALID", `--mode "${raw}" must be "cached" or "dual"`);
+  }
+  return raw;
+}
+
 function parseCount(raw: string): number {
   const value = Number(raw);
   if (!Number.isInteger(value) || value < 1) {
@@ -40,6 +48,9 @@ function parseCount(raw: string): number {
   }
   return value;
 }
+
+/** Set by commands that can end in a regression rather than a pass. */
+let exitCode: ExitCode = EXIT_CODE.pass;
 
 export function buildProgram(): Command {
   const program = new Command();
@@ -81,13 +92,50 @@ export function buildProgram(): Command {
       });
     });
 
+  program
+    .command("run")
+    .description("Build the candidate, find or build a baseline, score both and reach a verdict")
+    .requiredOption("--config <path>", "path to contextforge.yml")
+    .option("--candidate <ref>", "the version under test; HEAD uses the working tree", "HEAD")
+    .option("--baseline <ref>", "compare against this commit instead of the merge base")
+    .option("--mode <mode>", "cached | dual (default: baseline.mode)", parseMode)
+    .option("--base-branch <name>", "the branch pull requests merge into", "main")
+    .option("--output <dir>", "where results are written", ".contextforge")
+    .option("--answers-only", "query both sides and stop; needs no judge", false)
+    .action(
+      async (options: {
+        config: string;
+        candidate: string;
+        baseline?: string;
+        mode?: "cached" | "dual";
+        baseBranch: string;
+        output: string;
+        answersOnly: boolean;
+      }) => {
+        const outcome = await runCommand({
+          configPath: options.config,
+          candidate: options.candidate,
+          ...(options.baseline === undefined ? {} : { baseline: options.baseline }),
+          ...(options.mode === undefined ? {} : { mode: options.mode }),
+          baseBranch: options.baseBranch,
+          outputDir: options.output,
+          answersOnly: options.answersOnly,
+          exec,
+          logger: logger(),
+          env: process.env,
+        });
+        exitCode = outcome.exitCode;
+      },
+    );
+
   return program;
 }
 
 export async function run(argv: readonly string[]): Promise<number> {
+  exitCode = EXIT_CODE.pass;
   try {
     await buildProgram().parseAsync(argv, { from: "user" });
-    return EXIT_CODE.pass;
+    return exitCode;
   } catch (error: unknown) {
     if (isContextForgeError(error)) {
       process.stderr.write(`${error.format()}\n`);

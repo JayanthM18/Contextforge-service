@@ -76,6 +76,12 @@ const baseSchema = z.strictObject({
       .min(10, { error: "must be between 10 and 900 seconds" })
       .max(900, { error: "must be between 10 and 900 seconds" })
       .default(120),
+    query_timeout: z
+      .number()
+      .int()
+      .min(1, { error: "must be between 1 and 600 seconds" })
+      .max(600, { error: "must be between 1 and 600 seconds" })
+      .default(60),
     env_passthrough: z.array(z.string().min(1)).default([]),
   }),
 

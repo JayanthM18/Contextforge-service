@@ -24,6 +24,11 @@ export interface LoadConfigOptions {
    * run before `dataset.path` exists.
    */
   readonly requireDataset?: boolean;
+  /**
+   * Whether the key variables named by `api_key_env` must be set. Commands that
+   * never call the judge, like `compare` and `report`, turn this off.
+   */
+  readonly requireKeys?: boolean;
   /** Injected so tests never touch the real environment. */
   readonly env?: Record<string, string | undefined>;
   readonly cwd?: string;
@@ -136,7 +141,7 @@ export async function loadConfig(options: LoadConfigOptions): Promise<Config> {
   if (!result.success) throw formatIssues(display, result.error.issues);
 
   const config = result.data;
-  checkKeyVariables(config, options.env ?? process.env);
+  if (options.requireKeys !== false) checkKeyVariables(config, options.env ?? process.env);
 
   if (options.requireDataset !== false) {
     const datasetPath = resolveAgainstConfig(configPath, config.dataset.path);
