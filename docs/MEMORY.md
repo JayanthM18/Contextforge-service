@@ -20,11 +20,149 @@ an entry here before the pull request is opened.
 
 ## Current state
 
-- **Stage:** 2 — config loader, complete and awaiting the gate review
-- **Works:** the scaffold, the reference RAG app, and a `contextforge` binary
-  with a working `validate` command. 109 tests across 11 files.
-- **Known gaps:** no evaluator, no dataset generation, no runner, no comparator
-- **Measured noise floor:** not measured yet (stage 6)
+- **Stage:** 3 — gate pending. Code for stages 3–8 is built and unit tested;
+  stage 9 is prepared. No gate from stage 3 onwards has passed.
+- **Works, verified by running:** 251 TypeScript tests and 39 Python tests;
+  lint, typecheck and build clean from an empty `dist/`; the built CLI's
+  `validate`, `compare` and `report` on real files, including a regression
+  caught with exit code `1`; the Action's comment step outside a pull request.
+- **Not yet verified:** the evaluator image has never been built (Docker was
+  down all session); nothing has been scored by a real judge; no app has run
+  under the runner for real; no workflow has run on GitHub.
+- **Blocked on:** Docker running (stages 3, 5); a judge — the Tailscale/Ollama
+  box — (stages 3, 4, 6, 9); a GitHub remote (stages 7, 8 demos).
+- **Measured noise floor:** not measured. `case_drop: 0.30` and the 0.05
+  `mean_drop` defaults are provisional until `pnpm measure-noise` runs.
+
+---
+
+## 2026-09-27 — stages 3–9 — built; gates pending
+
+One session, at the user's request: "complete everything else except setting
+up tailscale". That overrides the one-stage-at-a-time rule in `CLAUDE.md` for
+this session; each stage still gets its own status below and in
+`docs/TASKS.md`. Nothing was committed.
+
+**Changed:** `evaluator/` (new), `packages/cli/src/{evaluator,dataset,runner,
+compare,benchmark,report,commands}`, `packages/action/`, `packages/shared`
+(schemas), `scripts/`, three workflows, `examples/contextforge.local-judge.yml`,
+`examples/testcases.json`; `docs/DESIGN.md` sections 2–7,
+`docs/ARCHITECTURE.md`, `docs/TASKS.md`, `README.md`.
+
+### Stage 3 — evaluator
+- **Ragas 0.4.3, fully pinned.** The unconstrained resolve silently
+  backtracked to instructor 1.3.2 (mid-2024), which lacks functions Ragas 0.4
+  calls. `instructor>=1.11` and `openai>=2,<3` are now explicit in
+  `requirements.in`; `requirements.txt` pins all 92 packages for CPython 3.12.
+- **Ragas's default temperature is 0.01, not 0.** Temperature and seed are
+  passed explicitly on every judge call.
+- **NaN never reaches a mean.** Ragas returns NaN when the judge's output has
+  nothing to score; the evaluator turns every NaN into `null` plus a reason.
+- **An unreachable judge stops the run** (exit 2) instead of producing a wall
+  of nulls that would look like per-case failures. Instructor and Ragas wrap
+  client errors, so fatal ones are found by walking the exception chain.
+- The core ↔ evaluator JSON contract did not exist in the spec; it is now
+  `docs/DESIGN.md` section 7.
+- On Linux the evaluator container uses host networking, so a judge reachable
+  from the host — including over Tailscale — is reachable unchanged.
+
+### Stage 4 — dataset generation
+- Generated sets record **source document ids**, not chunk ids, in
+  `reference_context_ids`. Chunk ids change whenever chunking changes — the
+  very thing ContextForge tests — so a frozen set naming chunks goes stale the
+  first time anyone touches chunking. Recorded in `docs/DESIGN.md` section 3.
+- Generation uses Ragas's LangChain-wrapper path, which is deprecated, because
+  `TestsetGenerator` is only half-migrated to the newer interface.
+- `OpenAIEmbeddings` sends pre-tokenised input by default, which only OpenAI
+  accepts; `check_embedding_ctx_length=False` is set so Ollama works.
+- The dataset hash covers `cases` only, in canonical JSON, so reformatting or a
+  new timestamp does not invalidate every stored benchmark.
+- `dataset generate` checks for an existing file *before* calling the judge,
+  and refuses without `--overwrite`. An early draft would have written an
+  empty dataset in that check; caught in review.
+
+### Stage 5 — runner
+- Teardown runs in `finally` and never throws; tests force failures during
+  build, health and query and assert `down` still runs.
+- Each Compose project gets a unique name, so teardown touches nothing a
+  developer already had running.
+- Compose sees only Docker's variables plus `app.env_passthrough`. A stray
+  shell variable cannot change a result, and secrets reach the app only when
+  listed.
+- A crashed container fails fast instead of at `startup_timeout`, and the
+  error carries the container's last log lines.
+- Cases are queried one at a time, so latency does not depend on how many
+  other questions were in flight.
+- `app.query_timeout` (default 60s) was added; it was hardcoded at first.
+- The baseline is built from a detached `git worktree` of the base commit; the
+  candidate at `HEAD` uses the working tree, with uncommitted changes noted.
+
+### Stage 6 — comparator
+- **`docs/DESIGN.md` never defined a "regressed case".** Added: the candidate
+  app failed to answer where the baseline did, or any metric fell by more than
+  the new `thresholds.case_drop`.
+- `mean_drop` uses **paired means** over cases scored on both sides, so a case
+  the candidate failed to answer cannot drop out of its average and flatter it.
+- A gated metric with nothing to measure **fails**, rather than passing
+  silently.
+- Results from different test sets or judges are a tool error, not a verdict.
+- The noise floor is not measured. `scripts/measure-noise.mjs` runs `main`
+  against itself N times and suggests thresholds; the analysis is a tested,
+  pure function.
+
+### Stage 7 — cached mode
+- Stored benchmarks are read from the **base branch's tree**, not the PR's. The
+  benchmark for a commit lands in a *later* `[skip ci]` commit, so a PR that
+  branched before it landed would otherwise never find it. A test reproduces
+  exactly that case.
+- `app_hash` covers the Compose file, Dockerfiles and lockfiles, deliberately
+  not source code: source changes are what the PR is being tested for.
+- A new `contextforge benchmark` command does the push-to-main half. It refuses
+  a dirty tree, because the file would misdescribe its commit.
+- `pr-check.yml` checks out the PR head rather than GitHub's merge commit, so
+  the baseline really is the merge base, as `docs/DESIGN.md` requires.
+- Separate stores per judge (`benchmark/baseline-local-judge` in the local
+  config) keep benchmarks from two judges from colliding.
+
+### Stage 8 — Action and reporting
+- **Composite action**, not a bundled JavaScript one: it builds the same CLI
+  developers run, so there is no second artefact to drift.
+- **Plain `fetch`, not Octokit.** Three REST calls did not justify the
+  dependency. A deviation from `docs/ARCHITECTURE.md`'s tech stack, now
+  recorded there.
+- **Posting the comment lives in the Action, not the core's Reporter**, as
+  `docs/ARCHITECTURE.md`'s layering says, although its component table had put
+  it in the core. The table is corrected.
+- A tool error posts a comment saying the *check* broke — never silence, and
+  never mistakable for a regression.
+- A comment that cannot be posted, such as a fork PR's read-only token, raises
+  a workflow warning without changing the verdict.
+- The report is escaped against app output and capped under GitHub's 65,536
+  character limit. The verdict gained `regressions` (case plus reasons), and
+  case records gained `question`, so `report` needs no config or dataset.
+
+### Stage 9 — prepared, not run
+- `scripts/validate-regressions.sh` builds four scenarios as local branches —
+  `top_k` 5→1, a weaker embedding model, a prompt without grounding rules, and
+  a pure rename — runs each in dual mode and tabulates caught versus missed.
+  Every patch was dry-run against a copy of the sample app.
+- It refuses `PROVIDER=local`: the offline app ignores prompts, so the results
+  would be meaningless.
+
+**Deferred:** every gate from stage 3 on (see Current state); publishing the
+evaluator image to a registry (the CLI builds it locally on first use).
+
+**Notes:**
+- **Docker was down all session** and starting it needs `sudo`. Nothing
+  touched a real container.
+- Workspace packages resolve through `package.json` to `dist/`, which is stale
+  until the next build. Tests passed against old code once before Vitest and
+  ESLint were both pointed at source.
+- Zod 4 reports an unknown key against its parent object; pydantic reports
+  paths as tuples. Both are translated into dotted key paths.
+- Two test failures during the session were wrong expectations in the tests,
+  not bugs: a drop of exactly `case_drop` is correctly not a regression, and
+  one fixture's "held" mean had in fact dropped by 0.08.
 
 ---
 
