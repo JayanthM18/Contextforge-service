@@ -47,3 +47,25 @@ export const scoreResponseSchema = z.strictObject({
   ),
 });
 export type ScoreResponse = z.infer<typeof scoreResponseSchema>;
+
+export const generateRequestSchema = z.strictObject({
+  task: z.literal("generate"),
+  size: z.number().int().min(1),
+  judge: endpointSchema.extend({ temperature: z.number(), seed: z.number().int() }),
+  embeddings: endpointSchema,
+  documents: z.array(z.strictObject({ id: z.string().min(1), text: z.string().min(1) })).min(1),
+});
+export type GenerateRequest = z.infer<typeof generateRequestSchema>;
+
+export const generateResponseSchema = z.strictObject({
+  generator: z.strictObject({ tool: z.string(), version: z.string(), model: z.string() }),
+  cases: z.array(
+    z.strictObject({
+      question: z.string().min(1),
+      ground_truth: z.string().min(1),
+      reference_document_ids: z.array(z.string()),
+      hops: z.enum(["single", "multi"]),
+    }),
+  ),
+});
+export type GenerateResponse = z.infer<typeof generateResponseSchema>;

@@ -77,3 +77,38 @@ class ScoreResponse(Strict):
     evaluator: EvaluatorInfo
     results: list[CaseResult]
 
+
+# ---------------------------------------------------------------------------
+# Test-set generation (stage 4)
+# ---------------------------------------------------------------------------
+
+
+class SourceDocument(Strict):
+    id: str = Field(min_length=1)
+    text: str = Field(min_length=1)
+
+
+class GenerateRequest(Strict):
+    task: Literal["generate"]
+    size: int = Field(ge=1, le=1000)
+    judge: Judge
+    embeddings: Endpoint
+    documents: list[SourceDocument] = Field(min_length=1)
+
+
+class GeneratedCase(Strict):
+    question: str = Field(min_length=1)
+    ground_truth: str = Field(min_length=1)
+    reference_document_ids: list[str]
+    hops: Literal["single", "multi"]
+
+
+class GeneratorInfo(Strict):
+    tool: str
+    version: str
+    model: str
+
+
+class GenerateResponse(Strict):
+    generator: GeneratorInfo
+    cases: list[GeneratedCase]

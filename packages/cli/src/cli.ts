@@ -9,11 +9,12 @@ import { Command } from "commander";
 
 import { EXIT_CODE } from "@contextforge/shared";
 
+import { datasetGenerateCommand } from "./commands/dataset.js";
 import { validateCommand } from "./commands/validate.js";
+import { exec } from "./util/exec.js";
 import { ContextForgeError, isContextForgeError } from "./util/errors.js";
-import { createLogger, isLogLevel, type LogLevel } from "./util/logger.js";
-
-const VERSION = "0.0.0";
+import { createLogger, isLogLevel, type LogLevel, type Logger } from "./util/logger.js";
+import { TOOL_VERSION } from "./util/version.js";
 
 interface GlobalOptions {
   readonly logLevel?: string;
@@ -29,26 +30,55 @@ function resolveLogLevel(raw: string | undefined): LogLevel {
   return raw;
 }
 
+function parseCount(raw: string): number {
+  const value = Number(raw);
+  if (!Number.isInteger(value) || value < 1) {
+    throw new ContextForgeError(
+      "CONFIG_INVALID",
+      `--size "${raw}" must be a whole number of at least 1`,
+    );
+  }
+  return value;
+}
+
 export function buildProgram(): Command {
   const program = new Command();
 
   program
     .name("contextforge")
     .description("CI regression testing for RAG applications")
-    .version(VERSION)
+    .version(TOOL_VERSION)
     .option("--log-level <level>", "debug | info | warn | error | silent", "info")
     // Subcommands own their exit codes; Commander must not call process.exit.
     .exitOverride();
+
+  const logger = (): Logger =>
+    createLogger({ level: resolveLogLevel(program.opts<GlobalOptions>().logLevel) });
 
   program
     .command("validate")
     .description("Parse and validate contextforge.yml")
     .requiredOption("--config <path>", "path to contextforge.yml")
     .action(async (options: { config: string }) => {
-      const logger = createLogger({
-        level: resolveLogLevel(program.opts<GlobalOptions>().logLevel),
+      await validateCommand({ configPath: options.config, logger: logger() });
+    });
+
+  const dataset = program.command("dataset").description("Manage the frozen test set");
+  dataset
+    .command("generate")
+    .description("Generate a draft test set from dataset.source_docs, for a human to review")
+    .requiredOption("--config <path>", "path to contextforge.yml")
+    .option("--size <n>", "number of cases to generate (default: dataset.size)", parseCount)
+    .option("--overwrite", "replace an existing test set; regenerating changes the exam", false)
+    .action(async (options: { config: string; size?: number; overwrite: boolean }) => {
+      await datasetGenerateCommand({
+        configPath: options.config,
+        overwrite: options.overwrite,
+        ...(options.size === undefined ? {} : { size: options.size }),
+        exec,
+        logger: logger(),
+        env: process.env,
       });
-      await validateCommand({ configPath: options.config, logger });
     });
 
   return program;
