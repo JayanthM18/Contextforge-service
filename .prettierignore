@@ -1,6 +1,10 @@
 dist/
 coverage/
 node_modules/
+.cache/
+.contextforge/
+evaluator/.venv/
+benchmark/baseline*/
 pnpm-lock.yaml
 
 # Hand-wrapped prose. These are the specs, not code; the formatter must not

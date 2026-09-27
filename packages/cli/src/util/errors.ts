@@ -12,6 +12,20 @@
 export const ERROR_CODE = {
   /** `contextforge.yml` is missing, unparseable, or fails schema validation. */
   configInvalid: "CONFIG_INVALID",
+  /** `docker` is not installed, or its daemon is not running. */
+  dockerUnavailable: "DOCKER_UNAVAILABLE",
+  /** The evaluator container failed or returned something unusable. */
+  evaluatorFailed: "EVALUATOR_FAILED",
+  /** The test set is missing, malformed, or would be overwritten by accident. */
+  datasetInvalid: "DATASET_INVALID",
+  /** The app under test would not build, start, or become healthy. */
+  appFailed: "APP_FAILED",
+  /** A Git operation failed: an unknown ref, a missing merge base. */
+  gitFailed: "GIT_FAILED",
+  /** A stored or supplied result file is missing or malformed. */
+  resultsInvalid: "RESULTS_INVALID",
+  /** Posting to GitHub failed. */
+  githubFailed: "GITHUB_FAILED",
   /** An internal invariant broke. Always a bug in ContextForge. */
   internal: "INTERNAL",
 } as const;
@@ -33,7 +47,7 @@ export class ContextForgeError extends Error {
 
   readonly code: ErrorCode;
 
-  readonly remedy: string | undefined;
+  remedy: string | undefined;
 
   constructor(code: ErrorCode, message: string, options: ContextForgeErrorOptions = {}) {
     super(message, options.cause === undefined ? undefined : { cause: options.cause });

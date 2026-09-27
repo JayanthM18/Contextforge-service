@@ -39,3 +39,15 @@ jobs:
 
       - name: Test
         run: pnpm test
+
+  evaluator:
+    # The Python evaluator is tested inside its own image, so CI proves the
+    # pinned environment works, not just the source.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build and run the evaluator tests
+        run: |
+          docker build --target test --tag contextforge-evaluator-test evaluator
+          docker run --rm contextforge-evaluator-test

@@ -10,7 +10,14 @@ import tseslint from "typescript-eslint";
  */
 export default [
   {
-    ignores: ["**/dist/**", "**/node_modules/**", "**/coverage/**", "evaluator/**"],
+    ignores: [
+      "**/dist/**",
+      "**/node_modules/**",
+      "**/coverage/**",
+      "evaluator/**",
+      ".cache/**",
+      ".contextforge/**",
+    ],
   },
   js.configs.recommended,
   ...tseslint.configs.strictTypeChecked,
@@ -39,8 +46,8 @@ export default [
     },
   },
   {
-    // This config file itself is JavaScript and outside the TS project.
-    files: ["**/*.js"],
+    // JavaScript files (this config, the scripts) are outside the TS project.
+    files: ["**/*.js", "**/*.mjs"],
     ...tseslint.configs.disableTypeChecked,
   },
   prettier,

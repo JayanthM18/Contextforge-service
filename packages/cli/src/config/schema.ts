@@ -9,17 +9,10 @@
  * (does `dataset.path` exist, is the API key variable set) live in `load.ts`.
  */
 
+import { METRICS, type Metric } from "@contextforge/shared";
 import { z } from "zod";
 
-/** The metrics ContextForge knows how to ask the evaluator for. */
-export const METRICS = [
-  "context_precision",
-  "context_recall",
-  "faithfulness",
-  "answer_relevancy",
-] as const;
-
-export type Metric = (typeof METRICS)[number];
+export { METRICS, type Metric };
 
 /** Metrics that cannot be computed without an embedding model. */
 const METRICS_NEEDING_EMBEDDINGS: readonly Metric[] = ["answer_relevancy"];

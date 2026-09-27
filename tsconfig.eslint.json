@@ -4,7 +4,11 @@
     "composite": false,
     "incremental": false,
     "noEmit": true,
-    "allowImportingTsExtensions": true
+    "allowImportingTsExtensions": true,
+    "paths": {
+      "@contextforge/shared": ["./packages/shared/src/index.ts"],
+      "@contextforge/cli": ["./packages/cli/src/index.ts"]
+    }
   },
   "include": [
     "packages/*/src/**/*.ts",

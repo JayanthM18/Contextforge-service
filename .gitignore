@@ -9,8 +9,15 @@ coverage/
 !.env.example
 
 # Run output. Benchmarks under benchmark/ are committed; scratch results are not.
+.contextforge/
 results.json
 *.local.json
 .vitest/
 
 .DS_Store
+
+# Local scratch: downloaded wheels, virtualenvs.
+.cache/
+evaluator/.venv/
+__pycache__/
+.pytest_cache/

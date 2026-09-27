@@ -1,0 +1,48 @@
+{
+  "task": "score",
+  "metrics": ["context_precision", "context_recall", "faithfulness", "answer_relevancy"],
+  "judge": {
+    "model": "gpt-4o-mini",
+    "base_url": null,
+    "api_key_env": "OPENAI_API_KEY",
+    "temperature": 0,
+    "seed": 42
+  },
+  "embeddings": {
+    "model": "text-embedding-3-small",
+    "base_url": null,
+    "api_key_env": "OPENAI_API_KEY"
+  },
+  "concurrency": 4,
+  "cases": [
+    {
+      "case_id": "tc-001",
+      "question": "What is the refund window?",
+      "ground_truth": "30 days from delivery.",
+      "answer": "Northwind accepts returns on most items within 30 days of delivery, counted from the date the carrier marks the parcel as delivered.",
+      "contexts": [
+        "Northwind Supply Co. accepts returns on most items within 30 days of delivery. The 30-day window starts on the date the carrier marks the parcel as delivered, not the date the order was placed.",
+        "The 60-day Plus return window applies to orders placed while the membership was active."
+      ]
+    },
+    {
+      "case_id": "tc-002",
+      "question": "How much does Express delivery cost?",
+      "ground_truth": "$14.95, arriving in 1 to 2 business days.",
+      "answer": "Express delivery costs $14.95 and arrives in 1 to 2 business days.",
+      "contexts": [
+        "| Standard | 3 to 5 business days | Free over $75, otherwise $6.95 |\n| Express | 1 to 2 business days | $14.95 |\n| Next Day | Next business day if ordered before 14:00 | $24.95 |"
+      ]
+    },
+    {
+      "case_id": "tc-003",
+      "question": "How long after delivery do loyalty points appear?",
+      "ground_truth": "14 days after delivery, so the return window has passed.",
+      "answer": "Loyalty points appear instantly at checkout and never expire.",
+      "contexts": [
+        "Points post 14 days after delivery, not at purchase. The delay covers the return window, so points are not earned on items that come straight back.",
+        "Points expire after 24 months of account inactivity."
+      ]
+    }
+  ]
+}

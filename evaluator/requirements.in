@@ -1,0 +1,9 @@
+# Direct dependencies. requirements.txt is the full, exact resolution of these
+# for Python 3.12 on linux/x86_64 and is what the image installs.
+#
+# instructor and openai are constrained explicitly: left alone, the resolver
+# backtracks to instructor 1.3.2 (mid-2024), which predates functions Ragas 0.4
+# calls. openai is held to 2.x, the line Ragas 0.4 was built against.
+ragas==0.4.3
+instructor>=1.11
+openai>=2,<3
