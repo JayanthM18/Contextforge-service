@@ -20,19 +20,61 @@ an entry here before the pull request is opened.
 
 ## Current state
 
-- **Stage:** 3 — gate pending. Code for stages 3–8 is built and unit tested;
-  stage 9 is prepared. No gate from stage 3 onwards has passed.
-- **Works, verified by running:** 251 TypeScript tests and 39 Python tests;
-  lint, typecheck and build clean from an empty `dist/`; the built CLI's
-  `validate`, `compare` and `report` on real files, including a regression
-  caught with exit code `1`; the Action's comment step outside a pull request.
-- **Not yet verified:** the evaluator image has never been built (Docker was
-  down all session); nothing has been scored by a real judge; no app has run
-  under the runner for real; no workflow has run on GitHub.
-- **Blocked on:** Docker running (stages 3, 5); a judge — the Tailscale/Ollama
-  box — (stages 3, 4, 6, 9); a GitHub remote (stages 7, 8 demos).
+- **Stage:** 3 — gate pending (needs a judge). Stage 5's gate passed on
+  2026-09-28. Code for stages 3–8 is built and unit tested; stage 9 prepared.
+- **Works, verified by running:** 257 TypeScript tests and 42 Python tests in
+  the evaluator image; the evaluator image builds with every pin passing
+  `pip check`; the real Ragas objects build and receive temperature 0 and seed
+  42; the runner builds, queries and tears down the sample app for both sides;
+  forced crash and timeout both fail cleanly with nothing left behind.
+- **Not yet verified:** nothing has been scored by a real judge; no workflow
+  has run on GitHub.
+- **Blocked on:** a judge — the Tailscale/Ollama box — (stages 3, 4, 6, 9);
+  a GitHub remote (stages 7, 8 demos).
 - **Measured noise floor:** not measured. `case_drop: 0.30` and the 0.05
   `mean_drop` defaults are provisional until `pnpm measure-noise` runs.
+
+---
+
+## 2026-09-28 — stages 3 and 5 — first real Docker runs
+
+**Changed:** `evaluator/requirements.{in,txt}`, `evaluator/tests/test_ragas_wiring.py`,
+`packages/cli/src/util/docker.ts`, `packages/cli/src/commands/run.ts`,
+`examples/contextforge.yml`, tests for each. Four `fix:` commits on
+`feat/stages-3-9`, after the nine stage commits.
+**Why:** Docker was down for all of the previous session, so nothing had
+touched a real container. This session ran the evaluator image and the
+runner for real, and each found something the fakes could not.
+**Decisions:**
+- `langchain-community` is capped below 0.4.2. Ragas 0.4.3 imports a module
+  0.4.2 removed, and Ragas does not cap the dependency; with it, `import
+  ragas` failed and the evaluator could not score anything.
+- The evaluator suite gained tests that build the real Ragas objects inside
+  the image. They make no network calls, and they skip on a host without
+  Ragas. The fake-scorer tests had passed throughout the broken state.
+- The Docker pre-flight also checks `docker compose version`, so a missing
+  Compose plugin is named instead of surfacing as "unknown flag".
+**Deferred:** the stage 3 determinism test and everything else needing a judge.
+**Notes:**
+- **Stage 5 gate passed.** `run --answers-only` with `PROVIDER=local` built
+  and queried the sample app at the merge base (`221e00f`) and at HEAD; all 3
+  cases answered with contract-shaped context ids, both sides identically, as
+  expected since the app did not change. A crashing app (`PROVIDER=openai`, no
+  key) failed in 2s with its own log line in the error; a never-healthy app
+  failed at the configured 10s `startup_timeout` showing the last response,
+  `HTTP 404`. Both left no containers, networks, volumes or worktrees.
+- **Real error path verified:** a judge at an unreachable address raised a
+  real `APIConnectionError` inside Ragas's wrapping; `find_fatal` found it and
+  the evaluator exited 2 after about 20s of client retries.
+- **Environment problems, both outside the code:** the machine was running a
+  kernel whose modules the package manager had already replaced, so `overlay`
+  could not load and every container failed (fixed by rebooting); and the same
+  update removed the Docker Compose plugin (fixed with `pacman -S
+  docker-compose`).
+- **Two real bugs found by the first runs:** the answers-only baseline
+  inherited the candidate's "uncommitted changes" note; and the example config
+  did not pass `PROVIDER` through, so the documented offline command could not
+  have worked. Both fixed and tested.
 
 ---
 

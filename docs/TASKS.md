@@ -4,11 +4,10 @@ Nine stages. Each ends with something runnable, a demo command you run
 yourself, and a review gate. Do not start a stage before the previous gate has
 passed. Append to `docs/MEMORY.md` at every gate.
 
-**Current stage: 3 — gate pending.** Code for stages 3–8 is built and unit
-tested, and stage 9 is prepared. No gate from stage 3 onwards has passed yet:
-each needs Docker running, a reachable judge, or a GitHub remote. The status
-line under each stage says which.
-
+**Current stage: 3 — gate pending (needs a judge).** Stage 5's gate passed
+on 2026-09-28 with real Docker. Code for stages 3–8 is built and unit tested,
+and stage 9 is prepared. The status line under each stage says what its gate
+still needs.
 ---
 
 ## Stage 0 — Scaffold ✅
@@ -47,7 +46,7 @@ contexts, writes a JSON file of per-case scores. No Git or CI awareness.
 - Demo: `docker run ... evaluator < fixtures/sample-results.json` prints scores
 - Gate: the same input twice at temperature 0 scores within a documented tolerance
 - Owner: _____
-- **Status:** built; 39 Python tests pass. Gate needs Docker (image build) and a judge (determinism test).
+- **Status:** image builds and 42 tests pass inside it (2026-09-28); real Ragas objects verified. Gate needs a judge (determinism test).
 
 ## Stage 4 — Dataset generation
 
@@ -59,7 +58,7 @@ source documents, for a human to review and commit.
 - Owner: _____
 - **Status:** built and tested. Gate needs a judge to generate and review 20 real cases.
 
-## Stage 5 — Runner (dual mode)
+## Stage 5 — Runner (dual mode) ✅
 
 Build and start baseline and candidate through Compose, health-check, query
 every case, collect answers and contexts, tear down cleanly on success and on
@@ -68,7 +67,7 @@ failure.
 - Demo: `contextforge run --mode dual --baseline main --candidate HEAD` writes two result files
 - Gate: no stray containers after a forced failure; `startup_timeout` honoured
 - Owner: _____
-- **Status:** built; teardown-after-failure and timeouts tested with a fake Docker. Gate needs a real Docker run.
+- **Status:** ✅ gate passed 2026-09-28: both sides built and answered; contract ids present; a crashing app failed in 2s, a never-healthy one at the 10s startup_timeout; no containers, networks or worktrees left behind.
 
 ## Stage 6 — Comparator, thresholds and the noise floor
 
