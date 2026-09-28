@@ -1,8 +1,11 @@
 # The reference config with the judge on a self-hosted, OpenAI-compatible
 # server — for example Ollama on another machine, reached over Tailscale.
 #
-# The judge below is the Tailscale IP of the GPU machine. Use an IP rather
-# than a MagicDNS name: containers do not always resolve MagicDNS names.
+# `judge-box` below is a placeholder for the machine running Ollama. Copy
+# this file to contextforge.local-judge.local.yml (git-ignored) and put the
+# machine's real address in its base_url lines; scripts/demo.sh uses that copy
+# automatically, and other commands take it with --config. Prefer an IP address,
+# such as the machine's Tailscale IP: containers do not always resolve MagicDNS names.
 #
 # Nothing else changes: the evaluator speaks the same protocol to Ollama as to
 # OpenAI, so this is configuration, not a code path. Scores from this judge are

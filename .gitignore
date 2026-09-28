@@ -12,6 +12,8 @@ coverage/
 .contextforge/
 results.json
 *.local.json
+# Machine-specific configs, such as the real address of your judge.
+*.local.yml
 .vitest/
 
 .DS_Store
