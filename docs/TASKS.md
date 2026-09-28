@@ -4,11 +4,11 @@ Nine stages. Each ends with something runnable, a demo command you run
 yourself, and a review gate. Do not start a stage before the previous gate has
 passed. Append to `docs/MEMORY.md` at every gate.
 
-**Current stage: 7 — blocked on a GitHub remote.** Stages 3–6 have passed their
-gates (2026-09-28), against a real judge where one is needed. Stages 7 and 8
-are built and unit tested but their demos need the repository on GitHub.
-Stage 9 has been partly demonstrated. The status line under each stage says
-what its gate still needs.
+**Current stage: 8 — Action and reporting.** Stages 3–7 have passed their
+gates (2026-09-28), against a real judge where one is needed; stage 7's on
+GitHub, with CI judging through the self-hosted Ollama server. Stage 8 is built
+and unit tested; its demo needs a blocked merge. Stage 9 has been partly
+demonstrated. The status line under each stage says what its gate still needs.
 
 ---
 
@@ -82,7 +82,7 @@ noise floor and it goes in `docs/MEMORY.md`.
 - Owner: _____
 - **Status:** ✅ gate passed 2026-09-28: five self-comparisons with the real judge drifted by exactly 0 on every metric; defaults kept at 0.05 and 0.30, above it and above one flipped case (0.029). Still to try: `reasoning_effort: low` against `none` for accuracy.
 
-## Stage 7 — Cached benchmark mode
+## Stage 7 — Cached benchmark mode ✅
 
 The push-to-main workflow writes `benchmark/baseline/<sha>.json`. Pull requests
 resolve the merge base, check the fingerprint, and choose: stored scores,
@@ -91,7 +91,7 @@ re-judge stored answers, or dual mode.
 - Demo: open a PR; CI builds only the candidate and still returns a verdict
 - Gate: cached and dual mode agree on the same PR; every fingerprint branch has a test
 - Owner: _____
-- **Status:** built; every fingerprint branch tested; cached and dual agree on fake scores. CI can now reach the self-hosted judge (`scripts/ci-judge-config.sh`); the real-PR demo waits on the Tailscale OAuth client and the `JUDGE_HOST` secret.
+- **Status:** ✅ gate passed 2026-09-28 on GitHub. Cached and dual mode gave the same verdict on the same PR, for a pass (#2) and a regression (#4); a cached PR check built only the candidate (7 min for 34 cases).
 
 ## Stage 8 — Action and reporting
 

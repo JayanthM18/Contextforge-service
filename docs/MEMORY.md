@@ -20,9 +20,9 @@ an entry here before the pull request is opened.
 
 ## Current state
 
-- **Stage:** 7 — blocked on a GitHub remote. Stages 3–6 passed their gates on
-  2026-09-28. Stages 7 and 8 are built and unit tested; their demos need the
-  repository on GitHub. Stage 9 is partly demonstrated.
+- **Stage:** 8 — Action and reporting. Stages 3–7 passed their gates on
+  2026-09-28; stage 7's on GitHub. Stage 8 is built and unit tested; its demo
+  needs a blocked merge. Stage 9 is partly demonstrated.
 - **Test set:** `benchmark/testcases.json`, 34 cases, reviewed by hand.
 - **Judge:** qwen3:14b with `reasoning_effort: none`, and nomic-embed-text,
   on Ollama on the GPU machine, over Tailscale at `judge-box`
@@ -31,12 +31,64 @@ an entry here before the pull request is opened.
   the evaluator image; scoring and generation against the real judge; the
   runner against the sample app; a breaking change flagged and a harmless one
   passed (`scripts/demo.sh`).
-- **Not yet verified:** stage 9 in full, and any workflow on GitHub.
-- **Repository:** github.com/JayanthM18/ContextForge, private. `ci` passes on
-  GitHub; `benchmark` is disabled there until a CI judge exists (stages 7–8).
+- **Also verified on GitHub:** `benchmark` stores a baseline on every push to
+  `main`, and `pr-check` gives verdicts in cached and dual mode, both judging
+  through the self-hosted Ollama server over Tailscale.
+- **Not yet verified:** stage 9 in full; a merge actually blocked (stage 8).
+- **Repository:** github.com/JayanthM18/ContextForge, private. Secrets:
+  `TS_OAUTH_CLIENT_ID`, `TS_OAUTH_SECRET`, `JUDGE_HOST`. The GPU machine must
+  be on for `benchmark` and `pr-check` to reach a verdict.
 - **Measured noise floor:** **0.000 within a session** (five back-to-back
   self-comparisons); **up to 0.075 between sessions** (faithfulness, 10 cases,
   runs hours apart). Defaults kept at `mean_drop: 0.05` and `case_drop: 0.30`.
+
+---
+
+## 2026-09-28 — stage 7 — gate passed on GitHub
+
+**Changed:** `packages/action/action.yml` uploads hidden paths, so the report
+artifact exists at last; verdict notes say "1 case" rather than "1 cases".
+`benchmark` re-enabled on GitHub. Demo PRs #1–#4 opened, not for merging.
+**Why:** stage 7's gate: cached and dual mode must agree on the same PR.
+**Decisions:**
+- **The gate was run on a pass and on a regression.** PR #2 (harmless rename)
+  and PR #4 (retrieval cut to 1 passage, in `pipeline.ts`) each ran cached on
+  `pull_request`, then dual by hand through `pr-check`'s manual trigger.
+- **PR #4 exists because PR #1 could not run cached.** #1 made the same cut
+  in the Compose file, which changes the app environment's fingerprint, so
+  ContextForge rightly rebuilt both sides. A regression made in code keeps
+  the stored baseline.
+- Demo PRs left open for stage 8's comment and blocked-merge demo.
+**Deferred:** a merge actually blocked (stage 8). Branch protection is not
+available for private repositories on GitHub's free plan.
+**Notes:**
+
+| PR | change | mode | verdict | regressed | recall Δ | faithfulness Δ | time |
+|---|---|---|---|---|---:|---:|---:|
+| #2 | rename locals | cached | pass | 1 | 0.000 | −0.004 | 16 min* |
+| #2 | rename locals | dual | pass | 1 | — | — | 26 min* |
+| #4 | top_k 1, in code | cached | **fail** | 14 | −0.252 | −0.183 | 7 min |
+| #4 | top_k 1, in code | dual | **fail** | 13 | −0.252 | −0.183 | 16 min |
+| #1 | top_k 1, in Compose | dual (forced) | **fail** | 14 | −0.252 | −0.180 | 21 min* |
+| #3 | prompt without grounding rules | cached | pass | 0 | 0.000 | +0.005 | — |
+
+\* shared the GPU with another run. #2's dual numbers were lost to the
+artifact bug below; its log gives the verdict and the one regressed case.
+- **Cached and dual agree** on verdict, on 13 of the 14 regressed cases, and
+  on every metric delta within 0.004. The one difference, tc-016, and a
+  baseline faithfulness 0.017 lower in dual than stored, are the
+  between-session noise recorded earlier.
+- **The prompt scenario is not a regression for qwen3:14b.** Without its
+  grounding rules the model still answers from the passages it is given;
+  relevancy even rose (+0.044). The tool was right to pass it. Stage 9's
+  sloppy-prompt scenario needs a stronger change for this model, or it
+  should be expected to pass.
+- **No report artifact had ever been uploaded:** `upload-artifact@v4` skips
+  hidden paths by default and the output is `.contextforge`. Found because
+  the dual run's numbers could not be downloaded; fixed, and PR #4's runs
+  uploaded theirs.
+- One cached PR check: 7 minutes for 34 cases, a quarter of it setup. The
+  judge's address never appeared in a log: GitHub masks the secret.
 
 ---
 
