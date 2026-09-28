@@ -20,19 +20,69 @@ an entry here before the pull request is opened.
 
 ## Current state
 
-- **Stage:** 3 — gate pending (needs a judge). Stage 5's gate passed on
-  2026-09-28. Code for stages 3–8 is built and unit tested; stage 9 prepared.
-- **Works, verified by running:** 257 TypeScript tests and 42 Python tests in
-  the evaluator image; the evaluator image builds with every pin passing
-  `pip check`; the real Ragas objects build and receive temperature 0 and seed
-  42; the runner builds, queries and tears down the sample app for both sides;
-  forced crash and timeout both fail cleanly with nothing left behind.
-- **Not yet verified:** nothing has been scored by a real judge; no workflow
-  has run on GitHub.
-- **Blocked on:** a judge — the Tailscale/Ollama box — (stages 3, 4, 6, 9);
-  a GitHub remote (stages 7, 8 demos).
+- **Stage:** 4 — next. Stage 3's gate passed on 2026-09-28 against a real
+  judge, and stage 5's gate passed the same day with real Docker. Code for
+  stages 4, 6, 7 and 8 is built and unit tested; stage 9 prepared.
+- **Judge:** qwen3:14b with `reasoning_effort: none`, and nomic-embed-text,
+  on Ollama on the GPU machine, reached over Tailscale at `judge-box`
+  (`examples/contextforge.local-judge.yml`). Connections go through the Tailscale
+  relay rather than directly.
+- **Works, verified by running:** 260 TypeScript tests (test files now
+  typechecked too) and 43 Python tests in the evaluator image; scoring against
+  the real judge; the runner against the sample app, including forced failures.
+- **Not yet verified:** dataset generation, the noise floor, stage 9, and any
+  workflow on GitHub.
+- **Blocked on:** nothing for stages 4, 6 and 9; a GitHub remote for the
+  stage 7 and 8 demos.
 - **Measured noise floor:** not measured. `case_drop: 0.30` and the 0.05
   `mean_drop` defaults are provisional until `pnpm measure-noise` runs.
+
+---
+
+## 2026-09-28 — stage 3 — gate passed against a real judge
+
+**Changed:** `judge.reasoning_effort` added end to end — config, evaluator
+request, both Python code paths, fingerprint, the cached-mode decision and
+the comparability check — with `docs/DESIGN.md` sections 2, 3 and 7.
+`pnpm typecheck` now covers test files. The local-judge config points at the
+GPU machine.
+**Why:** the judge became reachable over Tailscale, so stage 3's gate could run.
+**Decisions:**
+- **Thinking is switched off for judging, via OpenAI's own `reasoning_effort`
+  parameter.** Qwen3 generated 246 tokens to produce the 14-character verdict
+  `{"verdict": 1}`, and 8 with `reasoning_effort: none`. Thinking makes every
+  one of ~360 calls per run slower, and it counts against Ragas's 1024-token
+  response cap, so a long think could leave no answer to parse. Ollama ignored
+  `think: false` on its OpenAI endpoint, and Qwen3 ignored a `/no_think`
+  system prompt; only `reasoning_effort` worked.
+- It is **optional and unset by default**, because non-reasoning models such as
+  gpt-4o-mini reject the parameter. It is **fingerprinted as part of the
+  judge**, because thinking changes verdicts: changing it re-scores the stored
+  answers.
+- Ollama returns thinking in a separate `reasoning` field, so even with it on
+  the answer text was clean JSON. The fear that thinking would break Ragas's
+  parsing was unfounded; its cost is time and token budget.
+**Deferred:** comparing `reasoning_effort: low` against `none` for accuracy,
+during the stage 6 noise measurement (see below).
+**Notes:**
+- **Stage 3 gate passed.** `evaluator/tests/test_integration.py` scored the
+  three fixture cases twice with qwen3:14b (thinking off) and nomic-embed-text:
+  every metric's mean was identical across the runs (spread 0.000 against the
+  provisional 0.05 tolerance), and the fabricated answer scored below the
+  grounded one. 67s for both tests over the Tailscale relay.
+- Per-case scores were sensible with one exception. Faithfulness gave the
+  fabricated answer 0.00 and both grounded answers 1.00. But **context_recall
+  gave tc-003 0.00**, although its retrieved context says "Points post 14 days
+  after delivery", which supports the ground truth. The same answer came back
+  on every run, so it is a wrong verdict, not noise. With a one-sentence
+  ground truth, recall is 0 or 1, so one wrong call flips a whole case. It may
+  be the price of turning thinking off; worth testing `low` in stage 6.
+- **Typechecking the tests found seven silent errors.** Vitest strips types
+  without checking them. The worst: an edit adding `task` to a test object in
+  stage 4 had never applied — the replacement ran without an assertion after
+  Prettier had reformatted the target — so those tests built Docker arguments
+  with an `undefined` subcommand and passed, because they only inspected the
+  network flags. A test now checks the subcommand.
 
 ---
 

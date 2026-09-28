@@ -4,10 +4,11 @@ Nine stages. Each ends with something runnable, a demo command you run
 yourself, and a review gate. Do not start a stage before the previous gate has
 passed. Append to `docs/MEMORY.md` at every gate.
 
-**Current stage: 3 — gate pending (needs a judge).** Stage 5's gate passed
-on 2026-09-28 with real Docker. Code for stages 3–8 is built and unit tested,
-and stage 9 is prepared. The status line under each stage says what its gate
-still needs.
+**Current stage: 4.** Stages 3 and 5 passed their gates on 2026-09-28, stage
+3 against a real judge. Code for stages 4, 6, 7 and 8 is built and unit
+tested, and stage 9 is prepared. The status line under each stage says what
+its gate still needs.
+
 ---
 
 ## Stage 0 — Scaffold ✅
@@ -38,7 +39,7 @@ errors that name the offending key.
 - Gate: tests cover at least six invalid configs; every error names the bad key
 - Owner: _____
 
-## Stage 3 — Evaluator container
+## Stage 3 — Evaluator container ✅
 
 Python and Ragas in `evaluator/`. Reads a JSON file of cases with answers and
 contexts, writes a JSON file of per-case scores. No Git or CI awareness.
@@ -46,7 +47,7 @@ contexts, writes a JSON file of per-case scores. No Git or CI awareness.
 - Demo: `docker run ... evaluator < fixtures/sample-results.json` prints scores
 - Gate: the same input twice at temperature 0 scores within a documented tolerance
 - Owner: _____
-- **Status:** image builds and 42 tests pass inside it (2026-09-28); real Ragas objects verified. Gate needs a judge (determinism test).
+- **Status:** ✅ gate passed 2026-09-28 with qwen3:14b (thinking off) and nomic-embed-text: every mean identical across two runs (spread 0.000 against a 0.05 tolerance); the fabricated answer scored below the grounded ones.
 
 ## Stage 4 — Dataset generation
 
@@ -56,7 +57,7 @@ source documents, for a human to review and commit.
 - Demo: generate 20 cases from the sample app's documents, read them, delete the bad ones
 - Gate: file matches the benchmark format; regeneration is always an explicit command
 - Owner: _____
-- **Status:** built and tested. Gate needs a judge to generate and review 20 real cases.
+- **Status:** built and tested; the judge is now reachable. Next: generate and review 20 real cases.
 
 ## Stage 5 — Runner (dual mode) ✅
 
@@ -78,7 +79,7 @@ noise floor and it goes in `docs/MEMORY.md`.
 - Demo: `contextforge compare a.json b.json` prints a verdict and the regressed cases
 - Gate: noise floor measured and recorded; defaults sit above it; comparison logic is pure and fully unit tested
 - Owner: _____
-- **Status:** comparator built and fully unit tested. Noise floor not measured: needs a judge (`pnpm measure-noise`).
+- **Status:** comparator built and fully unit tested. Noise floor not measured yet; the judge is now reachable (`pnpm measure-noise`). Also compare `reasoning_effort: low` with `none` for accuracy.
 
 ## Stage 7 — Cached benchmark mode
 
@@ -110,7 +111,7 @@ each one.
 - Demo: a results table of regressions introduced versus regressions detected
 - Gate: every deliberate regression flagged, harmless refactor passes, numbers recorded for the report
 - Owner: _____
-- **Status:** prepared (`pnpm validate-regressions`). Not run: needs a judge and a real app provider.
+- **Status:** prepared (`pnpm validate-regressions`). Not run yet; the judge is reachable, and the sample app can answer through the same Ollama server (see `examples/contextforge.local-judge.yml`).
 
 ---
 
