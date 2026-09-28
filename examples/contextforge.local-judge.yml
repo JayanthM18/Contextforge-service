@@ -33,7 +33,8 @@ app:
     [PROVIDER, OPENAI_API_KEY, OPENAI_BASE_URL, GENERATION_MODEL, EMBEDDING_MODEL, TOP_K]
 
 dataset:
-  path: testcases.json
+  # The frozen test set, generated in stage 4 and reviewed by hand.
+  path: ../benchmark/testcases.json
   source_docs: sample-rag-app/docs/knowledge-base
   size: 40
 

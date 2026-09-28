@@ -1,0 +1,321 @@
+{
+  "dataset_version": 1,
+  "generated_at": "2026-09-28T06:58:50Z",
+  "generator": {
+    "tool": "ragas, reviewed and edited by hand",
+    "version": "0.4.3",
+    "model": "qwen3:14b"
+  },
+  "cases": [
+    {
+      "id": "tc-001",
+      "question": "how long does it take to verify identity with support if you lose both the authenticator and recovery codes?",
+      "ground_truth": "losing both the authenticator and the recovery codes means identity verification with support, which takes up to 5 business days.",
+      "reference_context_ids": [
+        "account-and-login.md"
+      ],
+      "hops": "single"
+    },
+    {
+      "id": "tc-002",
+      "question": "What payment terms do approved business accounts get?",
+      "ground_truth": "Net 30 payment terms.",
+      "reference_context_ids": [
+        "bulk-and-business-orders.md"
+      ],
+      "hops": "single"
+    },
+    {
+      "id": "tc-003",
+      "question": "What is the prepaied lable used for when an item is damaged in transit?",
+      "ground_truth": "A replacement is shipped immediately, and a prepaid label is sent so the damaged item can be returned; you do not wait for the return to arrive.",
+      "reference_context_ids": [
+        "damaged-or-missing-items.md"
+      ],
+      "hops": "single"
+    },
+    {
+      "id": "tc-004",
+      "question": "What is the shipping policy for exchanges under standard delivery?",
+      "ground_truth": "Exchanges ship free by Standard delivery within the country of the original order. Upgrading the replacement to Express costs the usual Express fee. We do not exchange across borders.",
+      "reference_context_ids": [
+        "exchanges.md"
+      ],
+      "hops": "single"
+    },
+    {
+      "id": "tc-005",
+      "question": "what is the shipping and delivery timelines and how does northwind plus subscription affect it",
+      "ground_truth": "shipping and delivery timelines are as follows: orders placed before 14:00 local warehouse time on a business day are picked the same day. standard delivery takes 3 to 5 business days, express takes 1 to 2 business days, and next day takes next business day if ordered before 14:00. northwind plus subscription includes free express delivery with no minimum order value.",
+      "reference_context_ids": [
+        "shipping-and-delivery.md",
+        "subscription-plans.md"
+      ],
+      "hops": "multi"
+    },
+    {
+      "id": "tc-006",
+      "question": "How does the return window interact with membership status, and what is the duration of the extended return window for Northwind Plus subscribers?",
+      "ground_truth": "The return window for Northwind Plus subscribers is extended to 60 days instead of the standard 30-day window. This extended return window applies to orders placed while the membership was active. Letting a membership lapse does not shorten the return window on orders that were already placed. The 60-day return window is a benefit of the Northwind Plus subscription plan.",
+      "reference_context_ids": [
+        "subscription-plans.md"
+      ],
+      "hops": "single"
+    },
+    {
+      "id": "tc-007",
+      "question": "Do customers in the EU have any return rights beyond the 30-day return window?",
+      "ground_truth": "Yes. EU customers also have the statutory 14-day right of withdrawal, which runs in parallel with the 30-day return window and is not reduced by it.",
+      "reference_context_ids": [
+        "international-orders.md"
+      ],
+      "hops": "single"
+    },
+    {
+      "id": "tc-008",
+      "question": "How does exchanging an item for a different size or colour differ from swapping it for a different product?",
+      "ground_truth": "A different size or colour is an advance exchange: choose Exchange in the Returns Centre and the replacement ships as soon as the return label is scanned, available once per order. A different product is handled as a refund plus a new order you place yourself, with any price difference settled at current prices.",
+      "reference_context_ids": [
+        "exchanges.md"
+      ],
+      "hops": "single"
+    },
+    {
+      "id": "tc-009",
+      "question": "what is the express shipping cost and how long does it take to deliver when you choose express for an exchange?",
+      "ground_truth": "the express shipping cost is $14.95 and it takes 1 to 2 business days to deliver when you choose express for an exchange.",
+      "reference_context_ids": [
+        "exchanges.md",
+        "shipping-and-delivery.md"
+      ],
+      "hops": "multi"
+    },
+    {
+      "id": "tc-010",
+      "question": "If I delete my account, what happens to my order records?",
+      "ground_truth": "They are not deleted. Order records are kept for 7 years to meet tax and accounting obligations, in a restricted form that is not linked to a live account.",
+      "reference_context_ids": [
+        "privacy-and-data.md"
+      ],
+      "hops": "single"
+    },
+    {
+      "id": "tc-011",
+      "question": "If I paid for an order partly with a gift card, how is the refund split?",
+      "ground_truth": "The gift card portion goes back to the gift card and the remainder to the original payment method. A gift card balance is never refunded as cash.",
+      "reference_context_ids": [
+        "gift-cards.md"
+      ],
+      "hops": "single"
+    },
+    {
+      "id": "tc-012",
+      "question": "What is the proceudre for making a waranty claim for a defected Northwind-branded product, and how long does it take to get a decision?",
+      "ground_truth": "The procedure for making a warranty claim for a defected Northwind-branded product involves submitting photographs of the defect and the original order number through the Warranty Claim form. A decision takes up to 10 business days. Approved claims ship the repair or replacement free; you pay nothing for return postage.",
+      "reference_context_ids": [
+        "warranty.md"
+      ],
+      "hops": "single"
+    },
+    {
+      "id": "tc-013",
+      "question": "whats the phoone support hours?",
+      "ground_truth": "Phone support runs 09:00 to 17:00 on business days.",
+      "reference_context_ids": [
+        "contacting-support.md"
+      ],
+      "hops": "single"
+    },
+    {
+      "id": "tc-014",
+      "question": "What are the customs and duty policies for orders shipped to the European Union?",
+      "ground_truth": "Orders shipped within the European Union from their own regional warehouse are delivered duty paid. You pay nothing further on arrival and the carrier will not ask you for money.",
+      "reference_context_ids": [
+        "customs-and-duties.md"
+      ],
+      "hops": "single"
+    },
+    {
+      "id": "tc-015",
+      "question": "What should I do if an item is missing from my multi-item parcel?",
+      "ground_truth": "Check the packing slip first: a split shipment means the remainder is still in transit and the slip will say so. If the slip lists an item that is not in the box, report it as missing.",
+      "reference_context_ids": [
+        "damaged-or-missing-items.md"
+      ],
+      "hops": "single"
+    },
+    {
+      "id": "tc-016",
+      "question": "Does the company accept cryptocurrency as a payment method?",
+      "ground_truth": "No, the company does not accept cryptocurrency as a payment method.",
+      "reference_context_ids": [
+        "payment-methods.md"
+      ],
+      "hops": "single"
+    },
+    {
+      "id": "tc-017",
+      "question": "whats the plus earlly accees policy for price drops and refunds?",
+      "ground_truth": "During Plus early access events, prices are final for the duration of the event. Items bought at full price in the 14 days before an event are eligible for the price drop refund, which is the main reason to buy early rather than wait.",
+      "reference_context_ids": [
+        "price-matching.md"
+      ],
+      "hops": "single"
+    },
+    {
+      "id": "tc-018",
+      "question": "What is the paymet processor responsible for?",
+      "ground_truth": "Payment card numbers are handled by our payment processor and never reach Northwind systems.",
+      "reference_context_ids": [
+        "privacy-and-data.md"
+      ],
+      "hops": "single"
+    },
+    {
+      "id": "tc-019",
+      "question": "how do i start a return at the returns centre?",
+      "ground_truth": "Open the Returns Centre in your account, select the order, and choose the items you are sending back.",
+      "reference_context_ids": [
+        "returns-and-refunds.md"
+      ],
+      "hops": "single"
+    },
+    {
+      "id": "tc-020",
+      "question": "How does the refund timeline interact with the points posting delay for customers returning items?",
+      "ground_truth": "The refund timeline begins once the warehouse has inspected the returned item, which takes up to 3 business days from the moment the parcel is scanned in. After inspection, the refund is released immediately, though the card issuer may take an additional 5 to 10 business days to post it to the customer's statement. Meanwhile, trailhead loyalty points post 14 days after delivery, not at the time of purchase. This delay ensures that points are not earned on items that are returned, and a refund removes the points that the item earned.",
+      "reference_context_ids": [
+        "returns-and-refunds.md",
+        "loyalty-program.md"
+      ],
+      "hops": "multi"
+    },
+    {
+      "id": "tc-021",
+      "question": "how long do i have to return an item and how long does it take to get my money back after sending it back",
+      "ground_truth": "you have 30 days to return an item after the carrier marks the parcel as delivered. once you send the item back, it takes up to 3 business days for the warehouse to inspect the returned item. after inspection, the refund is released immediately, but the card issuer may take a further 5 to 10 business days to post it to your statement.",
+      "reference_context_ids": [
+        "returns-and-refunds.md"
+      ],
+      "hops": "single"
+    },
+    {
+      "id": "tc-022",
+      "question": "How can a customer use a gift card in combination with Trailhead loyalty points during checkout, and what are the limitations of this combination?",
+      "ground_truth": "A customer can use a gift card in combination with Trailhead loyalty points during checkout, as points can be redeemed in blocks of 100 at checkout and combined with a gift card. However, this combination cannot be used with a percentage-off promotion code. Additionally, gift cards are applied before any card or wallet payment, and points are not earned on gift card purchases.",
+      "reference_context_ids": [
+        "loyalty-program.md",
+        "gift-cards.md"
+      ],
+      "hops": "multi"
+    },
+    {
+      "id": "tc-023",
+      "question": "how long does it take for email support to respond to a customer query?",
+      "ground_truth": "email is answered within one business day",
+      "reference_context_ids": [
+        "contacting-support.md"
+      ],
+      "hops": "single"
+    },
+    {
+      "id": "tc-024",
+      "question": "What is the minimum order for business pricing?",
+      "ground_truth": "Any order above $2,500, or 12 or more units of a single item, qualifies for business pricing.",
+      "reference_context_ids": [
+        "bulk-and-business-orders.md"
+      ],
+      "hops": "single"
+    },
+    {
+      "id": "tc-025",
+      "question": "How is the storefront for an order chosen?",
+      "ground_truth": "By the delivery address at checkout, not by the shopper's location. A visitor in Germany sending a gift to a Canadian address checks out on the Canadian storefront and is billed in Canadian dollars.",
+      "reference_context_ids": [
+        "international-orders.md"
+      ],
+      "hops": "single"
+    },
+    {
+      "id": "tc-026",
+      "question": "What does the Summit tier of the Trailhead loyalty program give, and how do you reach it?",
+      "ground_truth": "Spending $500 in a calendar year reaches Summit tier, which adds free Express delivery and a dedicated support queue. The tier is assessed on 1 January and held for the whole of the following year.",
+      "reference_context_ids": [
+        "loyalty-program.md"
+      ],
+      "hops": "single"
+    },
+    {
+      "id": "tc-027",
+      "question": "Which items can't be returned?",
+      "ground_truth": "Perishable food, climbing rope cut to a custom length, personalised engraving, any item marked Final Sale, and gift cards.",
+      "reference_context_ids": [
+        "returns-and-refunds.md"
+      ],
+      "hops": "single"
+    },
+    {
+      "id": "tc-028",
+      "question": "I found a defect four months after delivery. Should I return the item or make a warranty claim?",
+      "ground_truth": "Make a warranty claim. A return is for changing your mind and closes 30 days after delivery; the warranty covers defects for 2 years from the delivery date.",
+      "reference_context_ids": [
+        "warranty.md"
+      ],
+      "hops": "single"
+    },
+    {
+      "id": "tc-029",
+      "question": "Can I cancel an order after it has been dispatched?",
+      "ground_truth": "No. Once an order is Dispatched it can no longer be cancelled; refuse the delivery at the door or return the item under the normal 30-day policy.",
+      "reference_context_ids": [
+        "cancellations.md"
+      ],
+      "hops": "single"
+    },
+    {
+      "id": "tc-030",
+      "question": "Who does Northwind share my personal data with?",
+      "ground_truth": "Addresses with carriers to deliver, and transaction data with the payment processor and with tax authorities where required. Northwind does not sell personal data.",
+      "reference_context_ids": [
+        "privacy-and-data.md"
+      ],
+      "hops": "single"
+    },
+    {
+      "id": "tc-031",
+      "question": "How long will a store or a locker hold my pickup order?",
+      "ground_truth": "10 calendar days at a store and 3 calendar days at a locker. Uncollected orders are returned to the warehouse and refunded in full automatically, including any shipping paid.",
+      "reference_context_ids": [
+        "store-pickup.md"
+      ],
+      "hops": "single"
+    },
+    {
+      "id": "tc-032",
+      "question": "If I return an item at a Northwind store, how quickly is the refund released?",
+      "ground_truth": "The same day: store returns are inspected on the spot, rather than after warehouse inspection.",
+      "reference_context_ids": [
+        "store-pickup.md"
+      ],
+      "hops": "single"
+    },
+    {
+      "id": "tc-033",
+      "question": "What does the warranty on Northwind-branded gear cover?",
+      "ground_truth": "Defects in materials and workmanship for 2 years from delivery, including seam failure, delamination, zip and buckle failure, broken frames, and coatings that fail under normal use.",
+      "reference_context_ids": [
+        "warranty.md"
+      ],
+      "hops": "single"
+    },
+    {
+      "id": "tc-034",
+      "question": "Does a price-drop refund restart the 30-day return window?",
+      "ground_truth": "No. A price adjustment does not restart the return window; it still runs from the original delivery date.",
+      "reference_context_ids": [
+        "price-matching.md"
+      ],
+      "hops": "single"
+    }
+  ]
+}

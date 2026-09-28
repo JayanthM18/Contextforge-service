@@ -18,10 +18,8 @@ app:
   env_passthrough: [OPENAI_API_KEY, PROVIDER]
 
 dataset:
-  # A three-case example so this config validates today. The real 40-case set
-  # is generated into benchmark/testcases.json by `contextforge dataset
-  # generate` in stage 4.
-  path: testcases.json
+  # The frozen test set: generated in stage 4, reviewed and edited by hand.
+  path: ../benchmark/testcases.json
   source_docs: sample-rag-app/docs/knowledge-base
   size: 40
 
