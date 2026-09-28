@@ -1,9 +1,8 @@
 # The reference config with the judge on a self-hosted, OpenAI-compatible
 # server — for example Ollama on another machine, reached over Tailscale.
 #
-# Before using it, replace `judge-box` below with that machine's address.
-# Prefer its Tailscale IP (100.x.y.z): containers do not always resolve
-# MagicDNS names.
+# The judge below is the Tailscale IP of the GPU machine. Use an IP rather
+# than a MagicDNS name: containers do not always resolve MagicDNS names.
 #
 # Nothing else changes: the evaluator speaks the same protocol to Ollama as to
 # OpenAI, so this is configuration, not a code path. Scores from this judge are
@@ -47,6 +46,9 @@ evaluation:
     api_key_env: null
     temperature: 0
     seed: 42
+    # Qwen3 thinks before every answer unless told not to: 246 tokens for a
+    # 14-character verdict. Off, the same verdict takes 8.
+    reasoning_effort: none
   embeddings:
     provider: openai
     model: nomic-embed-text
