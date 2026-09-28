@@ -5,7 +5,7 @@
  * Nothing here knows how a score is computed; that is the evaluator's job.
  */
 
-import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { mkdtemp, readdir, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -13,6 +13,7 @@ import { fileURLToPath } from "node:url";
 import type { z } from "zod";
 
 import type { Config } from "../config/schema.js";
+import { hashData, sha256 } from "../dataset/hash.js";
 import { baseEnv } from "../util/docker.js";
 import { ContextForgeError } from "../util/errors.js";
 import { type Exec, tail } from "../util/exec.js";
@@ -38,19 +39,43 @@ export interface EvaluatorOptions {
   readonly user?: string | null;
 }
 
-export function evaluatorImage(env: Record<string, string | undefined>): string {
+/**
+ * A hash of exactly the files baked into the image: the Dockerfile, the pinned
+ * requirements and the Python app. Tests and docs are excluded, so editing
+ * them does not force a rebuild.
+ */
+export async function evaluatorSourceHash(dir: string = EVALUATOR_DIR): Promise<string> {
+  const app = (await readdir(path.join(dir, "app"), { recursive: true }))
+    .filter((file) => file.endsWith(".py"))
+    .map((file) => `app/${file.split(path.sep).join("/")}`);
+  const files = ["Dockerfile", "requirements.txt", ...app].sort();
+
+  const entries: [string, string][] = [];
+  for (const file of files) entries.push([file, sha256(await readFile(path.join(dir, file)))]);
+  return hashData(entries).slice("sha256:".length, "sha256:".length + 12);
+}
+
+/**
+ * The image to use. The tag carries a hash of the evaluator's sources, not
+ * only the tool version: with a version-only tag, changing the evaluator's
+ * code silently reused the old image until someone rebuilt it by hand.
+ */
+export function evaluatorImage(
+  env: Record<string, string | undefined>,
+  sourceHash: string,
+): string {
   const override = env.CONTEXTFORGE_EVALUATOR_IMAGE;
   return override !== undefined && override !== ""
     ? override
-    : `contextforge-evaluator:${TOOL_VERSION}`;
+    : `contextforge-evaluator:${TOOL_VERSION}-${sourceHash}`;
 }
 
 /** Build the evaluator image unless it already exists or one was supplied. */
 export async function ensureEvaluatorImage(options: EvaluatorOptions): Promise<string> {
-  const image = evaluatorImage(options.env);
-  const env = baseEnv(options.env);
+  if (options.env.CONTEXTFORGE_EVALUATOR_IMAGE) return evaluatorImage(options.env, "");
 
-  if (options.env.CONTEXTFORGE_EVALUATOR_IMAGE) return image;
+  const image = evaluatorImage(options.env, await evaluatorSourceHash());
+  const env = baseEnv(options.env);
 
   const inspect = await options.exec("docker", ["image", "inspect", image], { env });
   if (inspect.code === 0) return image;

@@ -1,5 +1,6 @@
 import { existsSync } from "node:fs";
-import { readFile, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
 import path from "node:path";
 
 import { describe, expect, it } from "vitest";
@@ -9,6 +10,7 @@ import {
   checkResponse,
   ensureEvaluatorImage,
   evaluatorImage,
+  evaluatorSourceHash,
   evaluatorRunArgs,
   keyVariables,
   scoreCases,
@@ -163,8 +165,55 @@ describe("ensureEvaluatorImage", () => {
     expect(calls).toEqual([]);
   });
 
-  it("names the tool version in the default tag", () => {
-    expect(evaluatorImage({})).toMatch(/^contextforge-evaluator:\d+\.\d+\.\d+$/);
+  it("tags the image with the tool version and a hash of its sources", () => {
+    expect(evaluatorImage({}, "abc123def456")).toMatch(
+      /^contextforge-evaluator:\d+\.\d+\.\d+-abc123def456$/,
+    );
+  });
+});
+
+describe("evaluatorSourceHash", () => {
+  async function evaluatorDir(): Promise<string> {
+    const dir = await mkdtemp(path.join(tmpdir(), "contextforge-evaluator-src-"));
+    await mkdir(path.join(dir, "app", "sub"), { recursive: true });
+    await mkdir(path.join(dir, "tests"));
+    await writeFile(path.join(dir, "Dockerfile"), "FROM python:3.12\n");
+    await writeFile(path.join(dir, "requirements.txt"), "ragas==0.4.3\n");
+    await writeFile(path.join(dir, "app", "main.py"), "print(1)\n");
+    await writeFile(path.join(dir, "app", "sub", "deep.py"), "x = 1\n");
+    await writeFile(path.join(dir, "tests", "test_x.py"), "def test(): pass\n");
+    return dir;
+  }
+
+  it("is a stable 12-character hex digest", async () => {
+    const dir = await evaluatorDir();
+
+    expect(await evaluatorSourceHash(dir)).toMatch(/^[0-9a-f]{12}$/);
+    expect(await evaluatorSourceHash(dir)).toBe(await evaluatorSourceHash(dir));
+  });
+
+  it("changes when code baked into the image changes, even deep in app/", async () => {
+    const dir = await evaluatorDir();
+    const before = await evaluatorSourceHash(dir);
+    await writeFile(path.join(dir, "app", "sub", "deep.py"), "x = 2\n");
+
+    expect(await evaluatorSourceHash(dir)).not.toBe(before);
+  });
+
+  it("changes when a pin changes", async () => {
+    const dir = await evaluatorDir();
+    const before = await evaluatorSourceHash(dir);
+    await writeFile(path.join(dir, "requirements.txt"), "ragas==0.4.4\n");
+
+    expect(await evaluatorSourceHash(dir)).not.toBe(before);
+  });
+
+  it("ignores tests, which are not in the runtime image", async () => {
+    const dir = await evaluatorDir();
+    const before = await evaluatorSourceHash(dir);
+    await writeFile(path.join(dir, "tests", "test_x.py"), "def test(): assert True\n");
+
+    expect(await evaluatorSourceHash(dir)).toBe(before);
   });
 });
 

@@ -446,6 +446,18 @@ and counted in the log. The core numbers the cases `tc-001`… and writes
 malformed request, a missing key variable, or an unreachable judge — anything
 that means the scores cannot be trusted as a whole.
 
+### Image
+
+The CLI tags the evaluator image `contextforge-evaluator:<tool version>-<hash>`,
+where the hash covers exactly what is baked into the image: the Dockerfile,
+the pinned requirements and the Python app. Changing any of them builds a new
+image on the next run; a tag carrying only the tool version silently reused a
+stale one. `CONTEXTFORGE_EVALUATOR_IMAGE` overrides the tag entirely.
+
+The image carries tiktoken's encoding tables, which Ragas uses to count tokens
+and which tiktoken would otherwise download on first use. At run time the
+evaluator needs the network only to reach the judge.
+
 ### Networking
 
 On Linux the container runs with host networking, so a judge reachable from
