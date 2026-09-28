@@ -20,22 +20,65 @@ an entry here before the pull request is opened.
 
 ## Current state
 
-- **Stage:** 6 — next. Stages 3, 4 and 5 passed their gates on 2026-09-28.
-  Code for stages 6, 7 and 8 is built and unit tested; stage 9 prepared.
-- **Test set:** `benchmark/testcases.json`, 34 cases, reviewed by hand. Both
-  example configs use it; the 3-case placeholder is gone.
+- **Stage:** 7 — blocked on a GitHub remote. Stages 3–6 passed their gates on
+  2026-09-28. Stages 7 and 8 are built and unit tested; their demos need the
+  repository on GitHub. Stage 9 is partly demonstrated.
+- **Test set:** `benchmark/testcases.json`, 34 cases, reviewed by hand.
 - **Judge:** qwen3:14b with `reasoning_effort: none`, and nomic-embed-text,
   on Ollama on the GPU machine, over Tailscale at `judge-box`
-  (`examples/contextforge.local-judge.yml`). Connections go through the Tailscale
-  relay.
-- **Works, verified by running:** 264 TypeScript tests and 45 Python tests in
-  the evaluator image, including the generation pipeline with the network
-  off; scoring and test-set generation against the real judge; the runner
-  against the sample app, including forced failures.
-- **Not yet verified:** the noise floor, stage 9, and any workflow on GitHub.
-- **Blocked on:** a GitHub remote, for the stage 7 and 8 demos only.
-- **Measured noise floor:** not measured. `case_drop: 0.30` and the 0.05
-  `mean_drop` defaults are provisional until `pnpm measure-noise` runs.
+  (`examples/contextforge.local-judge.yml`). The link is now direct, 2 ms.
+- **Works, verified by running:** 268 TypeScript tests and 45 Python tests in
+  the evaluator image; scoring and generation against the real judge; the
+  runner against the sample app; a breaking change flagged and a harmless one
+  passed (`scripts/demo.sh`).
+- **Not yet verified:** stage 9 in full, and any workflow on GitHub.
+- **Measured noise floor:** **0.000 on every metric**, qwen3:14b with
+  thinking off and nomic-embed-text, 34 cases, 5 self-comparisons. Defaults
+  kept at `mean_drop: 0.05` and `case_drop: 0.30`.
+
+---
+
+## 2026-09-28 — stage 6 — noise floor measured; first demos
+
+**Changed:** `packages/cli/src/compare/noise.ts` (suggestions respect score
+granularity), `scripts/measure-noise.mjs`, `scripts/demo.sh` (new), a
+granularity paragraph in `docs/DESIGN.md` section 4, a Demo section in the
+README. Earlier in the stage: `REASONING_EFFORT` for the sample app, and
+Prettier kept off `benchmark/`.
+**Why:** stage 6's gate — measure the noise floor and set defaults above it —
+and a demo the user asked for.
+**Decisions:**
+- **Defaults kept at `mean_drop: 0.05`, `case_drop: 0.30`.** Both sit above
+  the measured floor. Tighter was rejected: scores are coarse, and one case
+  flipping from 1 to 0 moves a 34-case mean by 0.029, so 0.05 tolerates one
+  flip and catches two or more.
+- **The script's suggestions were wrong for a quiet judge, and are fixed.**
+  Suggesting 1.5× the observed drift gave 0.02 when the drift was zero — below
+  a single flip. Suggestions now never fall below 1.5 flips for `mean_drop`
+  (0.05 at 34 cases) or 0.30 for `case_drop`.
+- The sample app answers through the same Ollama server, with thinking off,
+  so the measurement reflects a realistic app rather than the offline stub.
+**Notes:**
+- **Measured noise floor: zero.** Five self-comparisons of commit `59c9287`,
+  10 app builds, 340 answers and about 3,700 judge calls in 78 minutes: every
+  answer identical word for word, every score identical, all four means
+  identical to four decimals across all ten scored sides — context_precision
+  0.767, context_recall 0.956, faithfulness 0.933, answer_relevancy 0.863.
+- **But noise is not impossible.** An earlier smoke test of the same commit
+  produced 4 of 34 answers worded differently between the two sides. It did
+  not recur in the measurement; plausibly it depends on GPU state, such as the
+  model having just been loaded. The 0.30 case threshold absorbs it.
+- **Why a comparison takes 15 minutes:** 11 judge calls per answer —
+  context_precision makes one per retrieved passage (5), answer_relevancy 3,
+  faithfulness 2, context_recall 1 — so 748 calls for 68 answers, about 2s
+  each on the GPU, two at a time. Not the network: Tailscale now connects
+  directly at 2 ms. Raising `OLLAMA_NUM_PARALLEL` is the untried speed-up.
+- **Demo, first 10 cases:** `top_k` 5→1 was flagged — context_recall −0.250,
+  faithfulness −0.142, answer_relevancy −0.106, 5 of 10 cases regressed, exit
+  1, in 226s. context_precision did not move, correctly: the one passage kept
+  is still the relevant top-ranked one. Renaming variables passed with every
+  score identical, exit 0, in 274s. Both runs undid their edit and left no
+  containers.
 
 ---
 

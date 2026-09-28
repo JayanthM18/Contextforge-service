@@ -4,9 +4,10 @@ Nine stages. Each ends with something runnable, a demo command you run
 yourself, and a review gate. Do not start a stage before the previous gate has
 passed. Append to `docs/MEMORY.md` at every gate.
 
-**Current stage: 6.** Stages 3, 4 and 5 have passed their gates (2026-09-28),
-stages 3 and 4 against a real judge. Code for stages 6, 7 and 8 is built and
-unit tested, and stage 9 is prepared. The status line under each stage says
+**Current stage: 7 — blocked on a GitHub remote.** Stages 3–6 have passed their
+gates (2026-09-28), against a real judge where one is needed. Stages 7 and 8
+are built and unit tested but their demos need the repository on GitHub.
+Stage 9 has been partly demonstrated. The status line under each stage says
 what its gate still needs.
 
 ---
@@ -70,7 +71,7 @@ failure.
 - Owner: _____
 - **Status:** ✅ gate passed 2026-09-28: both sides built and answered; contract ids present; a crashing app failed in 2s, a never-healthy one at the 10s startup_timeout; no containers, networks or worktrees left behind.
 
-## Stage 6 — Comparator, thresholds and the noise floor
+## Stage 6 — Comparator, thresholds and the noise floor ✅
 
 Pure comparison logic over two result sets. Before setting defaults, run `main`
 against itself five times and record the per-metric spread. That number is the
@@ -79,7 +80,7 @@ noise floor and it goes in `docs/MEMORY.md`.
 - Demo: `contextforge compare a.json b.json` prints a verdict and the regressed cases
 - Gate: noise floor measured and recorded; defaults sit above it; comparison logic is pure and fully unit tested
 - Owner: _____
-- **Status:** comparator built and fully unit tested. Noise floor not measured yet; the judge is now reachable (`pnpm measure-noise`). Also compare `reasoning_effort: low` with `none` for accuracy.
+- **Status:** ✅ gate passed 2026-09-28: five self-comparisons with the real judge drifted by exactly 0 on every metric; defaults kept at 0.05 and 0.30, above it and above one flipped case (0.029). Still to try: `reasoning_effort: low` against `none` for accuracy.
 
 ## Stage 7 — Cached benchmark mode
 
@@ -111,7 +112,7 @@ each one.
 - Demo: a results table of regressions introduced versus regressions detected
 - Gate: every deliberate regression flagged, harmless refactor passes, numbers recorded for the report
 - Owner: _____
-- **Status:** prepared (`pnpm validate-regressions`). Not run yet; the judge is reachable, and the sample app can answer through the same Ollama server (see `examples/contextforge.local-judge.yml`).
+- **Status:** partly demonstrated 2026-09-28 on the first 10 cases with `scripts/demo.sh`: `top_k` 5→1 was flagged (FAIL, 5 of 10 cases regressed) and a pure rename passed. Remaining: the weaker-embedding and prompt scenarios, and all four on the full 34 cases (`pnpm validate-regressions`).
 
 ---
 
