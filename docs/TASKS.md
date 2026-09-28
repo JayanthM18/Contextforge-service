@@ -4,10 +4,10 @@ Nine stages. Each ends with something runnable, a demo command you run
 yourself, and a review gate. Do not start a stage before the previous gate has
 passed. Append to `docs/MEMORY.md` at every gate.
 
-**Current stage: 4.** Stages 3 and 5 passed their gates on 2026-09-28, stage
-3 against a real judge. Code for stages 4, 6, 7 and 8 is built and unit
-tested, and stage 9 is prepared. The status line under each stage says what
-its gate still needs.
+**Current stage: 6.** Stages 3, 4 and 5 have passed their gates (2026-09-28),
+stages 3 and 4 against a real judge. Code for stages 6, 7 and 8 is built and
+unit tested, and stage 9 is prepared. The status line under each stage says
+what its gate still needs.
 
 ---
 
@@ -49,7 +49,7 @@ contexts, writes a JSON file of per-case scores. No Git or CI awareness.
 - Owner: _____
 - **Status:** ✅ gate passed 2026-09-28 with qwen3:14b (thinking off) and nomic-embed-text: every mean identical across two runs (spread 0.000 against a 0.05 tolerance); the fabricated answer scored below the grounded ones.
 
-## Stage 4 — Dataset generation
+## Stage 4 — Dataset generation ✅
 
 `contextforge dataset generate` produces `benchmark/testcases.json` from the
 source documents, for a human to review and commit.
@@ -57,7 +57,7 @@ source documents, for a human to review and commit.
 - Demo: generate 20 cases from the sample app's documents, read them, delete the bad ones
 - Gate: file matches the benchmark format; regeneration is always an explicit command
 - Owner: _____
-- **Status:** built and tested; the judge is now reachable. Next: generate and review 20 real cases.
+- **Status:** ✅ gate passed 2026-09-28: 63 cases generated in two runs with qwen3:14b, reviewed by hand down to 34 (`benchmark/testcases.json`), valid against the format; regenerating without `--overwrite` is refused before any judge call.
 
 ## Stage 5 — Runner (dual mode) ✅
 

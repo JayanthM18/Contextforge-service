@@ -20,22 +20,70 @@ an entry here before the pull request is opened.
 
 ## Current state
 
-- **Stage:** 4 — next. Stage 3's gate passed on 2026-09-28 against a real
-  judge, and stage 5's gate passed the same day with real Docker. Code for
-  stages 4, 6, 7 and 8 is built and unit tested; stage 9 prepared.
+- **Stage:** 6 — next. Stages 3, 4 and 5 passed their gates on 2026-09-28.
+  Code for stages 6, 7 and 8 is built and unit tested; stage 9 prepared.
+- **Test set:** `benchmark/testcases.json`, 34 cases, reviewed by hand. Both
+  example configs use it; the 3-case placeholder is gone.
 - **Judge:** qwen3:14b with `reasoning_effort: none`, and nomic-embed-text,
-  on Ollama on the GPU machine, reached over Tailscale at `judge-box`
+  on Ollama on the GPU machine, over Tailscale at `judge-box`
   (`examples/contextforge.local-judge.yml`). Connections go through the Tailscale
-  relay rather than directly.
-- **Works, verified by running:** 260 TypeScript tests (test files now
-  typechecked too) and 43 Python tests in the evaluator image; scoring against
-  the real judge; the runner against the sample app, including forced failures.
-- **Not yet verified:** dataset generation, the noise floor, stage 9, and any
-  workflow on GitHub.
-- **Blocked on:** nothing for stages 4, 6 and 9; a GitHub remote for the
-  stage 7 and 8 demos.
+  relay.
+- **Works, verified by running:** 264 TypeScript tests and 45 Python tests in
+  the evaluator image, including the generation pipeline with the network
+  off; scoring and test-set generation against the real judge; the runner
+  against the sample app, including forced failures.
+- **Not yet verified:** the noise floor, stage 9, and any workflow on GitHub.
+- **Blocked on:** a GitHub remote, for the stage 7 and 8 demos only.
 - **Measured noise floor:** not measured. `case_drop: 0.30` and the 0.05
   `mean_drop` defaults are provisional until `pnpm measure-noise` runs.
+
+---
+
+## 2026-09-28 — stage 4 — gate passed: a reviewed 34-case test set
+
+**Changed:** `benchmark/testcases.json` (new), both example configs now use
+it, `examples/testcases.json` removed. Before that, in two `fix:` commits:
+`rapidfuzz` pinned, tiktoken's tables baked into the image, an unexpected
+evaluator failure exits 2, and the image tag carries a hash of its sources.
+**Why:** stage 4 — generate a test set from the sample app's documents, review
+it, delete the bad cases.
+**Decisions:**
+- Generated with qwen3:14b in two runs: 20 requested (21 produced, 171s), then
+  40 requested (42 produced, 206s). 63 cases in all.
+- **Review outcome: 34 kept.** 18 kept as written, 16 rewritten, 29 deleted.
+  Every rewrite's answer was checked against the knowledge-base text.
+- Deleted cases fell into four kinds: nonsense from Ragas's typo persona
+  ("what is the *misspelled* term for…"); circular questions ("why are gift
+  cards non-returnable?" → "because they cannot be returned"); two unrelated
+  questions joined with "and"; and **wrong ground truths**, where the
+  generator combined facts from different policies into rules that do not
+  exist, or invented a reason the documents never give. Some deletions were
+  duplicates across the two runs.
+- Typo'd questions whose meaning is clear were kept on purpose, as a test of
+  messy user input.
+- `generator.tool` reads "ragas, reviewed and edited by hand", because a third
+  of the cases were rewritten; claiming pure generation would be false.
+- Cases were renumbered tc-001 to tc-034 once, now, before anything depends on
+  the ids. From here the set is frozen.
+**Deferred:** more genuine two-document cases (see below).
+**Notes:**
+- **Only 4 of the 34 cases genuinely need two documents.** Almost everything
+  Ragas labelled multi-hop was either two unrelated questions glued together
+  or a single document split across chunks. A good multi-hop case has to be
+  written by hand; Ragas 0.4.3 with this judge does not produce them.
+- **Ragas could not trace the sources of any multi-hop case**: the reference
+  contexts it returns are paraphrased, so the verbatim match that finds the
+  source document fails. Every kept case's `reference_context_ids` was filled
+  in by hand during review.
+- **Usable yield: 29% as written, 54% after rewriting.** That is why
+  `docs/DESIGN.md` makes human review mandatory, and it belongs in the
+  write-up.
+- The first real `dataset generate` failed after 16s on the missing
+  `rapidfuzz`; the construction tests had passed, because Ragas imports it
+  only once generation starts. The pipeline test added in response builds
+  the real transforms, and passes with the network off.
+- Regenerating over the reviewed file was refused in 0.24s, before any judge
+  call, leaving it byte-identical.
 
 ---
 
