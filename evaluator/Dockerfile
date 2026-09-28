@@ -28,7 +28,7 @@ COPY app ./app
 # pinned environment works, not just the developer's laptop.
 FROM base AS test
 COPY requirements-dev.txt pyproject.toml ./
-RUN pip install pytest==8.4.2
+RUN pip install -r requirements-dev.txt
 COPY tests ./tests
 COPY fixtures ./fixtures
 CMD ["python", "-m", "pytest", "-q"]
