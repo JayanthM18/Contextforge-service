@@ -123,20 +123,25 @@ export async function runCommand(options: RunOptions): Promise<RunOutcome> {
   if (options.answersOnly) {
     const baselineSide = await answerAt("baseline", baselineSha, false);
     const note = "answers only: nothing was scored and no verdict was reached";
-    const make = (commit: string, side: AnsweredSide): RunResult =>
+    // `notes` describe the candidate (uncommitted changes, say); the baseline
+    // is a clean commit and must not inherit them.
+    const make = (commit: string, side: AnsweredSide, sideNotes: string[]): RunResult =>
       buildRunResult({
         commit,
         fingerprint: currentFingerprint(side.appHash),
         records: side.records,
         runs: 1,
         metrics: [],
-        notes: [...notes, note],
+        notes: [...sideNotes, note],
         ...(options.now === undefined ? {} : { now: options.now() }),
       });
-    await writeJson(path.join(options.outputDir, "baseline.json"), make(baselineSha, baselineSide));
+    await writeJson(
+      path.join(options.outputDir, "baseline.json"),
+      make(baselineSha, baselineSide, []),
+    );
     await writeJson(
       path.join(options.outputDir, "candidate.json"),
-      make(candidateLabel, candidateSide),
+      make(candidateLabel, candidateSide, notes),
     );
     logger.info("wrote answers for both sides", { output: options.outputDir });
     return { exitCode: EXIT_CODE.pass, outputDir: options.outputDir, mode: "answers-only" };

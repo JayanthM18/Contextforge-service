@@ -395,6 +395,16 @@ describe("run", () => {
     expect(candidate.notes.join(" ")).toContain("uncommitted changes");
   });
 
+  it("answers-only keeps the candidate's notes off the baseline", async () => {
+    await feature();
+    await write("app.txt", "uncommitted edit");
+
+    await runCommand(runOptions(fakeDocker({ baseline: 0, candidate: 0 }), { answersOnly: true }));
+
+    expect((await written("candidate.json")).notes.join(" ")).toContain("uncommitted changes");
+    expect((await written("baseline.json")).notes.join(" ")).not.toContain("uncommitted changes");
+  });
+
   it("leaves no git worktrees behind", async () => {
     await feature();
     await runCommand(runOptions(fakeDocker({ baseline: 0.9, candidate: 0.9 }), { mode: "dual" }));
