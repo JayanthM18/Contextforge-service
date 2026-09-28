@@ -4,7 +4,9 @@ node_modules/
 .cache/
 .contextforge/
 evaluator/.venv/
-benchmark/baseline*/
+# Frozen data, written by the tool that owns it. A formatter reflowing the
+# test set would make a pull request look like it changed the exam.
+benchmark/
 pnpm-lock.yaml
 
 # Hand-wrapped prose. These are the specs, not code; the formatter must not
