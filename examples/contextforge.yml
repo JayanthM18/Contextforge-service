@@ -13,7 +13,9 @@ app:
   health_path: /health
   query_path: /query
   startup_timeout: 120
-  env_passthrough: [OPENAI_API_KEY]
+  # Compose sees only these variables. PROVIDER lets the sample app run
+  # offline (PROVIDER=local) for checks that need no model.
+  env_passthrough: [OPENAI_API_KEY, PROVIDER]
 
 dataset:
   # A three-case example so this config validates today. The real 40-case set
