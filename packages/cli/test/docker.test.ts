@@ -1,18 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { assertDockerAvailable, baseEnv } from "../src/util/docker.js";
-import { ContextForgeError } from "../src/util/errors.js";
-import { fakeExec } from "./helpers.js";
-
-async function failure(promise: Promise<unknown>): Promise<ContextForgeError> {
-  try {
-    await promise;
-  } catch (error: unknown) {
-    if (error instanceof ContextForgeError) return error;
-    throw error;
-  }
-  throw new Error("expected a ContextForgeError");
-}
+import { failure, fakeExec } from "./helpers.js";
 
 describe("assertDockerAvailable", () => {
   it("passes when the daemon and the Compose plugin both answer", async () => {

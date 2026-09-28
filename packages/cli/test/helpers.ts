@@ -1,6 +1,7 @@
 /** Shared test fixtures. No network, no Docker, no real environment. */
 
 import { configSchema, type Config } from "../src/config/schema.js";
+import { ContextForgeError } from "../src/util/errors.js";
 import type { Exec, ExecOptions, ExecResult } from "../src/util/exec.js";
 import { createLogger, type Logger } from "../src/util/logger.js";
 
@@ -59,4 +60,20 @@ export function fakeExec(
     return { code: result.code ?? 0, stdout: result.stdout ?? "", stderr: result.stderr ?? "" };
   };
   return { exec, calls };
+}
+
+/**
+ * The ContextForgeError that a promise (or a function) produces. Fails the
+ * test if it throws something else, or nothing at all.
+ */
+export async function failure(
+  action: Promise<unknown> | (() => unknown),
+): Promise<ContextForgeError> {
+  try {
+    await (typeof action === "function" ? action() : action);
+  } catch (error: unknown) {
+    if (error instanceof ContextForgeError) return error;
+    throw error;
+  }
+  throw new Error("expected a ContextForgeError, but nothing was thrown");
 }

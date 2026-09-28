@@ -10,8 +10,7 @@ import { datasetGenerateCommand } from "../src/commands/dataset.js";
 import { assertWritable, datasetHash, loadDataset, writeDataset } from "../src/dataset/freeze.js";
 import { buildGenerateRequest, readSourceDocuments, toDataset } from "../src/dataset/generate.js";
 import { canonicalJson, hashData } from "../src/dataset/hash.js";
-import { ContextForgeError } from "../src/util/errors.js";
-import { fakeExec, silentLogger, testConfig } from "./helpers.js";
+import { failure, fakeExec, silentLogger, testConfig } from "./helpers.js";
 
 let dir = "";
 beforeEach(async () => {
@@ -32,16 +31,6 @@ const dataset: Dataset = {
     },
   ],
 };
-
-async function failure(promise: Promise<unknown> | (() => unknown)): Promise<ContextForgeError> {
-  try {
-    await (typeof promise === "function" ? promise() : promise);
-  } catch (error: unknown) {
-    if (error instanceof ContextForgeError) return error;
-    throw error;
-  }
-  throw new Error("expected a ContextForgeError");
-}
 
 describe("canonicalJson and hashing", () => {
   it("ignores key order", () => {

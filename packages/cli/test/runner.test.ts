@@ -10,8 +10,7 @@ import { appHash, buildContexts } from "../src/runner/fingerprint.js";
 import { waitForHealthy } from "../src/runner/health.js";
 import { queryAll, queryCase } from "../src/runner/query.js";
 import { answerSide } from "../src/runner/side.js";
-import { ContextForgeError } from "../src/util/errors.js";
-import { fakeExec, silentLogger, testConfig } from "./helpers.js";
+import { failure, fakeExec, silentLogger, testConfig } from "./helpers.js";
 
 const refundCase: TestCase = {
   id: "tc-001",
@@ -45,16 +44,6 @@ function json(body: unknown, status = 200): Response {
     status,
     headers: { "content-type": "application/json" },
   });
-}
-
-async function failure(promise: Promise<unknown>): Promise<ContextForgeError> {
-  try {
-    await promise;
-  } catch (error: unknown) {
-    if (error instanceof ContextForgeError) return error;
-    throw error;
-  }
-  throw new Error("expected a ContextForgeError");
 }
 
 describe("queryCase", () => {

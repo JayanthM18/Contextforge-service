@@ -7,7 +7,7 @@ import path from "node:path";
 import { beforeAll, describe, expect, it } from "vitest";
 
 import { loadConfig, resolveAgainstConfig } from "../src/config/load.js";
-import { ContextForgeError } from "../src/util/errors.js";
+import { failure } from "./helpers.js";
 
 const VALID_YAML = `
 version: 1
@@ -39,17 +39,6 @@ async function write(name: string, contents: string): Promise<string> {
   return file;
 }
 
-/** The thrown ContextForgeError, so tests can assert on code and message. */
-async function failure(...args: Parameters<typeof loadConfig>): Promise<ContextForgeError> {
-  try {
-    await loadConfig(...args);
-  } catch (error: unknown) {
-    if (error instanceof ContextForgeError) return error;
-    throw error;
-  }
-  throw new Error("expected loadConfig to throw, but it resolved");
-}
-
 beforeAll(async () => {
   dir = await mkdtemp(path.join(tmpdir(), "contextforge-"));
   await writeFile(path.join(dir, "testcases.json"), "{}");
@@ -66,14 +55,16 @@ describe("loadConfig", () => {
   });
 
   it("shows an absolute path rather than a relative one that escapes the cwd", async () => {
-    const error = await failure({ configPath: path.join(dir, "absent.yml"), env, cwd: repoish });
+    const error = await failure(
+      loadConfig({ configPath: path.join(dir, "absent.yml"), env, cwd: repoish }),
+    );
 
     expect(error.message).toContain(dir);
     expect(error.message).not.toContain("../..");
   });
 
   it("names the file when it cannot be read", async () => {
-    const error = await failure({ configPath: path.join(dir, "absent.yml"), env });
+    const error = await failure(loadConfig({ configPath: path.join(dir, "absent.yml"), env }));
 
     expect(error.code).toBe("CONFIG_INVALID");
     expect(error.message).toContain("absent.yml");
@@ -82,7 +73,7 @@ describe("loadConfig", () => {
 
   it("reports malformed YAML with the line number", async () => {
     const configPath = await write("broken.yml", "version: 1\napp: [unclosed\n");
-    const error = await failure({ configPath, env });
+    const error = await failure(loadConfig({ configPath, env }));
 
     expect(error.message).toMatch(/is not valid YAML at line \d+/);
   });
@@ -90,7 +81,7 @@ describe("loadConfig", () => {
   it("rejects an empty file rather than treating it as an empty config", async () => {
     const configPath = await write("empty.yml", "\n# just a comment\n");
 
-    expect((await failure({ configPath, env })).message).toContain("is empty");
+    expect((await failure(loadConfig({ configPath, env }))).message).toContain("is empty");
   });
 
   it("lists every schema problem in one error", async () => {
@@ -98,7 +89,7 @@ describe("loadConfig", () => {
       "bad.yml",
       VALID_YAML.replace("version: 1", "version: 3").replace("  service: rag-app", "  service: ''"),
     );
-    const error = await failure({ configPath, env });
+    const error = await failure(loadConfig({ configPath, env }));
 
     expect(error.message).toContain("2 problems");
     expect(error.message).toContain("version:");
@@ -108,12 +99,12 @@ describe("loadConfig", () => {
   it("uses the singular when there is one problem", async () => {
     const configPath = await write("one.yml", VALID_YAML.replace("version: 1", "version: 3"));
 
-    expect((await failure({ configPath, env })).message).toContain("1 problem");
+    expect((await failure(loadConfig({ configPath, env }))).message).toContain("1 problem");
   });
 
   it("fails when the variable named by api_key_env is not set", async () => {
     const configPath = await write("key.yml", VALID_YAML);
-    const error = await failure({ configPath, env: {} });
+    const error = await failure(loadConfig({ configPath, env: {} }));
 
     expect(error.message).toContain("OPENAI_API_KEY");
     expect(error.remedy).toContain("api_key_env to null");
@@ -122,9 +113,9 @@ describe("loadConfig", () => {
   it("treats an empty variable as unset", async () => {
     const configPath = await write("key2.yml", VALID_YAML);
 
-    expect((await failure({ configPath, env: { OPENAI_API_KEY: "" } })).message).toContain(
-      "is not set",
-    );
+    expect(
+      (await failure(loadConfig({ configPath, env: { OPENAI_API_KEY: "" } }))).message,
+    ).toContain("is not set");
   });
 
   it("needs no key when api_key_env is null", async () => {
@@ -145,7 +136,7 @@ describe("loadConfig", () => {
       "nodata.yml",
       VALID_YAML.replace("  path: testcases.json", "  path: missing.json"),
     );
-    const error = await failure({ configPath, env });
+    const error = await failure(loadConfig({ configPath, env }));
 
     expect(error.message).toContain("missing.json");
     expect(error.remedy).toContain("dataset generate");

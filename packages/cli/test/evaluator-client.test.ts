@@ -16,8 +16,7 @@ import {
   scoreCases,
 } from "../src/evaluator/client.js";
 import type { ScoreRequest, ScoreResponse } from "../src/evaluator/types.js";
-import { ContextForgeError } from "../src/util/errors.js";
-import { fakeExec, silentLogger, testConfig } from "./helpers.js";
+import { failure, fakeExec, silentLogger, testConfig } from "./helpers.js";
 
 const cases = [
   { case_id: "tc-001", question: "q1?", ground_truth: "t1", answer: "a1", contexts: ["c1"] },
@@ -54,16 +53,6 @@ function fakeEvaluator(respond: (req: ScoreRequest) => unknown, code = 0) {
 }
 
 const env = { OPENAI_API_KEY: "sk-test", PATH: "/usr/bin" };
-
-async function failure(promise: Promise<unknown>): Promise<ContextForgeError> {
-  try {
-    await promise;
-  } catch (error: unknown) {
-    if (error instanceof ContextForgeError) return error;
-    throw error;
-  }
-  throw new Error("expected a ContextForgeError");
-}
 
 describe("buildScoreRequest", () => {
   it("carries the judge's temperature and seed explicitly", () => {
