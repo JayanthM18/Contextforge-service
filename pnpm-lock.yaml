@@ -46,9 +46,6 @@ importers:
       '@contextforge/cli':
         specifier: workspace:*
         version: link:../cli
-      '@contextforge/shared':
-        specifier: workspace:*
-        version: link:../shared
 
   packages/cli:
     dependencies:

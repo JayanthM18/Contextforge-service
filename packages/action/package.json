@@ -12,7 +12,6 @@
     "build": "tsc --build"
   },
   "dependencies": {
-    "@contextforge/cli": "workspace:*",
-    "@contextforge/shared": "workspace:*"
+    "@contextforge/cli": "workspace:*"
   }
 }
