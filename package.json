@@ -18,7 +18,7 @@
     "test:coverage": "vitest run --coverage",
     "lint": "eslint . && prettier --check .",
     "format": "prettier --write .",
-    "sample-app": "node examples/sample-rag-app/src/index.ts",
+    "sample-app": "pnpm --filter @contextforge/sample-rag-app start",
     "test:evaluator": "docker build --target test --tag contextforge-evaluator-test evaluator && docker run --rm contextforge-evaluator-test",
     "measure-noise": "node scripts/measure-noise.mjs",
     "validate-regressions": "scripts/validate-regressions.sh"
