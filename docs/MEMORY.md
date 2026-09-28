@@ -32,9 +32,57 @@ an entry here before the pull request is opened.
   runner against the sample app; a breaking change flagged and a harmless one
   passed (`scripts/demo.sh`).
 - **Not yet verified:** stage 9 in full, and any workflow on GitHub.
-- **Measured noise floor:** **0.000 on every metric**, qwen3:14b with
-  thinking off and nomic-embed-text, 34 cases, 5 self-comparisons. Defaults
-  kept at `mean_drop: 0.05` and `case_drop: 0.30`.
+- **Repository:** github.com/JayanthM18/ContextForge, private. `ci` passes on
+  GitHub; `benchmark` is disabled there until a CI judge exists (stages 7–8).
+- **Measured noise floor:** **0.000 within a session** (five back-to-back
+  self-comparisons); **up to 0.075 between sessions** (faithfulness, 10 cases,
+  runs hours apart). Defaults kept at `mean_drop: 0.05` and `case_drop: 0.30`.
+
+---
+
+## 2026-09-28 — noise between sessions; pushed to GitHub
+
+**Changed:** the history was rewritten once more, before the first push, to
+replace the GPU machine's Tailscale address with the placeholder `judge-box`
+and to drop the relay's city code; the real address now lives in the
+git-ignored `examples/contextforge.local-judge.local.yml`, which `demo.sh`
+uses automatically. Pushed to a new private repository. `benchmark` disabled
+on GitHub.
+**Why:** the user asked to push with no trace of their network and no Claude
+contributor.
+**Decisions:**
+- **The scrub covered the whole history, not just the latest commit,**
+  because pushing uploads every commit. Done before the first push, when
+  rewriting was still safe. Verified: 37 commits before and after, authors
+  and all dates identical, the address in no file or message, and only the
+  intended strings changed.
+- **`benchmark` is disabled on GitHub** until stages 7–8 give CI a judge:
+  without one, every push to `main` produced a red run. `pr-check` stays
+  enabled; it runs only on pull requests.
+**Notes:**
+- **Noise exists between sessions.** The failing `top_k` demo, rerun a few
+  hours after the first run, gave the same verdict and the same 5 regressed
+  cases, with context_recall again 1.000 → 0.750 — but faithfulness went
+  1.000 → 0.738 instead of 0.925 → 0.783, and answer relevancy 0.894 → 0.799
+  instead of 0.897 → 0.791.
+- **The cause is the app, not the judge.** Between sessions the GPU produced
+  reworded answers for 5 of the 10 unchanged baseline questions, and two of
+  those scored differently on faithfulness (0.75 → 1.00, 0.50 → 1.00). The
+  judge itself moved by 0.02 on answer relevancy for one identical answer.
+  The five back-to-back runs of stage 6 never showed this; plausibly the
+  model's state on the GPU, such as a fresh load, is what differs.
+- The largest drift seen, 0.075 on a 10-case mean, is still far below the
+  drops a real regression caused (−0.25 on recall, −0.26 on faithfulness),
+  so the 0.05 threshold is not threatened on the full 34 cases, where one
+  such reworded case moves a mean by at most about 0.015. The noise
+  measurement should nonetheless be repeated across separate sessions.
+- **The first GitHub CI run passed**: lint, typecheck, tests, and the
+  evaluator image built and tested on GitHub's machines. That is the first
+  build anywhere but this laptop, which is stage 0's original gate.
+- GitHub lists one contributor, the user, with every commit linked to their
+  account.
+- A 2-case demo run used to test the local config overwrote the 10-case
+  `top_k` report; it was regenerated, which is how the drift was noticed.
 
 ---
 
