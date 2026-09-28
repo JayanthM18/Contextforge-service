@@ -1,6 +1,6 @@
 # Push to main: score the new commit and store it as the baseline pull requests
 # compare against (docs/ARCHITECTURE.md, "Flow: push to main"). One file per
-# commit under benchmark/baseline/, committed with [skip ci].
+# commit under the config's baseline store in benchmark/, committed with [skip ci].
 name: benchmark
 
 on:
@@ -52,16 +52,26 @@ jobs:
           oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
           tags: tag:ci
 
+      # Optional: a self-hosted Ollama judge whose address is the JUDGE_HOST
+      # secret. Writes a config with the real host and overrides the one above.
+      - name: Point at the self-hosted judge
+        id: judge
+        env:
+          JUDGE_HOST: ${{ secrets.JUDGE_HOST }}
+        run: scripts/ci-judge-config.sh
+
       - name: Benchmark this commit
         env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        run: node packages/cli/dist/bin.js benchmark --config "$CONTEXTFORGE_CONFIG"
+          # The judge step may have set OPENAI_API_KEY for the sample app.
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY || env.OPENAI_API_KEY }}
+          CONFIG: ${{ steps.judge.outputs.config || env.CONTEXTFORGE_CONFIG }}
+        run: node packages/cli/dist/bin.js benchmark --config "$CONFIG"
 
       - name: Commit the benchmark
         run: |
           git config user.name "contextforge[bot]"
           git config user.email "contextforge[bot]@users.noreply.github.com"
-          git add benchmark/baseline
+          git add benchmark/
           if git diff --cached --quiet; then
             echo "nothing to commit"
             exit 0

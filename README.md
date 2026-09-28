@@ -128,9 +128,30 @@ evaluation:
 
 For a self-hosted judge such as Ollama, set `base_url` to its `/v1` endpoint
 and `api_key_env: null`. `examples/contextforge.local-judge.yml` is a complete
-example. In CI, the workflows can join a private Tailscale network if the
-`TS_OAUTH_CLIENT_ID` and `TS_OAUTH_SECRET` secrets exist; without them that
-step is skipped.
+example.
+
+### CI with a self-hosted judge
+
+The workflows can reach an Ollama judge on a private Tailscale network. Each
+step below is skipped unless its secrets exist, so the OpenAI path is unchanged.
+
+1. In the Tailscale admin console, add `"tag:ci": ["autogroup:admin"]` to
+   `tagOwners` in the access-control policy, and make sure the policy lets
+   `tag:ci` reach the judge machine on port 11434.
+2. Under Settings → OAuth clients, create a client with the **Auth Keys**
+   write scope and the tag `tag:ci`.
+3. In the GitHub repository, add the secrets `TS_OAUTH_CLIENT_ID`,
+   `TS_OAUTH_SECRET` and `JUDGE_HOST` (the judge's Tailscale IP).
+
+Each run then joins the tailnet as an ephemeral node, writes a copy of
+`examples/contextforge.local-judge.yml` with the real host (never committed;
+GitHub masks it in logs), and has the sample app answer through the same
+server. Baselines go to `benchmark/baseline-local-judge/`. The judge machine
+must be on while CI runs; if it is unreachable the run stops early with a
+tool error (exit 2).
+
+To re-check an open pull request by hand, for example in dual mode, run the
+`pr-check` workflow from the Actions tab with the pull request's number.
 
 Scores from different judges are not comparable. ContextForge fingerprints the
 judge and embedding model and re-scores stored answers when either changes,

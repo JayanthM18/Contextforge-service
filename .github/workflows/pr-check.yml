@@ -6,9 +6,22 @@ name: pr-check
 
 on:
   pull_request:
+  # Re-run the check on an open pull request by hand, e.g. in dual mode to
+  # confirm the cached verdict (stage 7's gate). No comment is posted; the
+  # report is in the run summary and the artifact.
+  workflow_dispatch:
+    inputs:
+      pr:
+        description: Pull request number
+        required: true
+      mode:
+        description: cached or dual
+        type: choice
+        options: [dual, cached]
+        default: dual
 
 concurrency:
-  group: pr-check-${{ github.event.pull_request.number }}
+  group: pr-check-${{ github.event.pull_request.number || inputs.pr }}-${{ inputs.mode || 'cached' }}
   cancel-in-progress: true
 
 permissions:
@@ -27,11 +40,11 @@ jobs:
       # landed on main after it branched (docs/DESIGN.md section 3).
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: ${{ github.event.pull_request.head.sha || format('refs/pull/{0}/head', inputs.pr) }}
           fetch-depth: 0
 
       - name: Fetch the base branch
-        run: git fetch --no-tags origin "${{ github.base_ref }}:refs/remotes/origin/${{ github.base_ref }}"
+        run: git fetch --no-tags origin "${{ github.base_ref || 'main' }}:refs/remotes/origin/${{ github.base_ref || 'main' }}"
 
       # Optional, as in benchmark.yml: reach a judge on a private tailnet.
       - name: Join the tailnet
@@ -42,8 +55,18 @@ jobs:
           oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
           tags: tag:ci
 
+      # Optional, as in benchmark.yml: a self-hosted judge at JUDGE_HOST.
+      - name: Point at the self-hosted judge
+        id: judge
+        env:
+          JUDGE_HOST: ${{ secrets.JUDGE_HOST }}
+        run: scripts/ci-judge-config.sh
+
       - uses: ./packages/action
         env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          # The judge step may have set OPENAI_API_KEY for the sample app.
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY || env.OPENAI_API_KEY }}
         with:
-          config: ${{ vars.CONTEXTFORGE_CONFIG || 'examples/contextforge.yml' }}
+          config: ${{ steps.judge.outputs.config || vars.CONTEXTFORGE_CONFIG || 'examples/contextforge.yml' }}
+          mode: ${{ inputs.mode }}
+          base-branch: ${{ github.base_ref || 'main' }}

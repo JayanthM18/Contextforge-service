@@ -91,7 +91,7 @@ re-judge stored answers, or dual mode.
 - Demo: open a PR; CI builds only the candidate and still returns a verdict
 - Gate: cached and dual mode agree on the same PR; every fingerprint branch has a test
 - Owner: _____
-- **Status:** built; every fingerprint branch tested; cached and dual agree on fake scores. Real-PR demo needs a GitHub remote and a judge.
+- **Status:** built; every fingerprint branch tested; cached and dual agree on fake scores. CI can now reach the self-hosted judge (`scripts/ci-judge-config.sh`); the real-PR demo waits on the Tailscale OAuth client and the `JUDGE_HOST` secret.
 
 ## Stage 8 — Action and reporting
 

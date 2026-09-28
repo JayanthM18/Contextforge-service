@@ -40,6 +40,36 @@ an entry here before the pull request is opened.
 
 ---
 
+## 2026-09-28 — stage 7 — CI can reach the self-hosted judge
+
+**Changed:** `scripts/ci-judge-config.sh`, called by `benchmark.yml` and
+`pr-check.yml` after the optional Tailscale step. With a `JUDGE_HOST` secret
+it writes `examples/contextforge.ci.local.yml` (git-ignored) from the
+local-judge config with the real host, points the sample app at the same
+Ollama server, checks the server answers, and hands the config to the run.
+`pr-check` gained a manual trigger taking a PR number and a mode, for running
+dual mode on the same PR. `benchmark` now commits everything under
+`benchmark/`, since the local judge stores to `baseline-local-judge/`.
+README has the setup steps.
+**Why:** stage 7's demo needs CI to score with the same judge as local runs,
+and the judge's address must stay out of the repository.
+**Decisions:**
+- **A generated config rather than `${VAR}` interpolation in the config
+  file.** Interpolation would change the config schema (DESIGN §2) for one
+  deployment detail; a git-ignored copy beside the original keeps relative
+  paths working with no product change.
+- **Fail before the build when the judge is unreachable,** rather than
+  after ten minutes of Docker builds.
+- `benchmark` stays disabled on GitHub until the secrets exist.
+**Deferred:** the real-PR demo and the cached-versus-dual gate, pending the
+user's Tailscale OAuth client and GitHub secrets.
+**Notes:** tested locally with fake `GITHUB_ENV`/`GITHUB_OUTPUT` files: a
+reachable judge gives the config output and six app variables; an unreachable
+address exits 2; no `JUDGE_HOST` is a no-op. Whether containers on a GitHub
+runner can reach the tailnet is untested until the first run.
+
+---
+
 ## 2026-09-28 — noise between sessions; pushed to GitHub
 
 **Changed:** the history was rewritten once more, before the first push, to
