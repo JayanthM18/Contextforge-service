@@ -33,6 +33,15 @@ describe("decideBaseline", () => {
     ).toBe("rejudged");
   });
 
+  it("reasoning effort differs → re-score, since thinking changes the verdicts", () => {
+    expect(
+      decideBaseline(
+        FINGERPRINT,
+        with_({ judge: { ...FINGERPRINT.judge, reasoning_effort: "none" } }),
+      ).mode,
+    ).toBe("rejudged");
+  });
+
   it("embedding model differs → re-score, and says which", () => {
     const decision = decideBaseline(
       FINGERPRINT,

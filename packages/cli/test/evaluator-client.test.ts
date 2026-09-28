@@ -67,7 +67,12 @@ describe("buildScoreRequest", () => {
   it("carries the judge's temperature and seed explicitly", () => {
     const req = request();
 
-    expect(req.judge).toMatchObject({ model: "gpt-4o-mini", temperature: 0, seed: 42 });
+    expect(req.judge).toMatchObject({
+      model: "gpt-4o-mini",
+      temperature: 0,
+      seed: 42,
+      reasoning_effort: null,
+    });
     expect(req.cases).toHaveLength(2);
     expect(req.embeddings?.model).toBe("text-embedding-3-small");
   });

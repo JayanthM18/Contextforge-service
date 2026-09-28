@@ -3,7 +3,7 @@
 Calls a real judge, so it is skipped unless CONTEXTFORGE_EVALUATOR_INTEGRATION=1.
 The judge comes from fixtures/sample-results.json unless overridden:
 
-    JUDGE_MODEL, JUDGE_BASE_URL, JUDGE_API_KEY_ENV
+    JUDGE_MODEL, JUDGE_BASE_URL, JUDGE_API_KEY_ENV, JUDGE_REASONING_EFFORT
     EMBEDDINGS_MODEL, EMBEDDINGS_BASE_URL, EMBEDDINGS_API_KEY_ENV
 
 An empty *_API_KEY_ENV means "no key", for a local server.
@@ -49,6 +49,8 @@ def _override(section: dict, prefix: str) -> None:
 def _request() -> ScoreRequest:
     raw = json.loads(FIXTURE.read_text())
     _override(raw["judge"], "JUDGE")
+    if effort := os.environ.get("JUDGE_REASONING_EFFORT"):
+        raw["judge"]["reasoning_effort"] = effort
     _override(raw["embeddings"], "EMBEDDINGS")
     return ScoreRequest.model_validate(raw)
 

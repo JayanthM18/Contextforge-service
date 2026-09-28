@@ -45,7 +45,8 @@ export function decideBaseline(stored: Fingerprint, current: Fingerprint): Decis
   const judgeChanged =
     stored.judge.model !== current.judge.model ||
     stored.judge.temperature !== current.judge.temperature ||
-    stored.judge.seed !== current.judge.seed;
+    stored.judge.seed !== current.judge.seed ||
+    stored.judge.reasoning_effort !== current.judge.reasoning_effort;
   const embeddingsChanged =
     (stored.embeddings?.model ?? null) !== (current.embeddings?.model ?? null);
 

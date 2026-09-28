@@ -29,6 +29,8 @@ class Endpoint(Strict):
 class Judge(Endpoint):
     temperature: float = Field(default=0, ge=0, le=2)
     seed: int = 42
+    # Sent to the judge only when set; see docs/DESIGN.md section 2.
+    reasoning_effort: Literal["none", "minimal", "low", "medium", "high"] | None = None
 
 
 class Case(Strict):

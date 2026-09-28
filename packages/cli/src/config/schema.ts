@@ -50,6 +50,18 @@ const judgeSchema = z.strictObject({
   ...endpoint,
   temperature: z.number().min(0).max(2).default(0),
   seed: z.number().int().default(42),
+  /**
+   * OpenAI's reasoning-effort parameter, sent only when set. Reasoning models
+   * such as Qwen3 otherwise think before every verdict: slower, and the
+   * thinking counts against the response's token budget. Non-reasoning models
+   * such as gpt-4o-mini reject the parameter, so it defaults to not sent.
+   */
+  reasoning_effort: z
+    .enum(["none", "minimal", "low", "medium", "high"], {
+      error: 'must be "none", "minimal", "low", "medium" or "high"',
+    })
+    .nullable()
+    .default(null),
 });
 
 const embeddingsSchema = z.strictObject(endpoint);

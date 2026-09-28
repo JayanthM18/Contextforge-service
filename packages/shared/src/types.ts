@@ -114,6 +114,8 @@ export const judgeFingerprintSchema = z.strictObject({
   model: z.string(),
   temperature: z.number(),
   seed: z.number(),
+  /** Thinking on or off changes the verdicts, so it is part of the judge. */
+  reasoning_effort: z.string().nullable(),
 });
 
 export const fingerprintSchema = z.strictObject({

@@ -202,7 +202,9 @@ describe("compare", () => {
       compare(
         result(cases(0.8)),
         result(cases(0.8), {
-          fingerprint: { judge: { model: "qwen3:14b", temperature: 0, seed: 42 } },
+          fingerprint: {
+            judge: { model: "qwen3:14b", temperature: 0, seed: 42, reasoning_effort: null },
+          },
         }),
         config,
         "dual",

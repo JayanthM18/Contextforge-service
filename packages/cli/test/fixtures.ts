@@ -14,7 +14,7 @@ export const METRICS: Metric[] = [
 export const FINGERPRINT: Fingerprint = {
   dataset_hash: "sha256:dataset",
   app_hash: "sha256:app",
-  judge: { model: "gpt-4o-mini", temperature: 0, seed: 42 },
+  judge: { model: "gpt-4o-mini", temperature: 0, seed: 42, reasoning_effort: null },
   embeddings: { model: "text-embedding-3-small" },
   tool_version: "0.1.0",
 };

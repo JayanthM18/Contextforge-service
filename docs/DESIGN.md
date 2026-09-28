@@ -85,6 +85,7 @@ evaluation:
     api_key_env: OPENAI_API_KEY   # names the variable, never holds the secret
     temperature: 0
     seed: 42
+    reasoning_effort: null    # none|minimal|low|medium|high; sent only when set
   embeddings:                 # answer_relevancy is computed from these
     provider: openai
     model: text-embedding-3-small
@@ -135,6 +136,12 @@ Every path in the config — `app.compose_file`, `dataset.path`,
 `dataset.source_docs`, `baseline.store` — resolves against the directory
 holding the config file, not the working directory, so a config means the same
 thing wherever it is run from.
+
+`reasoning_effort` is OpenAI's own parameter, sent only when set. Reasoning
+models such as Qwen3 otherwise think before every verdict — measured at 246
+tokens to produce a 14-character answer — which is slow, and the thinking
+counts against the response's token budget. `none` turns it off. It defaults
+to unset because non-reasoning models such as gpt-4o-mini reject it.
 
 `base_url` and `api_key_env` exist because the endpoint is not always OpenAI's:
 Azure OpenAI, a corporate proxy, a self-hosted gateway and a local server all
@@ -200,7 +207,7 @@ stored text; answers cannot be recomputed without rebuilding the app.
   "fingerprint": {
     "dataset_hash": "sha256:...",
     "app_hash": "sha256:...",
-    "judge": { "model": "gpt-4o-mini", "temperature": 0, "seed": 42 },
+    "judge": { "model": "gpt-4o-mini", "temperature": 0, "seed": 42, "reasoning_effort": null },
     "embeddings": { "model": "text-embedding-3-small" },
     "tool_version": "0.3.0"
   },
@@ -229,6 +236,9 @@ stored text; answers cannot be recomputed without rebuilding the app.
 | `dataset_hash` differs | Benchmark unusable — dual mode |
 | `app_hash` differs (deps, Dockerfile, compose) | Dual mode |
 | `tool_version` major differs | Dual mode |
+
+`judge` includes `reasoning_effort`: a judge that thinks and one that does
+not reach different verdicts.
 
 `embeddings` is fingerprinted for the same reason `judge` is: `answer_relevancy`
 is computed from embeddings, so changing that model changes the score. Without
@@ -364,7 +374,7 @@ stderr only.
   "task": "score",
   "metrics": ["context_precision", "context_recall", "faithfulness", "answer_relevancy"],
   "judge": { "model": "gpt-4o-mini", "base_url": null, "api_key_env": "OPENAI_API_KEY",
-             "temperature": 0, "seed": 42 },
+             "temperature": 0, "seed": 42, "reasoning_effort": null },
   "embeddings": { "model": "text-embedding-3-small", "base_url": null,
                   "api_key_env": "OPENAI_API_KEY" },
   "concurrency": 4,

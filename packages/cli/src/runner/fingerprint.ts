@@ -105,7 +105,12 @@ export function buildFingerprint(config: Config, datasetHash: string, app: strin
   return {
     dataset_hash: datasetHash,
     app_hash: app,
-    judge: { model: judge.model, temperature: judge.temperature, seed: judge.seed },
+    judge: {
+      model: judge.model,
+      temperature: judge.temperature,
+      seed: judge.seed,
+      reasoning_effort: judge.reasoning_effort,
+    },
     embeddings: embeddings === undefined ? null : { model: embeddings.model },
     tool_version: TOOL_VERSION,
   };

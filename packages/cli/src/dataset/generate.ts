@@ -81,6 +81,7 @@ export function buildGenerateRequest(
       api_key_env: judge.api_key_env,
       temperature: judge.temperature,
       seed: judge.seed,
+      reasoning_effort: judge.reasoning_effort,
     },
     embeddings: {
       model: embeddings.model,

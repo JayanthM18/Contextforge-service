@@ -20,13 +20,13 @@ from app.scoring import RagasScorer  # noqa: E402
 UNREACHABLE = "http://127.0.0.1:9/v1"
 
 
-def _request() -> ScoreRequest:
+def _request(**judge: object) -> ScoreRequest:
     return ScoreRequest.model_validate(
         {
             "task": "score",
             "metrics": ["context_precision", "context_recall", "faithfulness", "answer_relevancy"],
             "judge": {"model": "judge", "base_url": UNREACHABLE, "api_key_env": None,
-                      "temperature": 0, "seed": 42},
+                      "temperature": 0, "seed": 42, **judge},
             "embeddings": {"model": "embed", "base_url": UNREACHABLE, "api_key_env": None},
             "cases": [],
         }
@@ -50,6 +50,14 @@ def test_temperature_and_seed_reach_the_judge_not_ragas_defaults() -> None:
 
     assert args["temperature"] == 0
     assert args["seed"] == 42
+
+
+def test_reasoning_effort_reaches_the_judge_only_when_set() -> None:
+    unset = RagasScorer(_request(), {})._metrics["faithfulness"].llm.model_args
+    off = RagasScorer(_request(reasoning_effort="none"), {})._metrics["faithfulness"].llm.model_args
+
+    assert "reasoning_effort" not in unset
+    assert off["reasoning_effort"] == "none"
 
 
 def test_the_generator_objects_build() -> None:

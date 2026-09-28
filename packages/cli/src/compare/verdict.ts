@@ -25,6 +25,7 @@ export function assertComparable(baseline: RunResult, candidate: RunResult): voi
     a.judge.model !== b.judge.model ||
     a.judge.temperature !== b.judge.temperature ||
     a.judge.seed !== b.judge.seed ||
+    a.judge.reasoning_effort !== b.judge.reasoning_effort ||
     (a.embeddings?.model ?? null) !== (b.embeddings?.model ?? null)
   ) {
     throw new ContextForgeError(

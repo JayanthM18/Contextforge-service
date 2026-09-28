@@ -69,6 +69,8 @@ describe("a valid config", () => {
     expect(parsed.evaluation.concurrency).toBe(4);
     expect(parsed.evaluation.judge.temperature).toBe(0);
     expect(parsed.evaluation.judge.seed).toBe(42);
+    // Not sent unless set: non-reasoning models reject the parameter.
+    expect(parsed.evaluation.judge.reasoning_effort).toBeNull();
     expect(parsed.evaluation.judge.base_url).toBeNull();
     expect(parsed.evaluation.judge.api_key_env).toBeNull();
     expect(parsed.baseline.mode).toBe("cached");
@@ -191,6 +193,16 @@ describe("invalid configs", () => {
     const { dataset: _omitted, ...withoutDataset } = BASE;
 
     expect(problems(withoutDataset).some((line) => line.startsWith("dataset:"))).toBe(true);
+  });
+
+  it("16. rejects an unknown reasoning effort", () => {
+    const lines = problems(
+      config({
+        evaluation: { judge: { provider: "openai", model: "m", reasoning_effort: "maximum" } },
+      }),
+    );
+
+    expect(lines[0]).toMatch(/^evaluation\.judge\.reasoning_effort: must be "none"/);
   });
 
   it("15. reports every problem at once rather than stopping at the first", () => {

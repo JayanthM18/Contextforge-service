@@ -129,6 +129,8 @@ class RagasScorer:
             client=make_client(judge, env, "judge"),
             temperature=judge.temperature,
             seed=judge.seed,
+            # Only when set: non-reasoning models reject the parameter.
+            **({} if judge.reasoning_effort is None else {"reasoning_effort": judge.reasoning_effort}),
         )
 
         self._metrics: dict[str, Any] = {}
