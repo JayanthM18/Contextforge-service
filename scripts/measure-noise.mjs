@@ -71,7 +71,8 @@ writeFileSync(path.join(values.output, "noise.json"), `${JSON.stringify(report, 
 
 const f = (v) => v.toFixed(3);
 process.stdout.write(
-  `\nNoise floor over ${String(report.runs)} self-comparisons, judge ${report.judge}\n\n`,
+  `\nNoise floor over ${String(report.runs)} self-comparisons of ${String(report.cases)} cases, judge ${report.judge}\n` +
+    `(one case flipping moves a mean by ${f(1 / Math.max(report.cases, 1))}; suggestions never sit below that)\n\n`,
 );
 process.stdout.write(
   "metric              mean|Δ|  max|Δ|  case p95  case max  suggested mean_drop\n",

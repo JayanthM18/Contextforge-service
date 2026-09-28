@@ -24,6 +24,8 @@ export interface MetricNoise {
 
 export interface NoiseReport {
   readonly runs: number;
+  /** Cases compared per run; one case flipping moves a mean by 1/cases. */
+  readonly cases: number;
   readonly judge: string;
   readonly metrics: MetricNoise[];
   readonly suggested: {
@@ -70,18 +72,33 @@ export function measureNoise(
     };
   });
 
-  // Mean thresholds: half again the largest drift seen with nothing changed,
-  // and never below 0.02. Case threshold: above the 95th-percentile case drop;
-  // the rarer, larger swings are what max_regressed_cases absorbs.
+  // Scores move in chunks: one case flipping from 1 to 0 moves a mean over N
+  // cases by 1/N. A threshold below that fails a pull request on a single
+  // flip, however quiet the measurement was, so drift alone is not enough.
+  // Measured with a real judge, five self-comparisons drifted by exactly 0,
+  // and drift-only suggestions of 0.02 would have been below one flip (0.029).
+  const cases = runs[0] === undefined ? 0 : pairCases(runs[0].baseline, runs[0].candidate).length;
+  const oneFlip = cases === 0 ? 0 : 1 / cases;
+
+  // Mean thresholds: half again the larger of the drift seen and one flip.
   const mean_drop: Partial<Record<Metric, number>> = {};
-  for (const m of perMetric) mean_drop[m.name] = Math.max(0.02, ceil2(m.maxAbsDelta * 1.5));
+  for (const m of perMetric) {
+    mean_drop[m.name] = Math.max(0.02, ceil2(Math.max(m.maxAbsDelta, oneFlip) * 1.5));
+  }
+
+  // Case threshold: above the 95th-percentile case drop, and never below
+  // 0.30. A typical answer holds about three statements, so one statement
+  // changing its verdict moves that case's faithfulness by about 0.33; below
+  // 0.30 even a wording change in one answer marks the case regressed. The
+  // rarer, larger swings are what max_regressed_cases absorbs.
   const case_drop = Math.min(
     1,
-    Math.max(0.05, ceil2(Math.max(...perMetric.map((m) => m.caseDropP95), 0) * 1.2)),
+    Math.max(0.3, ceil2(Math.max(...perMetric.map((m) => m.caseDropP95), 0) * 1.2)),
   );
 
   return {
     runs: runs.length,
+    cases,
     judge: runs[0]?.verdict.judge_model ?? "unknown",
     metrics: perMetric,
     suggested: { mean_drop, case_drop },

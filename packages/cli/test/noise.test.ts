@@ -15,6 +15,8 @@ function selfRun(wobble: number[]): ResultsFile {
   return { verdict: compare(baseline, candidate, testConfig(), "dual"), baseline, candidate };
 }
 
+const quiet = (cases: number): ResultsFile => selfRun(Array.from({ length: cases }, () => 0));
+
 describe("measureNoise", () => {
   const report = measureNoise(
     [selfRun([0.0, 0.1, 0.0, 0.0]), selfRun([0.04, 0.0, 0.0, 0.0])],
@@ -31,19 +33,29 @@ describe("measureNoise", () => {
     expect(faithfulness?.caseDropMax).toBeCloseTo(0.1, 10);
   });
 
-  it("suggests a mean threshold above the drift seen, never below 0.02", () => {
-    expect(report.suggested.mean_drop.faithfulness).toBe(0.04);
-    expect(measureNoise([selfRun([0, 0])], ["faithfulness"]).suggested.mean_drop.faithfulness).toBe(
-      0.02,
-    );
+  it("never suggests a mean threshold one flipped case could breach on its own", () => {
+    // The real measurement: 34 cases, five self-comparisons, zero drift. A
+    // drift-only rule suggested 0.02, below one flip (1/34 = 0.029).
+    expect(measureNoise([quiet(34)], ["faithfulness"]).suggested.mean_drop.faithfulness).toBe(0.05);
   });
 
-  it("suggests a case threshold above the 95th-percentile case drop", () => {
-    expect(report.suggested.case_drop).toBeGreaterThanOrEqual(0.05);
-    expect(report.suggested.case_drop).toBeLessThanOrEqual(1);
+  it("follows the drift when it is larger than one flip", () => {
+    const drifting = selfRun(Array.from({ length: 200 }, () => 0.05));
+
+    expect(measureNoise([drifting], ["faithfulness"]).suggested.mean_drop.faithfulness).toBe(0.08);
   });
 
-  it("records the run count and the judge, which the measurement belongs to", () => {
-    expect(report).toMatchObject({ runs: 2, judge: "gpt-4o-mini" });
+  it("never suggests a case threshold below 0.30, one statement's worth", () => {
+    expect(measureNoise([quiet(34)], ["faithfulness"]).suggested.case_drop).toBe(0.3);
+  });
+
+  it("raises the case threshold above the 95th-percentile case drop when that is larger", () => {
+    const swinging = selfRun(Array.from({ length: 20 }, () => 0.5));
+
+    expect(measureNoise([swinging], ["faithfulness"]).suggested.case_drop).toBe(0.6);
+  });
+
+  it("records the runs, the cases and the judge, which the measurement belongs to", () => {
+    expect(report).toMatchObject({ runs: 2, cases: 4, judge: "gpt-4o-mini" });
   });
 });

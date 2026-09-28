@@ -310,6 +310,13 @@ measurement used, shipped defaults are calibrated against the shipped default
 judge, and a user running a different judge recalibrates their own thresholds.
 Any published result names the judge that produced it.
 
+Thresholds also respect how coarse scores are. One case flipping from 1 to 0
+moves a mean over N cases by 1/N, so a `mean_drop` below that fails a pull
+request on a single flip however quiet the measurement was: with 34 cases, one
+flip is 0.029. `pnpm measure-noise` therefore never suggests a `mean_drop`
+below 1.5 flips, nor a `case_drop` below 0.30 — about one statement's verdict
+in a typical three-statement answer.
+
 ## 5. Report
 
 A single sticky PR comment, updated on every push:
