@@ -93,6 +93,8 @@ runs:
       with:
         name: contextforge-report
         path: ${{ inputs.output }}
+        # The output folder is usually .contextforge, which v4 skips by default.
+        include-hidden-files: true
         if-no-files-found: ignore
 
     # The check status: pass (0), regression (1) and tool error (2) stay

@@ -182,8 +182,8 @@ describe("compare", () => {
 
     const notes = compare(result(base), result(cand), config, "dual").notes.join("\n");
 
-    expect(notes).toContain("the candidate app failed to answer 1 cases");
-    expect(notes).toContain("1 cases appear on only one side");
+    expect(notes).toContain("the candidate app failed to answer 1 case");
+    expect(notes).toContain("1 case appears on only one side and was not compared");
   });
 
   it("refuses results from different test sets", () => {

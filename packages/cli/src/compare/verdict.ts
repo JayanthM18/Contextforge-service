@@ -71,15 +71,19 @@ export function compare(
   const failedCandidate = candidate.results.filter((r) => r.status === "failed").length;
   const failedBaseline = baseline.results.filter((r) => r.status === "failed").length;
   if (failedCandidate > 0)
-    notes.push(`the candidate app failed to answer ${String(failedCandidate)} cases`);
+    notes.push(`the candidate app failed to answer ${count(failedCandidate, "case")}`);
   if (failedBaseline > 0)
-    notes.push(`the baseline app failed to answer ${String(failedBaseline)} cases`);
+    notes.push(`the baseline app failed to answer ${count(failedBaseline, "case")}`);
   const unscored = unscoredCount(candidate, metrics) + unscoredCount(baseline, metrics);
   if (unscored > 0)
-    notes.push(`${String(unscored)} scores could not be computed by the judge and were excluded`);
+    notes.push(
+      `${count(unscored, "score")} could not be computed by the judge and ${unscored === 1 ? "was" : "were"} excluded`,
+    );
   const missing = baseline.results.length + candidate.results.length - 2 * pairs.length;
   if (missing > 0)
-    notes.push(`${String(missing)} cases appear on only one side and were not compared`);
+    notes.push(
+      `${count(missing, "case")} ${missing === 1 ? "appears" : "appear"} on only one side and ${missing === 1 ? "was" : "were"} not compared`,
+    );
 
   return {
     status: failed ? "fail" : "pass",
@@ -92,4 +96,9 @@ export function compare(
     regressions: regressions.map((r) => ({ case_id: r.caseId, reasons: r.reasons })),
     notes,
   };
+}
+
+/** "1 case", "3 cases". */
+function count(n: number, noun: string): string {
+  return `${String(n)} ${noun}${n === 1 ? "" : "s"}`;
 }
