@@ -11,6 +11,9 @@
 # reachable judge. Build first: pnpm build.
 set -euo pipefail
 
+# The scenario edits live in one place, shared with demo.sh.
+source "$(cd "$(dirname "$0")" && pwd)/lib/scenarios.sh"
+
 CONFIG=examples/contextforge.yml
 BASE=main
 WEAK_EMBEDDING=text-embedding-ada-002
@@ -38,29 +41,10 @@ fi
 
 $CLI validate --config "$CONFIG"
 
-# Each scenario edits the sample app in a fresh worktree. Values are written
-# literally rather than as ${VAR:-default}, so an exported variable cannot
-# quietly undo the regression.
+# Each scenario edits the sample app in a fresh worktree, with the same edits
+# scripts/demo.sh makes.
 apply() {
-  case "$1" in
-    smaller-top-k)
-      sed -i 's/TOP_K: \${TOP_K:-5}/TOP_K: 1/' "$APP/docker-compose.eval.yml" ;;
-    weaker-embeddings)
-      sed -i "s/EMBEDDING_MODEL: \${EMBEDDING_MODEL:-[^}]*}/EMBEDDING_MODEL: $WEAK_EMBEDDING/" "$APP/docker-compose.eval.yml" ;;
-    sloppy-prompt)
-      python3 - "$APP/src/generate.ts" <<'PY'
-import pathlib, sys
-p = pathlib.Path(sys.argv[1]); s = p.read_text()
-start = s.index("const SYSTEM_PROMPT = [")
-end = s.index('].join(" ");', start) + len('].join(" ");')
-s = s[:start] + 'const SYSTEM_PROMPT = ["You are a friendly assistant. Answer the question as helpfully as you can."].join(" ");' + s[end:]
-p.write_text(s)
-PY
-      ;;
-    harmless-refactor)
-      # Rename locals only; behaviour is identical.
-      sed -i 's/magnitudeA/normA/g; s/magnitudeB/normB/g; s/denominator/norms/g' "$APP/src/retrieve.ts" ;;
-  esac
+  apply_scenario "$1" "$APP" "$WEAK_EMBEDDING"
 }
 
 declare -A EXPECT=(

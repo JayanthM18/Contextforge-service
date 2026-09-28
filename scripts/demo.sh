@@ -16,6 +16,9 @@
 # Scenario edits are undone afterwards, however the run ends.
 set -uo pipefail
 
+# The scenario edits live in one place, shared with validate-regressions.sh.
+source "$(cd "$(dirname "$0")" && pwd)/lib/scenarios.sh"
+
 SCENARIO=""
 CASES=""
 JUDGE_HOST=judge-box
@@ -47,23 +50,11 @@ if [ -n "$SCENARIO" ]; then
     exit 2
   fi
   trap 'git checkout -- "$APP"' EXIT
+  apply_scenario "$SCENARIO" "$APP"
   case "$SCENARIO" in
-    top-k)
-      sed -i 's/TOP_K: \${TOP_K:-5}/TOP_K: 1/' "$APP/docker-compose.eval.yml"
-      echo "Change: the app now retrieves 1 passage per question instead of 5." ;;
-    prompt)
-      python3 - "$APP/src/generate.ts" <<'PY'
-import pathlib, sys
-p = pathlib.Path(sys.argv[1]); s = p.read_text()
-start = s.index("const SYSTEM_PROMPT = [")
-end = s.index('].join(" ");', start) + len('].join(" ");')
-s = s[:start] + 'const SYSTEM_PROMPT = ["You are a friendly assistant. Answer the question as helpfully as you can."].join(" ");' + s[end:]
-p.write_text(s)
-PY
-      echo "Change: the prompt no longer tells the model to answer only from the retrieved passages." ;;
-    harmless)
-      sed -i 's/magnitudeA/normA/g; s/magnitudeB/normB/g; s/denominator/norms/g' "$APP/src/retrieve.ts"
-      echo "Change: variables renamed in the retriever; behaviour is identical." ;;
+    top-k) echo "Change: the app now retrieves 1 passage per question instead of 5." ;;
+    prompt) echo "Change: the prompt no longer tells the model to answer only from the retrieved passages." ;;
+    harmless) echo "Change: variables renamed in the retriever; behaviour is identical." ;;
   esac
   git diff --stat -- "$APP" | sed 's/^/  /'
 elif git diff --quiet -- "$APP"; then
