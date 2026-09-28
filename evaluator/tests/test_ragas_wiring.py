@@ -60,15 +60,42 @@ def test_reasoning_effort_reaches_the_judge_only_when_set() -> None:
     assert off["reasoning_effort"] == "none"
 
 
-def test_the_generator_objects_build() -> None:
+def _generator_models():
     from langchain_openai import ChatOpenAI, OpenAIEmbeddings
     from ragas.embeddings import LangchainEmbeddingsWrapper
     from ragas.llms import LangchainLLMWrapper
+
+    llm = LangchainLLMWrapper(ChatOpenAI(model="judge", base_url=UNREACHABLE, api_key="x", temperature=0, seed=42))
+    embeddings = LangchainEmbeddingsWrapper(
+        OpenAIEmbeddings(model="embed", base_url=UNREACHABLE, api_key="x", check_embedding_ctx_length=False)
+    )
+    return llm, embeddings
+
+
+def test_the_generator_objects_build() -> None:
     from ragas.testset import TestsetGenerator
 
-    TestsetGenerator(
-        llm=LangchainLLMWrapper(ChatOpenAI(model="judge", base_url=UNREACHABLE, api_key="x", temperature=0, seed=42)),
-        embedding_model=LangchainEmbeddingsWrapper(
-            OpenAIEmbeddings(model="embed", base_url=UNREACHABLE, api_key="x", check_embedding_ctx_length=False)
-        ),
-    )
+    llm, embeddings = _generator_models()
+    TestsetGenerator(llm=llm, embedding_model=embeddings)
+
+
+def test_the_generation_pipeline_builds_without_the_network() -> None:
+    """Ragas's generation transforms, as `dataset generate` builds them.
+
+    This is the step that first failed for real: it imports rapidfuzz lazily,
+    which Ragas does not install, and it counts tokens with tiktoken, which
+    downloads its tables on first use unless the image already has them.
+    Building the transforms makes no model calls, so this passes with the
+    network off — and only if both are in place.
+    """
+    from langchain_core.documents import Document
+    from ragas.testset.transforms.default import default_transforms
+
+    long_text = " ".join(f"Refund policy clause {n} explains the thirty day window." for n in range(120))
+    documents = [
+        Document(page_content=long_text, metadata={"source": "long.md"}),
+        Document(page_content="Express delivery costs $14.95.", metadata={"source": "short.md"}),
+    ]
+    llm, embeddings = _generator_models()
+
+    assert default_transforms(documents=documents, llm=llm, embedding_model=embeddings)

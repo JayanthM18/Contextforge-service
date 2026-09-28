@@ -53,6 +53,17 @@ def test_a_configuration_error_exits_two() -> None:
     assert code == EXIT_TOOL_ERROR
 
 
+def test_an_unexpected_failure_exits_two_not_one() -> None:
+    def explode(_request, _env):
+        raise ImportError("rapidfuzz is required for string distance")
+
+    code = main(
+        ["score"], stdin=io.StringIO(json.dumps(make_request())), stdout=io.StringIO(), env={},
+        make_scorer=explode,
+    )
+    assert code == EXIT_TOOL_ERROR
+
+
 def test_file_input_and_output(tmp_path: Path, factory) -> None:
     source = tmp_path / "request.json"
     target = tmp_path / "response.json"

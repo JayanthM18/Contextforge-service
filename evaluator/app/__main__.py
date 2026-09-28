@@ -141,8 +141,14 @@ def main(
     except OSError as error:
         log.error("cannot read or write a file: %s", error)
         return EXIT_TOOL_ERROR
+    except Exception:  # noqa: BLE001 — anything unforeseen is still a tool error
+        # Without this, an unexpected failure (a missing optional dependency,
+        # say) escapes as a bare traceback with exit code 1, which the
+        # contract reserves for nothing: every failure here is exit 2.
+        log.exception("the evaluator failed unexpectedly")
+        return EXIT_TOOL_ERROR
 
-    nulls = sum(value is None for result in response.results for value in result.scores.values())
+    nulls =sum(value is None for result in response.results for value in result.scores.values())
     if nulls:
         log.warning("%d scores could not be computed; see errors in the response", nulls)
     return EXIT_OK

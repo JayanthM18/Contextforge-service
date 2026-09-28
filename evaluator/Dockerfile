@@ -9,11 +9,18 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     # Ragas and its dependencies phone home by default. The evaluator only
     # talks to the judge it was given.
     RAGAS_DO_NOT_TRACK=true \
-    HF_HUB_DISABLE_TELEMETRY=1
+    HF_HUB_DISABLE_TELEMETRY=1 \
+    TIKTOKEN_CACHE_DIR=/opt/tiktoken
 
 WORKDIR /evaluator
 COPY requirements.txt ./
 RUN pip install --no-deps -r requirements.txt && pip check
+
+# tiktoken downloads its encoding tables on first use. Ragas counts tokens
+# with cl100k_base and o200k_base, so fetch both at build time: at run time
+# the evaluator then needs the network only to reach the judge.
+RUN python -c "import tiktoken; [tiktoken.get_encoding(e) for e in ('cl100k_base', 'o200k_base')]" \
+    && chmod -R a+rX /opt/tiktoken
 
 COPY app ./app
 

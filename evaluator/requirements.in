@@ -13,3 +13,9 @@ ragas==0.4.3
 instructor>=1.11
 openai>=2,<3
 langchain-community<0.4.2
+#
+# rapidfuzz is a direct requirement because Ragas's test-set generator imports
+# it lazily, and Ragas installs it only with its "all" extra, which would also
+# pull in transformers and PyTorch. Without it, `dataset generate` fails the
+# moment generation starts.
+rapidfuzz
