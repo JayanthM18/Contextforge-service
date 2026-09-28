@@ -46,7 +46,7 @@ export function all(value: number | null): ScoreMap {
 
 export function result(
   records: CaseRecord[],
-  overrides: Partial<RunResult> & { fingerprint?: Partial<Fingerprint> } = {},
+  overrides: Partial<Omit<RunResult, "fingerprint">> & { fingerprint?: Partial<Fingerprint> } = {},
 ): RunResult {
   const { fingerprint, ...rest } = overrides;
   return {

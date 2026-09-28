@@ -91,6 +91,7 @@ describe("keyVariables", () => {
 
 describe("evaluatorRunArgs", () => {
   const base = {
+    task: "score" as const,
     image: "img",
     workdir: "/tmp/w",
     keyVariables: ["OPENAI_API_KEY"],
@@ -108,6 +109,12 @@ describe("evaluatorRunArgs", () => {
 
     expect(args).toContain("host.docker.internal:host-gateway");
     expect(args).not.toContain("host");
+  });
+
+  it("runs the requested task", () => {
+    const args = evaluatorRunArgs({ ...base, platform: "linux" });
+
+    expect(args.slice(args.indexOf("img") + 1, args.indexOf("img") + 2)).toEqual(["score"]);
   });
 
   it("passes the key by name only, so it never appears on the command line", () => {
