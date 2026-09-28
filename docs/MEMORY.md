@@ -38,6 +38,41 @@ an entry here before the pull request is opened.
 
 ---
 
+## 2026-09-28 — cleanup — bloat removed, behaviour unchanged
+
+**Changed:** six commits, one concern each — one shared `failure()` test
+helper instead of five copies; one `scripts/lib/scenarios.sh` for the
+scenario edits `demo.sh` and `validate-regressions.sh` both make; `pnpm
+sample-app` fixed; an unread variable dropped from `.env.example`; the
+evaluator's test image installs from `requirements-dev.txt`; the Action's
+unused `@contextforge/shared` dependency removed. Also deleted git's
+`refs/original` backup from the commit-message rewrite.
+**Why:** the user asked for the codebase to be organised and its bloat
+removed, without changes that could break it.
+**Decisions:**
+- **No files moved or renamed.** The layout already follows
+  `docs/ARCHITECTURE.md`; moving files would rewrite imports for no gain.
+- **About 50 exports that are only used in their own file were left
+  exported.** They are option and result types; removing `export` changes
+  nothing at runtime.
+- The survey found almost no dead code in the TypeScript core. The bloat was
+  duplication and stale configuration.
+**Notes:**
+- **Proof of no behaviour change:** before and after, the same script recorded
+  the built CLI's help text, every exit code, the `compare` verdict and all
+  three report formats on fixed inputs, plus test, typecheck and lint output.
+  All 14 outputs were byte-identical. A real `run --answers-only` in Docker
+  answered all 34 cases on both sides and left nothing behind.
+- **`pnpm sample-app` had never worked:** run from the repository root, the
+  app looked for `docs/knowledge-base` there and crashed on start.
+- The `refs/original` backup still held the 14 commits carrying Claude
+  trailers. A normal push would not have sent it; a mirror push would have.
+- Changing the Dockerfile changes the evaluator image's source hash, so the
+  next scoring run rebuilds the runtime image once. That is the tagging
+  working as designed.
+
+---
+
 ## 2026-09-28 — stage 6 — noise floor measured; first demos
 
 **Changed:** `packages/cli/src/compare/noise.ts` (suggestions respect score
