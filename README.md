@@ -96,6 +96,22 @@ store the baseline) and `.github/workflows/pr-check.yml` (pull request: check
 and comment), add `OPENAI_API_KEY` as a repository secret, and make the
 `pr-check` job a required check in branch protection.
 
+## Demo
+
+`scripts/demo.sh` changes the sample app, compares it with the last commit and
+prints the verdict, then undoes the change:
+
+```sh
+scripts/demo.sh top-k --cases 10      # retrieve 1 passage instead of 5: should fail
+scripts/demo.sh prompt --cases 10     # drop the grounding rule from the prompt: should fail
+scripts/demo.sh harmless --cases 10   # rename variables only: should pass
+scripts/demo.sh --cases 10            # compare your own uncommitted edits to the app
+```
+
+It uses the Ollama judge in `examples/contextforge.local-judge.yml`; pass
+`--judge <host>` if that machine's address changes. Reports land in
+`.contextforge/demo-<scenario>/`.
+
 ## Choosing a judge
 
 The judge is configuration, not code. Any server that speaks the OpenAI API
