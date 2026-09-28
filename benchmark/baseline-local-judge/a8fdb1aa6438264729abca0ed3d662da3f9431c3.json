@@ -1,0 +1,1490 @@
+{
+  "commit": "a8fdb1aa6438264729abca0ed3d662da3f9431c3",
+  "created_at": "2026-09-28T12:44:21Z",
+  "fingerprint": {
+    "dataset_hash": "sha256:349e53e510b709342b58076b4498f15a2cb3d8c26e91f9cc3447afed39bc467c",
+    "app_hash": "sha256:a2491aaa398f7ae9d4d8a08df5f0a3138a0b35f5e6be3d3e381a3d7e706d975f",
+    "judge": {
+      "model": "qwen3:14b",
+      "temperature": 0,
+      "seed": 42,
+      "reasoning_effort": "none"
+    },
+    "embeddings": {
+      "model": "nomic-embed-text"
+    },
+    "tool_version": "0.1.0"
+  },
+  "runs": 1,
+  "results": [
+    {
+      "case_id": "tc-001",
+      "question": "how long does it take to verify identity with support if you lose both the authenticator and recovery codes?",
+      "status": "ok",
+      "error": null,
+      "answer": "It takes up to 5 business days to verify identity with support if you lose both the authenticator and recovery codes.",
+      "contexts": [
+        {
+          "id": "account-and-login.md#c2",
+          "text": "not arrived within 10 minutes, check the\nspam folder and confirm you are using the address the order was placed with.\n\n## Two-factor authentication\n\nTwo-factor authentication is optional and uses an authenticator app; we do not\nsend codes by SMS. Enabling it invalidates existing sessions on other devices.\nRecovery codes are shown once at setup and cannot be retrieved later — losing\nboth the authenticator and the recovery codes means identity verification with\nsupport, which takes up to 5 business days.\n\n## Changing the email address\n\nThe account email can be changed in Account Settings and requires confirmation\nfrom both the old and the new address. Orders already placed keep the old\naddress on their records, so dispatch notifications for an in-flight order go\nto the address that was current when it was placed.\n\n## Closing an account"
+        },
+        {
+          "id": "account-and-login.md#c1",
+          "text": "# Accounts and signing in\n\nAn account is not required to place an order — guest checkout is available —\nbut it is required to use the Returns Centre, track orders and hold loyalty\npoints.\n\n## Resetting a password\n\nChoose *Forgot password* on the sign-in page. The reset link is valid for **60\nminutes** and can be used once. Requesting a new link immediately invalidates\nthe previous one. If the email has not arrived within 10 minutes, check the\nspam folder and confirm you are using the address the order was placed with.\n\n## Two-factor authentication"
+        },
+        {
+          "id": "privacy-and-data.md#c2",
+          "text": "accounting obligations.\nSupport conversations are kept for 24 months. Marketing preferences are kept\nuntil you change them.\n\n## Access and deletion\n\nYou can request a copy of your data or its deletion from Account Settings. A\ncopy arrives within 30 days. Deletion removes the account, addresses, marketing\npreferences and support history, but **not** order records inside the 7-year\nretention period, which are retained in a restricted form that is not linked to\na live account.\n\n## Sharing\n\nWe share addresses with carriers to deliver, and transaction data with the\npayment processor and with tax authorities where required. We do not sell\npersonal data."
+        },
+        {
+          "id": "contacting-support.md#c1",
+          "text": "# Contacting support\n\n## Channels and hours\n\nLive chat runs 07:00 to 22:00 local time, seven days a week, and is the fastest\nchannel. Email is answered within **one business day**; complex cases involving\na carrier investigation or a warranty decision take longer. Phone support runs\n09:00 to 17:00 on business days. There is no support on 25 December or\n1 January.\n\n## What to have ready\n\nThe order number is the single most useful thing. With it, most questions are\nanswered in one message. Without it, we need the email address the order was\nplaced with plus the delivery postcode, and identity checks add time.\n\n## Escalation\n\nIf a case has been open for more than 5 business days without a resolution, ask\nfor it to be escalated. Escalated cases go to a senior agent with authority to\nissue a goodwill refund or replacement without a carrier decision.\n\n## What support cannot do"
+        },
+        {
+          "id": "gift-cards.md#c2",
+          "text": "goes\nback to the gift card and the remainder to the original payment method. A gift\ncard balance is never refunded as cash.\n\n## Lost cards and fraud\n\nA digital card can be reissued to the original purchaser if it has not been\nredeemed. We cannot reissue a redeemed card, and we cannot tell you who\nredeemed it. Gift cards themselves cannot be returned or refunded, which is why\nthey appear in the non-returnable list in `returns-and-refunds.md`."
+        }
+      ],
+      "scores": {
+        "context_precision": 0.9999999999,
+        "context_recall": 1,
+        "faithfulness": 1,
+        "answer_relevancy": 0.9999999999999986
+      },
+      "scores_stddev": {
+        "context_precision": null,
+        "context_recall": null,
+        "faithfulness": null,
+        "answer_relevancy": null
+      },
+      "score_errors": {},
+      "latency_ms": 5424
+    },
+    {
+      "case_id": "tc-002",
+      "question": "What payment terms do approved business accounts get?",
+      "status": "ok",
+      "error": null,
+      "answer": "Approved business accounts get payment terms of net 30.",
+      "contexts": [
+        {
+          "id": "bulk-and-business-orders.md#c1",
+          "text": "# Bulk and business orders\n\nOrders of **12 or more units** of a single item, or any order above $2,500,\nqualify for business pricing. Submit the request through the Business Orders\nform rather than checking out normally; a quote follows within 2 business days.\n\n## What business pricing includes\n\nTiered discounts starting at 10% for 12 units and reaching 25% at 100 units,\nfree Standard delivery at any value, consolidated invoicing, and payment terms\nof net 30 for approved accounts. Custom embroidery and logo application are\navailable with a 15-unit minimum.\n\n## Stock and lead time\n\nBusiness orders draw on reserved stock rather than the consumer pool, so\navailability shown on the website is not a reliable guide. Typical lead time is\n5 business days for stocked items and 4 to 6 weeks where a production run is\nneeded. Custom decoration adds 10 business days.\n\n## Returns on business orders"
+        },
+        {
+          "id": "payment-methods.md#c1",
+          "text": "# Payment methods\n\nWe accept Visa, Mastercard, American Express, Apple Pay, Google Pay, PayPal and\nNorthwind gift cards. We do not accept cheques, bank transfer, cryptocurrency\nor cash on delivery.\n\n## When you are charged\n\nPlacing an order creates an **authorisation**, which reserves the funds but\ndoes not take them. The charge is **captured** when the parcel is dispatched.\nFor a split shipment each parcel is captured separately, so your statement may\nshow two smaller charges rather than one.\n\nAn authorisation that is not captured within 7 days expires and the funds are\nreleased by your bank automatically.\n\n## Paying with more than one method\n\nA gift card can be combined with one card or wallet. The gift card balance is\nconsumed first and the remainder goes to the second method. Two credit cards\ncannot be combined on a single order.\n\n## Declined payments"
+        },
+        {
+          "id": "privacy-and-data.md#c2",
+          "text": "accounting obligations.\nSupport conversations are kept for 24 months. Marketing preferences are kept\nuntil you change them.\n\n## Access and deletion\n\nYou can request a copy of your data or its deletion from Account Settings. A\ncopy arrives within 30 days. Deletion removes the account, addresses, marketing\npreferences and support history, but **not** order records inside the 7-year\nretention period, which are retained in a restricted form that is not linked to\na live account.\n\n## Sharing\n\nWe share addresses with carriers to deliver, and transaction data with the\npayment processor and with tax authorities where required. We do not sell\npersonal data."
+        },
+        {
+          "id": "bulk-and-business-orders.md#c2",
+          "text": "days for stocked items and 4 to 6 weeks where a production run is\nneeded. Custom decoration adds 10 business days.\n\n## Returns on business orders\n\nBusiness orders are **not covered by the 30-day consumer return policy** in\n`returns-and-refunds.md`. Returns are by prior agreement only, within 14 days\nof delivery, and a 15% restocking fee applies to unopened cases. Decorated and\ncustom items cannot be returned at all.\n\n## Tax exemption\n\nRegistered tax-exempt organisations submit their certificate once; it is\napplied to all future orders on the account."
+        },
+        {
+          "id": "payment-methods.md#c2",
+          "text": "balance is\nconsumed first and the remainder goes to the second method. Two credit cards\ncannot be combined on a single order.\n\n## Declined payments\n\nThe most common causes are an address mismatch with the card issuer, an expired\ncard, and a daily spending limit. We are not told the specific reason a bank\ndeclines a transaction, so if a card is repeatedly refused the issuer is the\nonly source of the answer. The order stays in Processing for 48 hours to give\nyou time to change the payment method before it is cancelled."
+        }
+      ],
+      "scores": {
+        "context_precision": 0.9999999999,
+        "context_recall": 1,
+        "faithfulness": 1,
+        "answer_relevancy": 0.9927863080946011
+      },
+      "scores_stddev": {
+        "context_precision": null,
+        "context_recall": null,
+        "faithfulness": null,
+        "answer_relevancy": null
+      },
+      "score_errors": {},
+      "latency_ms": 1195
+    },
+    {
+      "case_id": "tc-003",
+      "question": "What is the prepaied lable used for when an item is damaged in transit?",
+      "status": "ok",
+      "error": null,
+      "answer": "When an item is damaged in transit, a prepaid label is provided for the damaged item so you can return it without waiting for the replacement to arrive. This allows for a quicker resolution and ensures the damaged item is sent back to us for investigation.",
+      "contexts": [
+        {
+          "id": "damaged-or-missing-items.md#c1",
+          "text": "# Damaged, wrong or missing items\n\nReport any of these within **7 days of delivery** so we can hold the carrier\naccountable. Reports after 7 days are still investigated but the carrier will\nusually refuse the claim, which limits what we can recover.\n\n## Damaged in transit\n\nPhotograph the outer packaging before you unpack anything else, then the item.\nThe packaging photograph is what carriers accept as evidence. We ship a\nreplacement immediately and send a prepaid label for the damaged item; you do\nnot wait for the return to arrive.\n\n## Wrong item received\n\nKeep the item and the packing slip and report it. We ship the correct item and\ncollect the wrong one. You are never asked to pay the difference if the item we\nsent by mistake is more expensive.\n\n## Missing from a multi-item parcel"
+        },
+        {
+          "id": "order-tracking.md#c2",
+          "text": "parcel is on a vehicle and will be attempted today.\n- **Delivered** — the carrier has recorded a successful delivery.\n\n## Tracking has not updated\n\nCarriers sometimes go quiet for 24 to 48 hours in the middle of a journey,\nparticularly on international routes where the parcel is between networks. This\nis normal. If tracking has not moved for **5 consecutive business days**, treat\nthe parcel as lost and contact support; see `damaged-or-missing-items.md`.\n\n## Marked delivered but not received\n\nCheck with neighbours and around the property first, as carriers often leave\nparcels in a safe place and photograph them. If it has not appeared within 24\nhours of the delivery scan, report it and we will open a carrier investigation."
+        },
+        {
+          "id": "order-tracking.md#c1",
+          "text": "# Tracking an order\n\nEvery dispatched parcel gets a tracking number. You will find it in the\ndispatch confirmation email and on the order page in your account.\n\n## Status meanings\n\n- **Processing** — the order is accepted but has not left the warehouse. You\n  can still cancel it at this stage; see `cancellations.md`.\n- **Dispatched** — the carrier has collected the parcel and the tracking number\n  is live. Tracking can take up to 6 hours to show its first scan.\n- **In transit** — the parcel is moving through the carrier network.\n- **Out for delivery** — the parcel is on a vehicle and will be attempted today.\n- **Delivered** — the carrier has recorded a successful delivery.\n\n## Tracking has not updated"
+        },
+        {
+          "id": "customs-and-duties.md#c2",
+          "text": "order, do not pay it — it is\neither a misclassification or a scam. Photograph the notice and send it to\nsupport.\n\n## Orders that cross a border\n\nA small number of specialist items ship direct from a supplier outside your\nregion. These are flagged *Ships internationally* on the product page and are\n**delivered duty unpaid**: the carrier collects import duty and handling before\nrelease. The amount is set by your customs authority, not by us, and we cannot\nestimate it.\n\n## Duties on a return\n\nImport duty paid on a cross-border order is refundable by your customs\nauthority, not by us. We refund the item price and, where the return is due to\na defect, the original shipping. Reclaiming duty is a form you file yourself;\nkeep the carrier's paperwork."
+        },
+        {
+          "id": "exchanges.md#c1",
+          "text": "# Exchanges\n\nAn exchange is a return and a new order handled together, so the same 30-day\nwindow described in `returns-and-refunds.md` applies.\n\n## Same product, different size or colour\n\nChoose *Exchange* rather than *Refund* in the Returns Centre and pick the\nreplacement variant. The replacement ships as soon as the return label is\nscanned by the carrier, so you are not waiting for the warehouse to receive the\noriginal. This is called an advance exchange and it is available once per\norder.\n\nIf the returned item never arrives within 21 days of the label being scanned,\nthe replacement is charged to the original payment method at the price you\noriginally paid.\n\n## Different product"
+        }
+      ],
+      "scores": {
+        "context_precision": 0.9999999999,
+        "context_recall": 1,
+        "faithfulness": 0.75,
+        "answer_relevancy": 0.8085549513647079
+      },
+      "scores_stddev": {
+        "context_precision": null,
+        "context_recall": null,
+        "faithfulness": null,
+        "answer_relevancy": null
+      },
+      "score_errors": {},
+      "latency_ms": 1382
+    },
+    {
+      "case_id": "tc-004",
+      "question": "What is the shipping policy for exchanges under standard delivery?",
+      "status": "ok",
+      "error": null,
+      "answer": "Exchanges under standard delivery are shipped free within the country of the original order. If you want to upgrade the replacement to Express delivery, you will need to pay the usual Express fee. Exchanges cannot be made across borders.",
+      "contexts": [
+        {
+          "id": "shipping-and-delivery.md#c2",
+          "text": "placed. A Standard order placed on a Friday afternoon typically dispatches\non Monday and arrives the following Thursday or Friday.\n\n## Where we ship\n\nWe ship to street addresses and carrier pickup points in the United States,\nCanada, the United Kingdom and the European Union. We do not deliver to PO\nboxes, and we cannot ship hazardous goods such as camping gas canisters or\nbear spray by air, so those items are restricted to Standard ground delivery\nwithin the contiguous United States.\n\n## Split shipments\n\nWhen one part of an order is on backorder we ship the available items\nimmediately at no extra charge and send the remainder when stock arrives. You\nare charged shipping once."
+        },
+        {
+          "id": "exchanges.md#c1",
+          "text": "# Exchanges\n\nAn exchange is a return and a new order handled together, so the same 30-day\nwindow described in `returns-and-refunds.md` applies.\n\n## Same product, different size or colour\n\nChoose *Exchange* rather than *Refund* in the Returns Centre and pick the\nreplacement variant. The replacement ships as soon as the return label is\nscanned by the carrier, so you are not waiting for the warehouse to receive the\noriginal. This is called an advance exchange and it is available once per\norder.\n\nIf the returned item never arrives within 21 days of the label being scanned,\nthe replacement is charged to the original payment method at the price you\noriginally paid.\n\n## Different product"
+        },
+        {
+          "id": "exchanges.md#c2",
+          "text": "21 days of the label being scanned,\nthe replacement is charged to the original payment method at the price you\noriginally paid.\n\n## Different product\n\nA swap to a different product is handled as a refund plus a fresh order. Refund\nthe original through the Returns Centre, then place the new order yourself. Any\nprice difference is settled at current prices; we do not honour the original\norder's price on a different product.\n\n## Exchange shipping cost\n\nExchanges ship free by Standard delivery within the country of the original\norder. Upgrading the replacement to Express costs the usual Express fee. We do\nnot exchange across borders — an order placed in Canada cannot be exchanged for\ndelivery to the United States."
+        },
+        {
+          "id": "shipping-and-delivery.md#c1",
+          "text": "# Shipping and delivery\n\nOrders placed before 14:00 local warehouse time on a business day are picked\nthe same day. Orders placed after that cut-off, at a weekend, or on a public\nholiday are picked on the next business day.\n\n## Delivery speeds and cost\n\n| Service | Delivery estimate | Cost |\n|---|---|---|\n| Standard | 3 to 5 business days | Free over $75, otherwise $6.95 |\n| Express | 1 to 2 business days | $14.95 |\n| Next Day | Next business day if ordered before 14:00 | $24.95 |\n\nDelivery estimates count business days from dispatch, not from when the order\nwas placed. A Standard order placed on a Friday afternoon typically dispatches\non Monday and arrives the following Thursday or Friday.\n\n## Where we ship"
+        },
+        {
+          "id": "international-orders.md#c2",
+          "text": "but EU customers also have the statutory 14-day right of\nwithdrawal, which runs in parallel and is not reduced by our policy.\n\n## Delivery times\n\nInternational delivery estimates assume clearance is uneventful. Customs delays\nare outside carrier control and do not count toward the 5-day \"tracking has not\nmoved\" rule in `order-tracking.md`.\n\n## What we cannot do\n\nWe cannot ship an order across storefronts, split one order across two\ncountries, or exchange an item bought in one region for delivery in another.\nDuties and taxes are covered in `customs-and-duties.md`."
+        }
+      ],
+      "scores": {
+        "context_precision": 0.3333333333,
+        "context_recall": 1,
+        "faithfulness": 1,
+        "answer_relevancy": 0.8045372993903023
+      },
+      "scores_stddev": {
+        "context_precision": null,
+        "context_recall": null,
+        "faithfulness": null,
+        "answer_relevancy": null
+      },
+      "score_errors": {},
+      "latency_ms": 1317
+    },
+    {
+      "case_id": "tc-005",
+      "question": "what is the shipping and delivery timelines and how does northwind plus subscription affect it",
+      "status": "ok",
+      "error": null,
+      "answer": "Northwind offers Standard, Express, and Next Day shipping options with varying delivery estimates and costs. The Northwind Plus subscription includes free Express delivery with no minimum order value, which means customers with this subscription can enjoy faster delivery without additional costs.",
+      "contexts": [
+        {
+          "id": "subscription-plans.md#c1",
+          "text": "# Northwind Plus subscription\n\nNorthwind Plus costs **$49 per year** or $5.50 per month. It includes free\nExpress delivery with no minimum order value, double loyalty points, a 60-day\nreturn window instead of 30, and early access to sale events 24 hours before\nthey open publicly.\n\n## Free trial\n\nNew members get a 30-day free trial, once per household. The trial converts to\na paid plan automatically unless cancelled, and you are told by email 3 days\nbefore it converts.\n\n## Billing\n\nAnnual plans are billed on the anniversary of sign-up. Monthly plans are billed\non the same day each month; where that day does not exist in a shorter month,\nbilling moves to the last day of the month.\n\n## Cancelling"
+        },
+        {
+          "id": "returns-and-refunds.md#c1",
+          "text": "# Returns and refunds\n\nNorthwind Supply Co. accepts returns on most items within **30 days of\ndelivery**. The 30-day window starts on the date the carrier marks the parcel\nas delivered, not the date the order was placed.\n\nTo qualify for a refund an item must be unused, in its original packaging, and\naccompanied by the order number. Items that show signs of wear, are missing\ntags, or have been washed are not eligible.\n\n## How to start a return\n\nOpen the Returns Centre in your account, select the order, and choose the items\nyou are sending back. You will receive a prepaid return label by email within\none business hour. Attach the label to the outside of the parcel and drop it at\nany carrier access point.\n\n## When the money arrives"
+        },
+        {
+          "id": "store-pickup.md#c1",
+          "text": "# Store and locker pickup\n\nPickup is available at the 14 Northwind stores and at roughly 3,000 carrier\nlocker points across our regions. Pickup is free regardless of order value.\n\n## How it works\n\nChoose *Collect* at checkout and pick a location. You are emailed a collection\ncode when the order is ready — usually the next business day for store stock\nand 2 to 3 business days for warehouse stock. Bring the code and photo\nidentification.\n\n## Collection window\n\nOrders are held for **10 calendar days** for store pickup and **3 calendar\ndays** at a locker, which is a carrier limit we cannot extend. Uncollected\norders are returned to the warehouse and refunded in full automatically,\nincluding any shipping paid.\n\n## Collection by someone else"
+        },
+        {
+          "id": "shipping-and-delivery.md#c1",
+          "text": "# Shipping and delivery\n\nOrders placed before 14:00 local warehouse time on a business day are picked\nthe same day. Orders placed after that cut-off, at a weekend, or on a public\nholiday are picked on the next business day.\n\n## Delivery speeds and cost\n\n| Service | Delivery estimate | Cost |\n|---|---|---|\n| Standard | 3 to 5 business days | Free over $75, otherwise $6.95 |\n| Express | 1 to 2 business days | $14.95 |\n| Next Day | Next business day if ordered before 14:00 | $24.95 |\n\nDelivery estimates count business days from dispatch, not from when the order\nwas placed. A Standard order placed on a Friday afternoon typically dispatches\non Monday and arrives the following Thursday or Friday.\n\n## Where we ship"
+        },
+        {
+          "id": "store-pickup.md#c2",
+          "text": "Uncollected\norders are returned to the warehouse and refunded in full automatically,\nincluding any shipping paid.\n\n## Collection by someone else\n\nName a nominated collector at checkout. They need the code and their own photo\nidentification. We cannot release an order to someone who is not named, even\nwith the code.\n\n## Returns at a store\n\nAny item can be returned at a Northwind store within the normal 30-day window,\nincluding items originally delivered to an address. Bring the order number.\nStore returns are inspected on the spot, so the refund is released the same day\nrather than after warehouse inspection (`returns-and-refunds.md`)."
+        }
+      ],
+      "scores": {
+        "context_precision": 0,
+        "context_recall": 1,
+        "faithfulness": 1,
+        "answer_relevancy": 0.856874471178603
+      },
+      "scores_stddev": {
+        "context_precision": null,
+        "context_recall": null,
+        "faithfulness": null,
+        "answer_relevancy": null
+      },
+      "score_errors": {},
+      "latency_ms": 1369
+    },
+    {
+      "case_id": "tc-006",
+      "question": "How does the return window interact with membership status, and what is the duration of the extended return window for Northwind Plus subscribers?",
+      "status": "ok",
+      "error": null,
+      "answer": "Northwind Plus subscribers enjoy an extended return window of 60 days instead of the standard 30 days. This extended window applies to orders placed while the membership was active. Letting a membership lapse does not shorten the return window for orders already placed.",
+      "contexts": [
+        {
+          "id": "subscription-plans.md#c1",
+          "text": "# Northwind Plus subscription\n\nNorthwind Plus costs **$49 per year** or $5.50 per month. It includes free\nExpress delivery with no minimum order value, double loyalty points, a 60-day\nreturn window instead of 30, and early access to sale events 24 hours before\nthey open publicly.\n\n## Free trial\n\nNew members get a 30-day free trial, once per household. The trial converts to\na paid plan automatically unless cancelled, and you are told by email 3 days\nbefore it converts.\n\n## Billing\n\nAnnual plans are billed on the anniversary of sign-up. Monthly plans are billed\non the same day each month; where that day does not exist in a shorter month,\nbilling moves to the last day of the month.\n\n## Cancelling"
+        },
+        {
+          "id": "returns-and-refunds.md#c1",
+          "text": "# Returns and refunds\n\nNorthwind Supply Co. accepts returns on most items within **30 days of\ndelivery**. The 30-day window starts on the date the carrier marks the parcel\nas delivered, not the date the order was placed.\n\nTo qualify for a refund an item must be unused, in its original packaging, and\naccompanied by the order number. Items that show signs of wear, are missing\ntags, or have been washed are not eligible.\n\n## How to start a return\n\nOpen the Returns Centre in your account, select the order, and choose the items\nyou are sending back. You will receive a prepaid return label by email within\none business hour. Attach the label to the outside of the parcel and drop it at\nany carrier access point.\n\n## When the money arrives"
+        },
+        {
+          "id": "subscription-plans.md#c2",
+          "text": "are billed\non the same day each month; where that day does not exist in a shorter month,\nbilling moves to the last day of the month.\n\n## Cancelling\n\nCancel at any time in Account Settings. Benefits continue until the end of the\nperiod you have already paid for and the plan does not renew. We do not\npro-rate a partial year: cancelling an annual plan in month two still gives you\nthe remaining ten months of benefits, with no refund.\n\n## Interaction with the return window\n\nThe 60-day Plus return window applies to orders placed while the membership was\nactive. Letting a membership lapse does not shorten the window on orders that\nwere already placed."
+        },
+        {
+          "id": "store-pickup.md#c2",
+          "text": "Uncollected\norders are returned to the warehouse and refunded in full automatically,\nincluding any shipping paid.\n\n## Collection by someone else\n\nName a nominated collector at checkout. They need the code and their own photo\nidentification. We cannot release an order to someone who is not named, even\nwith the code.\n\n## Returns at a store\n\nAny item can be returned at a Northwind store within the normal 30-day window,\nincluding items originally delivered to an address. Bring the order number.\nStore returns are inspected on the spot, so the refund is released the same day\nrather than after warehouse inspection (`returns-and-refunds.md`)."
+        },
+        {
+          "id": "loyalty-program.md#c1",
+          "text": "# Trailhead loyalty points\n\nEvery account earns **1 point per dollar** spent, excluding shipping, tax and\ngift card purchases. Northwind Plus members earn 2 points per dollar; see\n`subscription-plans.md`.\n\n## Redeeming\n\n100 points is worth $5 off an order. Points are redeemed in blocks of 100 at\ncheckout and can be combined with a gift card but not with a percentage-off\npromotion code.\n\n## When points arrive\n\nPoints post **14 days after delivery**, not at purchase. The delay covers the\nreturn window, so points are not earned on items that come straight back. A\nrefund removes the points that item earned; if they have already been spent,\nthe balance goes negative and future earnings pay it down.\n\n## Expiry\n\nPoints expire after **24 months of account inactivity**. Any order, return or\nsign-in resets the clock. You are emailed 30 days before expiry.\n\n## Tiers"
+        }
+      ],
+      "scores": {
+        "context_precision": 0.8333333332916666,
+        "context_recall": 1,
+        "faithfulness": 1,
+        "answer_relevancy": 0.8895819220975135
+      },
+      "scores_stddev": {
+        "context_precision": null,
+        "context_recall": null,
+        "faithfulness": null,
+        "answer_relevancy": null
+      },
+      "score_errors": {},
+      "latency_ms": 1337
+    },
+    {
+      "case_id": "tc-007",
+      "question": "Do customers in the EU have any return rights beyond the 30-day return window?",
+      "status": "ok",
+      "error": null,
+      "answer": "Yes, EU customers have the statutory 14-day right of withdrawal, which runs in parallel and is not reduced by the company's 30-day return policy.",
+      "contexts": [
+        {
+          "id": "international-orders.md#c2",
+          "text": "but EU customers also have the statutory 14-day right of\nwithdrawal, which runs in parallel and is not reduced by our policy.\n\n## Delivery times\n\nInternational delivery estimates assume clearance is uneventful. Customs delays\nare outside carrier control and do not count toward the 5-day \"tracking has not\nmoved\" rule in `order-tracking.md`.\n\n## What we cannot do\n\nWe cannot ship an order across storefronts, split one order across two\ncountries, or exchange an item bought in one region for delivery in another.\nDuties and taxes are covered in `customs-and-duties.md`."
+        },
+        {
+          "id": "returns-and-refunds.md#c1",
+          "text": "# Returns and refunds\n\nNorthwind Supply Co. accepts returns on most items within **30 days of\ndelivery**. The 30-day window starts on the date the carrier marks the parcel\nas delivered, not the date the order was placed.\n\nTo qualify for a refund an item must be unused, in its original packaging, and\naccompanied by the order number. Items that show signs of wear, are missing\ntags, or have been washed are not eligible.\n\n## How to start a return\n\nOpen the Returns Centre in your account, select the order, and choose the items\nyou are sending back. You will receive a prepaid return label by email within\none business hour. Attach the label to the outside of the parcel and drop it at\nany carrier access point.\n\n## When the money arrives"
+        },
+        {
+          "id": "exchanges.md#c1",
+          "text": "# Exchanges\n\nAn exchange is a return and a new order handled together, so the same 30-day\nwindow described in `returns-and-refunds.md` applies.\n\n## Same product, different size or colour\n\nChoose *Exchange* rather than *Refund* in the Returns Centre and pick the\nreplacement variant. The replacement ships as soon as the return label is\nscanned by the carrier, so you are not waiting for the warehouse to receive the\noriginal. This is called an advance exchange and it is available once per\norder.\n\nIf the returned item never arrives within 21 days of the label being scanned,\nthe replacement is charged to the original payment method at the price you\noriginally paid.\n\n## Different product"
+        },
+        {
+          "id": "bulk-and-business-orders.md#c2",
+          "text": "days for stocked items and 4 to 6 weeks where a production run is\nneeded. Custom decoration adds 10 business days.\n\n## Returns on business orders\n\nBusiness orders are **not covered by the 30-day consumer return policy** in\n`returns-and-refunds.md`. Returns are by prior agreement only, within 14 days\nof delivery, and a 15% restocking fee applies to unopened cases. Decorated and\ncustom items cannot be returned at all.\n\n## Tax exemption\n\nRegistered tax-exempt organisations submit their certificate once; it is\napplied to all future orders on the account."
+        },
+        {
+          "id": "returns-and-refunds.md#c2",
+          "text": "by email within\none business hour. Attach the label to the outside of the parcel and drop it at\nany carrier access point.\n\n## When the money arrives\n\nRefunds are issued to the original payment method once the warehouse has\ninspected the returned item. Inspection takes up to 3 business days from the\nmoment the parcel is scanned in. After inspection the refund is released\nimmediately, but the card issuer may take a further 5 to 10 business days to\npost it to your statement.\n\n## Non-returnable items\n\nPerishable food, climbing rope cut to a custom length, personalised engraving,\nand any item marked *Final Sale* on the product page cannot be returned.\nGift cards are also non-returnable. See `gift-cards.md` for the separate rules\nthat cover unused gift card balances."
+        }
+      ],
+      "scores": {
+        "context_precision": 0.9999999999,
+        "context_recall": 1,
+        "faithfulness": 1,
+        "answer_relevancy": 0.8129793657755838
+      },
+      "scores_stddev": {
+        "context_precision": null,
+        "context_recall": null,
+        "faithfulness": null,
+        "answer_relevancy": null
+      },
+      "score_errors": {},
+      "latency_ms": 1195
+    },
+    {
+      "case_id": "tc-008",
+      "question": "How does exchanging an item for a different size or colour differ from swapping it for a different product?",
+      "status": "ok",
+      "error": null,
+      "answer": "When exchanging an item for a different size or color, you choose \"Exchange\" in the Returns Centre and pick the replacement variant, and the replacement ships as soon as the return label is scanned. Swapping for a different product is handled as a refund plus a fresh order, where any price difference is settled at current prices, and the original order's price is not honored on a different product.",
+      "contexts": [
+        {
+          "id": "exchanges.md#c1",
+          "text": "# Exchanges\n\nAn exchange is a return and a new order handled together, so the same 30-day\nwindow described in `returns-and-refunds.md` applies.\n\n## Same product, different size or colour\n\nChoose *Exchange* rather than *Refund* in the Returns Centre and pick the\nreplacement variant. The replacement ships as soon as the return label is\nscanned by the carrier, so you are not waiting for the warehouse to receive the\noriginal. This is called an advance exchange and it is available once per\norder.\n\nIf the returned item never arrives within 21 days of the label being scanned,\nthe replacement is charged to the original payment method at the price you\noriginally paid.\n\n## Different product"
+        },
+        {
+          "id": "exchanges.md#c2",
+          "text": "21 days of the label being scanned,\nthe replacement is charged to the original payment method at the price you\noriginally paid.\n\n## Different product\n\nA swap to a different product is handled as a refund plus a fresh order. Refund\nthe original through the Returns Centre, then place the new order yourself. Any\nprice difference is settled at current prices; we do not honour the original\norder's price on a different product.\n\n## Exchange shipping cost\n\nExchanges ship free by Standard delivery within the country of the original\norder. Upgrading the replacement to Express costs the usual Express fee. We do\nnot exchange across borders — an order placed in Canada cannot be exchanged for\ndelivery to the United States."
+        },
+        {
+          "id": "size-guide.md#c2",
+          "text": "Kids\n\nChildren's sizes are by age band with a generous cut, expecting a season of\ngrowth. Where a child sits between bands, choose the larger.\n\n## If the size is wrong\n\nSizing is the most common reason for a return and an exchange is usually\nfaster. Use the advance exchange described in `exchanges.md` rather than\nrefunding and reordering, because it ships the replacement before we receive\nthe original."
+        },
+        {
+          "id": "price-matching.md#c1",
+          "text": "# Price matching and price drops\n\n## Matching a competitor\n\nWe match the advertised price of an identical item — same brand, model, colour\nand size — sold new and in stock by an authorised retailer that ships to your\nregion. Send a link before you order and we apply the difference as a discount.\n\nWe do not match marketplace sellers, auction listings, membership-only pricing,\nclearance of discontinued stock, bundle pricing, or prices that include a\ncompetitor's own loyalty credit.\n\n## Our own price drops\n\nIf an item you bought drops in price within **14 days of your order date**, we\nrefund the difference to the original payment method. Request it through\nsupport with the order number. This applies once per item and is not available\non items bought during a sitewide sale event.\n\n## Sale events"
+        },
+        {
+          "id": "returns-and-refunds.md#c2",
+          "text": "by email within\none business hour. Attach the label to the outside of the parcel and drop it at\nany carrier access point.\n\n## When the money arrives\n\nRefunds are issued to the original payment method once the warehouse has\ninspected the returned item. Inspection takes up to 3 business days from the\nmoment the parcel is scanned in. After inspection the refund is released\nimmediately, but the card issuer may take a further 5 to 10 business days to\npost it to your statement.\n\n## Non-returnable items\n\nPerishable food, climbing rope cut to a custom length, personalised engraving,\nand any item marked *Final Sale* on the product page cannot be returned.\nGift cards are also non-returnable. See `gift-cards.md` for the separate rules\nthat cover unused gift card balances."
+        }
+      ],
+      "scores": {
+        "context_precision": 0.9999999999666667,
+        "context_recall": 1,
+        "faithfulness": 1,
+        "answer_relevancy": 0.9092614260291211
+      },
+      "scores_stddev": {
+        "context_precision": null,
+        "context_recall": null,
+        "faithfulness": null,
+        "answer_relevancy": null
+      },
+      "score_errors": {},
+      "latency_ms": 1726
+    },
+    {
+      "case_id": "tc-009",
+      "question": "what is the express shipping cost and how long does it take to deliver when you choose express for an exchange?",
+      "status": "ok",
+      "error": null,
+      "answer": "The Express shipping cost is $14.95, and it typically takes 1 to 2 business days for delivery.",
+      "contexts": [
+        {
+          "id": "shipping-and-delivery.md#c1",
+          "text": "# Shipping and delivery\n\nOrders placed before 14:00 local warehouse time on a business day are picked\nthe same day. Orders placed after that cut-off, at a weekend, or on a public\nholiday are picked on the next business day.\n\n## Delivery speeds and cost\n\n| Service | Delivery estimate | Cost |\n|---|---|---|\n| Standard | 3 to 5 business days | Free over $75, otherwise $6.95 |\n| Express | 1 to 2 business days | $14.95 |\n| Next Day | Next business day if ordered before 14:00 | $24.95 |\n\nDelivery estimates count business days from dispatch, not from when the order\nwas placed. A Standard order placed on a Friday afternoon typically dispatches\non Monday and arrives the following Thursday or Friday.\n\n## Where we ship"
+        },
+        {
+          "id": "exchanges.md#c2",
+          "text": "21 days of the label being scanned,\nthe replacement is charged to the original payment method at the price you\noriginally paid.\n\n## Different product\n\nA swap to a different product is handled as a refund plus a fresh order. Refund\nthe original through the Returns Centre, then place the new order yourself. Any\nprice difference is settled at current prices; we do not honour the original\norder's price on a different product.\n\n## Exchange shipping cost\n\nExchanges ship free by Standard delivery within the country of the original\norder. Upgrading the replacement to Express costs the usual Express fee. We do\nnot exchange across borders — an order placed in Canada cannot be exchanged for\ndelivery to the United States."
+        },
+        {
+          "id": "shipping-and-delivery.md#c2",
+          "text": "placed. A Standard order placed on a Friday afternoon typically dispatches\non Monday and arrives the following Thursday or Friday.\n\n## Where we ship\n\nWe ship to street addresses and carrier pickup points in the United States,\nCanada, the United Kingdom and the European Union. We do not deliver to PO\nboxes, and we cannot ship hazardous goods such as camping gas canisters or\nbear spray by air, so those items are restricted to Standard ground delivery\nwithin the contiguous United States.\n\n## Split shipments\n\nWhen one part of an order is on backorder we ship the available items\nimmediately at no extra charge and send the remainder when stock arrives. You\nare charged shipping once."
+        },
+        {
+          "id": "exchanges.md#c1",
+          "text": "# Exchanges\n\nAn exchange is a return and a new order handled together, so the same 30-day\nwindow described in `returns-and-refunds.md` applies.\n\n## Same product, different size or colour\n\nChoose *Exchange* rather than *Refund* in the Returns Centre and pick the\nreplacement variant. The replacement ships as soon as the return label is\nscanned by the carrier, so you are not waiting for the warehouse to receive the\noriginal. This is called an advance exchange and it is available once per\norder.\n\nIf the returned item never arrives within 21 days of the label being scanned,\nthe replacement is charged to the original payment method at the price you\noriginally paid.\n\n## Different product"
+        },
+        {
+          "id": "international-orders.md#c1",
+          "text": "# International orders\n\nWe operate storefronts for the United States, Canada, the United Kingdom and\nthe European Union. Each storefront prices in its local currency, holds its own\nstock and ships domestically within its region.\n\n## Choosing a storefront\n\nThe storefront is chosen at checkout by the delivery address, not by your\nlocation. A visitor in Germany sending a gift to a Canadian address checks out\non the Canadian storefront and is billed in Canadian dollars.\n\n## What differs by region\n\nAssortment differs: some brands are not licensed for sale in every region.\nPrices differ because they include the local tax treatment. The return window\nis 30 days everywhere, but EU customers also have the statutory 14-day right of\nwithdrawal, which runs in parallel and is not reduced by our policy.\n\n## Delivery times"
+        }
+      ],
+      "scores": {
+        "context_precision": 0.9999999999,
+        "context_recall": 1,
+        "faithfulness": 1,
+        "answer_relevancy": 0.942326900911234
+      },
+      "scores_stddev": {
+        "context_precision": null,
+        "context_recall": null,
+        "faithfulness": null,
+        "answer_relevancy": null
+      },
+      "score_errors": {},
+      "latency_ms": 1093
+    },
+    {
+      "case_id": "tc-010",
+      "question": "If I delete my account, what happens to my order records?",
+      "status": "ok",
+      "error": null,
+      "answer": "If you delete your account, your order records will be retained for 7 years in a restricted form that is not linked to a live account. Other information, such as your addresses, marketing preferences, and support history, will be deleted. You can request a copy of your data before deletion.",
+      "contexts": [
+        {
+          "id": "privacy-and-data.md#c2",
+          "text": "accounting obligations.\nSupport conversations are kept for 24 months. Marketing preferences are kept\nuntil you change them.\n\n## Access and deletion\n\nYou can request a copy of your data or its deletion from Account Settings. A\ncopy arrives within 30 days. Deletion removes the account, addresses, marketing\npreferences and support history, but **not** order records inside the 7-year\nretention period, which are retained in a restricted form that is not linked to\na live account.\n\n## Sharing\n\nWe share addresses with carriers to deliver, and transaction data with the\npayment processor and with tax authorities where required. We do not sell\npersonal data."
+        },
+        {
+          "id": "account-and-login.md#c3",
+          "text": "on their records, so dispatch notifications for an in-flight order go\nto the address that was current when it was placed.\n\n## Closing an account\n\nClosure is requested in Account Settings. See `privacy-and-data.md` for what is\ndeleted and what is retained."
+        },
+        {
+          "id": "privacy-and-data.md#c1",
+          "text": "# Privacy and your data\n\nWe collect the data needed to take an order and run an account: name, delivery\nand billing address, email, phone number, order history and support\ncorrespondence. Payment card numbers are handled by our payment processor and\nnever reach Northwind systems.\n\n## Marketing\n\nMarketing email requires explicit opt-in and every message carries an\nunsubscribe link that takes effect within 48 hours. Transactional messages —\norder confirmation, dispatch, delivery, returns — are not marketing and cannot\nbe switched off while an order is open.\n\n## Retention\n\nOrder records are kept for **7 years** to meet tax and accounting obligations.\nSupport conversations are kept for 24 months. Marketing preferences are kept\nuntil you change them.\n\n## Access and deletion"
+        },
+        {
+          "id": "cancellations.md#c1",
+          "text": "# Cancelling an order\n\nAn order can be cancelled by you, without contacting anyone, for as long as it\nis in **Processing** status. Open the order in your account and choose *Cancel\norder*. The authorisation on your card is released immediately, though your\nbank may take a few days to remove the pending charge.\n\n## After dispatch\n\nOnce an order reaches **Dispatched** it can no longer be cancelled, because the\nparcel has physically left the warehouse. Refuse the delivery at the door or\nreturn the item under the normal 30-day policy in `returns-and-refunds.md`.\n\n## Partial cancellation\n\nYou can cancel individual lines of a multi-item order while it is in\nProcessing. Cancelling enough items to drop the order below the $75 free\nshipping threshold adds the $6.95 Standard shipping fee to the remaining\nitems.\n\n## Cancellations we make"
+        },
+        {
+          "id": "account-and-login.md#c1",
+          "text": "# Accounts and signing in\n\nAn account is not required to place an order — guest checkout is available —\nbut it is required to use the Returns Centre, track orders and hold loyalty\npoints.\n\n## Resetting a password\n\nChoose *Forgot password* on the sign-in page. The reset link is valid for **60\nminutes** and can be used once. Requesting a new link immediately invalidates\nthe previous one. If the email has not arrived within 10 minutes, check the\nspam folder and confirm you are using the address the order was placed with.\n\n## Two-factor authentication"
+        }
+      ],
+      "scores": {
+        "context_precision": 0.8333333332916666,
+        "context_recall": 1,
+        "faithfulness": 1,
+        "answer_relevancy": 0.9186479539572435
+      },
+      "scores_stddev": {
+        "context_precision": null,
+        "context_recall": null,
+        "faithfulness": null,
+        "answer_relevancy": null
+      },
+      "score_errors": {},
+      "latency_ms": 1480
+    },
+    {
+      "case_id": "tc-011",
+      "question": "If I paid for an order partly with a gift card, how is the refund split?",
+      "status": "ok",
+      "error": null,
+      "answer": "The refund is split so that the gift card portion goes back to the gift card, and the remainder is refunded to the original payment method. A gift card balance is never refunded as cash.",
+      "contexts": [
+        {
+          "id": "gift-cards.md#c2",
+          "text": "goes\nback to the gift card and the remainder to the original payment method. A gift\ncard balance is never refunded as cash.\n\n## Lost cards and fraud\n\nA digital card can be reissued to the original purchaser if it has not been\nredeemed. We cannot reissue a redeemed card, and we cannot tell you who\nredeemed it. Gift cards themselves cannot be returned or refunded, which is why\nthey appear in the non-returnable list in `returns-and-refunds.md`."
+        },
+        {
+          "id": "gift-cards.md#c1",
+          "text": "# Gift cards\n\nDigital gift cards are delivered by email within 15 minutes of purchase and are\navailable from $25 to $500. Physical gift cards ship as a normal order and\nfollow the delivery times in `shipping-and-delivery.md`.\n\n## Using a card\n\nEnter the 16-digit code at checkout. The balance is applied before any card or\nwallet payment. A card can be split across as many orders as you like until the\nbalance reaches zero.\n\n## Expiry\n\nGift card balances **do not expire**. Promotional credit issued as an apology or\nas part of a campaign is different: it expires 12 months after issue and the\nexpiry date is shown in your account.\n\n## Refunds involving gift cards\n\nWhen an order paid partly by gift card is refunded, the gift card portion goes\nback to the gift card and the remainder to the original payment method. A gift\ncard balance is never refunded as cash.\n\n## Lost cards and fraud"
+        },
+        {
+          "id": "returns-and-refunds.md#c2",
+          "text": "by email within\none business hour. Attach the label to the outside of the parcel and drop it at\nany carrier access point.\n\n## When the money arrives\n\nRefunds are issued to the original payment method once the warehouse has\ninspected the returned item. Inspection takes up to 3 business days from the\nmoment the parcel is scanned in. After inspection the refund is released\nimmediately, but the card issuer may take a further 5 to 10 business days to\npost it to your statement.\n\n## Non-returnable items\n\nPerishable food, climbing rope cut to a custom length, personalised engraving,\nand any item marked *Final Sale* on the product page cannot be returned.\nGift cards are also non-returnable. See `gift-cards.md` for the separate rules\nthat cover unused gift card balances."
+        },
+        {
+          "id": "payment-methods.md#c1",
+          "text": "# Payment methods\n\nWe accept Visa, Mastercard, American Express, Apple Pay, Google Pay, PayPal and\nNorthwind gift cards. We do not accept cheques, bank transfer, cryptocurrency\nor cash on delivery.\n\n## When you are charged\n\nPlacing an order creates an **authorisation**, which reserves the funds but\ndoes not take them. The charge is **captured** when the parcel is dispatched.\nFor a split shipment each parcel is captured separately, so your statement may\nshow two smaller charges rather than one.\n\nAn authorisation that is not captured within 7 days expires and the funds are\nreleased by your bank automatically.\n\n## Paying with more than one method\n\nA gift card can be combined with one card or wallet. The gift card balance is\nconsumed first and the remainder goes to the second method. Two credit cards\ncannot be combined on a single order.\n\n## Declined payments"
+        },
+        {
+          "id": "store-pickup.md#c2",
+          "text": "Uncollected\norders are returned to the warehouse and refunded in full automatically,\nincluding any shipping paid.\n\n## Collection by someone else\n\nName a nominated collector at checkout. They need the code and their own photo\nidentification. We cannot release an order to someone who is not named, even\nwith the code.\n\n## Returns at a store\n\nAny item can be returned at a Northwind store within the normal 30-day window,\nincluding items originally delivered to an address. Bring the order number.\nStore returns are inspected on the spot, so the refund is released the same day\nrather than after warehouse inspection (`returns-and-refunds.md`)."
+        }
+      ],
+      "scores": {
+        "context_precision": 0.9166666666361111,
+        "context_recall": 1,
+        "faithfulness": 1,
+        "answer_relevancy": 0.8019013156679371
+      },
+      "scores_stddev": {
+        "context_precision": null,
+        "context_recall": null,
+        "faithfulness": null,
+        "answer_relevancy": null
+      },
+      "score_errors": {},
+      "latency_ms": 1242
+    },
+    {
+      "case_id": "tc-012",
+      "question": "What is the proceudre for making a waranty claim for a defected Northwind-branded product, and how long does it take to get a decision?",
+      "status": "ok",
+      "error": null,
+      "answer": "To make a warranty claim for a defective Northwind-branded product, submit photographs of the defect and the original order number through the Warranty Claim form. A decision takes up to 10 business days. Approved claims ship the repair or replacement free, with no cost for return postage.",
+      "contexts": [
+        {
+          "id": "warranty.md#c1",
+          "text": "# Warranty\n\nNorthwind-branded gear carries a **2-year limited warranty** against defects in\nmaterials and workmanship, starting on the delivery date. Third-party brands\nsold by Northwind carry whatever warranty their manufacturer offers, which is\nstated on the product page.\n\n## What is covered\n\nSeam failure, delamination, zip and buckle failure, broken frames, and coatings\nthat fail under normal use are covered. We repair where a repair restores the\nitem, and replace where it does not. If the exact product is discontinued we\nsubstitute the closest current equivalent.\n\n## What is not covered\n\nNormal wear, UV fading, abrasion from rock or bark, damage from improper\nstorage, accidental damage, and any modification to the product. Items bought\nsecond-hand or from an unauthorised reseller are outside the warranty\naltogether.\n\n## Making a claim"
+        },
+        {
+          "id": "returns-and-refunds.md#c1",
+          "text": "# Returns and refunds\n\nNorthwind Supply Co. accepts returns on most items within **30 days of\ndelivery**. The 30-day window starts on the date the carrier marks the parcel\nas delivered, not the date the order was placed.\n\nTo qualify for a refund an item must be unused, in its original packaging, and\naccompanied by the order number. Items that show signs of wear, are missing\ntags, or have been washed are not eligible.\n\n## How to start a return\n\nOpen the Returns Centre in your account, select the order, and choose the items\nyou are sending back. You will receive a prepaid return label by email within\none business hour. Attach the label to the outside of the parcel and drop it at\nany carrier access point.\n\n## When the money arrives"
+        },
+        {
+          "id": "warranty.md#c2",
+          "text": "any modification to the product. Items bought\nsecond-hand or from an unauthorised reseller are outside the warranty\naltogether.\n\n## Making a claim\n\nSubmit photographs of the defect and the original order number through the\nWarranty Claim form. A decision takes up to 10 business days. Approved claims\nship the repair or replacement free; you pay nothing for return postage.\n\n## Warranty is not a return\n\nA warranty claim is about a defect and has no time limit beyond the 2 years. A\nreturn is about changing your mind and closes after 30 days\n(`returns-and-refunds.md`). Do not use a return to report a defect that appears\nin month four — you will be refused the return and should claim instead."
+        },
+        {
+          "id": "store-pickup.md#c2",
+          "text": "Uncollected\norders are returned to the warehouse and refunded in full automatically,\nincluding any shipping paid.\n\n## Collection by someone else\n\nName a nominated collector at checkout. They need the code and their own photo\nidentification. We cannot release an order to someone who is not named, even\nwith the code.\n\n## Returns at a store\n\nAny item can be returned at a Northwind store within the normal 30-day window,\nincluding items originally delivered to an address. Bring the order number.\nStore returns are inspected on the spot, so the refund is released the same day\nrather than after warehouse inspection (`returns-and-refunds.md`)."
+        },
+        {
+          "id": "damaged-or-missing-items.md#c1",
+          "text": "# Damaged, wrong or missing items\n\nReport any of these within **7 days of delivery** so we can hold the carrier\naccountable. Reports after 7 days are still investigated but the carrier will\nusually refuse the claim, which limits what we can recover.\n\n## Damaged in transit\n\nPhotograph the outer packaging before you unpack anything else, then the item.\nThe packaging photograph is what carriers accept as evidence. We ship a\nreplacement immediately and send a prepaid label for the damaged item; you do\nnot wait for the return to arrive.\n\n## Wrong item received\n\nKeep the item and the packing slip and report it. We ship the correct item and\ncollect the wrong one. You are never asked to pay the difference if the item we\nsent by mistake is more expensive.\n\n## Missing from a multi-item parcel"
+        }
+      ],
+      "scores": {
+        "context_precision": 0.3333333333,
+        "context_recall": 1,
+        "faithfulness": 1,
+        "answer_relevancy": 0.8578849963590162
+      },
+      "scores_stddev": {
+        "context_precision": null,
+        "context_recall": null,
+        "faithfulness": null,
+        "answer_relevancy": null
+      },
+      "score_errors": {},
+      "latency_ms": 1477
+    },
+    {
+      "case_id": "tc-013",
+      "question": "whats the phoone support hours?",
+      "status": "ok",
+      "error": null,
+      "answer": "Phone support runs from 09:00 to 17:00 on business days.",
+      "contexts": [
+        {
+          "id": "contacting-support.md#c1",
+          "text": "# Contacting support\n\n## Channels and hours\n\nLive chat runs 07:00 to 22:00 local time, seven days a week, and is the fastest\nchannel. Email is answered within **one business day**; complex cases involving\na carrier investigation or a warranty decision take longer. Phone support runs\n09:00 to 17:00 on business days. There is no support on 25 December or\n1 January.\n\n## What to have ready\n\nThe order number is the single most useful thing. With it, most questions are\nanswered in one message. Without it, we need the email address the order was\nplaced with plus the delivery postcode, and identity checks add time.\n\n## Escalation\n\nIf a case has been open for more than 5 business days without a resolution, ask\nfor it to be escalated. Escalated cases go to a senior agent with authority to\nissue a goodwill refund or replacement without a carrier decision.\n\n## What support cannot do"
+        },
+        {
+          "id": "privacy-and-data.md#c2",
+          "text": "accounting obligations.\nSupport conversations are kept for 24 months. Marketing preferences are kept\nuntil you change them.\n\n## Access and deletion\n\nYou can request a copy of your data or its deletion from Account Settings. A\ncopy arrives within 30 days. Deletion removes the account, addresses, marketing\npreferences and support history, but **not** order records inside the 7-year\nretention period, which are retained in a restricted form that is not linked to\na live account.\n\n## Sharing\n\nWe share addresses with carriers to deliver, and transaction data with the\npayment processor and with tax authorities where required. We do not sell\npersonal data."
+        },
+        {
+          "id": "loyalty-program.md#c2",
+          "text": "expire after **24 months of account inactivity**. Any order, return or\nsign-in resets the clock. You are emailed 30 days before expiry.\n\n## Tiers\n\nSpending $500 in a calendar year reaches Summit tier, which adds free Express\ndelivery and a dedicated support queue. Tier is assessed on 1 January and held\nfor the whole of the following year, so a strong year protects you through a\nquiet one."
+        },
+        {
+          "id": "store-pickup.md#c1",
+          "text": "# Store and locker pickup\n\nPickup is available at the 14 Northwind stores and at roughly 3,000 carrier\nlocker points across our regions. Pickup is free regardless of order value.\n\n## How it works\n\nChoose *Collect* at checkout and pick a location. You are emailed a collection\ncode when the order is ready — usually the next business day for store stock\nand 2 to 3 business days for warehouse stock. Bring the code and photo\nidentification.\n\n## Collection window\n\nOrders are held for **10 calendar days** for store pickup and **3 calendar\ndays** at a locker, which is a carrier limit we cannot extend. Uncollected\norders are returned to the warehouse and refunded in full automatically,\nincluding any shipping paid.\n\n## Collection by someone else"
+        },
+        {
+          "id": "subscription-plans.md#c2",
+          "text": "are billed\non the same day each month; where that day does not exist in a shorter month,\nbilling moves to the last day of the month.\n\n## Cancelling\n\nCancel at any time in Account Settings. Benefits continue until the end of the\nperiod you have already paid for and the plan does not renew. We do not\npro-rate a partial year: cancelling an annual plan in month two still gives you\nthe remaining ten months of benefits, with no refund.\n\n## Interaction with the return window\n\nThe 60-day Plus return window applies to orders placed while the membership was\nactive. Letting a membership lapse does not shorten the window on orders that\nwere already placed."
+        }
+      ],
+      "scores": {
+        "context_precision": 0.9999999999,
+        "context_recall": 1,
+        "faithfulness": 1,
+        "answer_relevancy": 0.712488921902187
+      },
+      "scores_stddev": {
+        "context_precision": null,
+        "context_recall": null,
+        "faithfulness": null,
+        "answer_relevancy": null
+      },
+      "score_errors": {},
+      "latency_ms": 1019
+    },
+    {
+      "case_id": "tc-014",
+      "question": "What are the customs and duty policies for orders shipped to the European Union?",
+      "status": "ok",
+      "error": null,
+      "answer": "Orders shipped within the European Union from their own regional warehouse are delivered duty paid, meaning you pay nothing further on arrival and the carrier will not ask for additional payment. If a carrier demands payment on a domestic order within the EU, it is either a misclassification or a scam, and you should contact support with evidence.",
+      "contexts": [
+        {
+          "id": "customs-and-duties.md#c1",
+          "text": "# Customs, duties and taxes\n\nPrices on each regional storefront include that region's consumption tax. US\nprices exclude sales tax, which is calculated at checkout from the delivery\naddress.\n\n## Delivered duty paid\n\nOrders shipped within the United States, Canada, the United Kingdom or the\nEuropean Union from their own regional warehouse are **delivered duty paid**.\nYou pay nothing further on arrival and the carrier will not ask you for money.\n\nIf a carrier demands a payment on a domestic order, do not pay it — it is\neither a misclassification or a scam. Photograph the notice and send it to\nsupport.\n\n## Orders that cross a border"
+        },
+        {
+          "id": "international-orders.md#c2",
+          "text": "but EU customers also have the statutory 14-day right of\nwithdrawal, which runs in parallel and is not reduced by our policy.\n\n## Delivery times\n\nInternational delivery estimates assume clearance is uneventful. Customs delays\nare outside carrier control and do not count toward the 5-day \"tracking has not\nmoved\" rule in `order-tracking.md`.\n\n## What we cannot do\n\nWe cannot ship an order across storefronts, split one order across two\ncountries, or exchange an item bought in one region for delivery in another.\nDuties and taxes are covered in `customs-and-duties.md`."
+        },
+        {
+          "id": "customs-and-duties.md#c2",
+          "text": "order, do not pay it — it is\neither a misclassification or a scam. Photograph the notice and send it to\nsupport.\n\n## Orders that cross a border\n\nA small number of specialist items ship direct from a supplier outside your\nregion. These are flagged *Ships internationally* on the product page and are\n**delivered duty unpaid**: the carrier collects import duty and handling before\nrelease. The amount is set by your customs authority, not by us, and we cannot\nestimate it.\n\n## Duties on a return\n\nImport duty paid on a cross-border order is refundable by your customs\nauthority, not by us. We refund the item price and, where the return is due to\na defect, the original shipping. Reclaiming duty is a form you file yourself;\nkeep the carrier's paperwork."
+        },
+        {
+          "id": "shipping-and-delivery.md#c2",
+          "text": "placed. A Standard order placed on a Friday afternoon typically dispatches\non Monday and arrives the following Thursday or Friday.\n\n## Where we ship\n\nWe ship to street addresses and carrier pickup points in the United States,\nCanada, the United Kingdom and the European Union. We do not deliver to PO\nboxes, and we cannot ship hazardous goods such as camping gas canisters or\nbear spray by air, so those items are restricted to Standard ground delivery\nwithin the contiguous United States.\n\n## Split shipments\n\nWhen one part of an order is on backorder we ship the available items\nimmediately at no extra charge and send the remainder when stock arrives. You\nare charged shipping once."
+        },
+        {
+          "id": "international-orders.md#c1",
+          "text": "# International orders\n\nWe operate storefronts for the United States, Canada, the United Kingdom and\nthe European Union. Each storefront prices in its local currency, holds its own\nstock and ships domestically within its region.\n\n## Choosing a storefront\n\nThe storefront is chosen at checkout by the delivery address, not by your\nlocation. A visitor in Germany sending a gift to a Canadian address checks out\non the Canadian storefront and is billed in Canadian dollars.\n\n## What differs by region\n\nAssortment differs: some brands are not licensed for sale in every region.\nPrices differ because they include the local tax treatment. The return window\nis 30 days everywhere, but EU customers also have the statutory 14-day right of\nwithdrawal, which runs in parallel and is not reduced by our policy.\n\n## Delivery times"
+        }
+      ],
+      "scores": {
+        "context_precision": 0.9999999999,
+        "context_recall": 1,
+        "faithfulness": 1,
+        "answer_relevancy": 0.7516273889051579
+      },
+      "scores_stddev": {
+        "context_precision": null,
+        "context_recall": null,
+        "faithfulness": null,
+        "answer_relevancy": null
+      },
+      "score_errors": {},
+      "latency_ms": 1540
+    },
+    {
+      "case_id": "tc-015",
+      "question": "What should I do if an item is missing from my multi-item parcel?",
+      "status": "ok",
+      "error": null,
+      "answer": "If an item is missing from your multi-item parcel, check the packing slip first. If the slip lists an item that is not in the box, report it as missing. The remainder of the shipment may still be in transit, and the slip will indicate this.",
+      "contexts": [
+        {
+          "id": "damaged-or-missing-items.md#c2",
+          "text": "the wrong one. You are never asked to pay the difference if the item we\nsent by mistake is more expensive.\n\n## Missing from a multi-item parcel\n\nCheck the packing slip first: a split shipment (`shipping-and-delivery.md`)\nmeans the remainder is still in transit and the slip will say so. If the slip\nlists an item that is not in the box, report it as missing.\n\n## Parcel never arrived\n\nFollow the lost-parcel rule in `order-tracking.md`. Once a carrier\ninvestigation is opened, a decision takes up to 8 business days, after which we\nrefund or replace at your choice."
+        },
+        {
+          "id": "damaged-or-missing-items.md#c1",
+          "text": "# Damaged, wrong or missing items\n\nReport any of these within **7 days of delivery** so we can hold the carrier\naccountable. Reports after 7 days are still investigated but the carrier will\nusually refuse the claim, which limits what we can recover.\n\n## Damaged in transit\n\nPhotograph the outer packaging before you unpack anything else, then the item.\nThe packaging photograph is what carriers accept as evidence. We ship a\nreplacement immediately and send a prepaid label for the damaged item; you do\nnot wait for the return to arrive.\n\n## Wrong item received\n\nKeep the item and the packing slip and report it. We ship the correct item and\ncollect the wrong one. You are never asked to pay the difference if the item we\nsent by mistake is more expensive.\n\n## Missing from a multi-item parcel"
+        },
+        {
+          "id": "order-tracking.md#c2",
+          "text": "parcel is on a vehicle and will be attempted today.\n- **Delivered** — the carrier has recorded a successful delivery.\n\n## Tracking has not updated\n\nCarriers sometimes go quiet for 24 to 48 hours in the middle of a journey,\nparticularly on international routes where the parcel is between networks. This\nis normal. If tracking has not moved for **5 consecutive business days**, treat\nthe parcel as lost and contact support; see `damaged-or-missing-items.md`.\n\n## Marked delivered but not received\n\nCheck with neighbours and around the property first, as carriers often leave\nparcels in a safe place and photograph them. If it has not appeared within 24\nhours of the delivery scan, report it and we will open a carrier investigation."
+        },
+        {
+          "id": "returns-and-refunds.md#c2",
+          "text": "by email within\none business hour. Attach the label to the outside of the parcel and drop it at\nany carrier access point.\n\n## When the money arrives\n\nRefunds are issued to the original payment method once the warehouse has\ninspected the returned item. Inspection takes up to 3 business days from the\nmoment the parcel is scanned in. After inspection the refund is released\nimmediately, but the card issuer may take a further 5 to 10 business days to\npost it to your statement.\n\n## Non-returnable items\n\nPerishable food, climbing rope cut to a custom length, personalised engraving,\nand any item marked *Final Sale* on the product page cannot be returned.\nGift cards are also non-returnable. See `gift-cards.md` for the separate rules\nthat cover unused gift card balances."
+        },
+        {
+          "id": "returns-and-refunds.md#c1",
+          "text": "# Returns and refunds\n\nNorthwind Supply Co. accepts returns on most items within **30 days of\ndelivery**. The 30-day window starts on the date the carrier marks the parcel\nas delivered, not the date the order was placed.\n\nTo qualify for a refund an item must be unused, in its original packaging, and\naccompanied by the order number. Items that show signs of wear, are missing\ntags, or have been washed are not eligible.\n\n## How to start a return\n\nOpen the Returns Centre in your account, select the order, and choose the items\nyou are sending back. You will receive a prepaid return label by email within\none business hour. Attach the label to the outside of the parcel and drop it at\nany carrier access point.\n\n## When the money arrives"
+        }
+      ],
+      "scores": {
+        "context_precision": 0.99999999995,
+        "context_recall": 1,
+        "faithfulness": 1,
+        "answer_relevancy": 0.9999999999999991
+      },
+      "scores_stddev": {
+        "context_precision": null,
+        "context_recall": null,
+        "faithfulness": null,
+        "answer_relevancy": null
+      },
+      "score_errors": {},
+      "latency_ms": 1428
+    },
+    {
+      "case_id": "tc-016",
+      "question": "Does the company accept cryptocurrency as a payment method?",
+      "status": "ok",
+      "error": null,
+      "answer": "No, the company does not accept cryptocurrency as a payment method.",
+      "contexts": [
+        {
+          "id": "payment-methods.md#c1",
+          "text": "# Payment methods\n\nWe accept Visa, Mastercard, American Express, Apple Pay, Google Pay, PayPal and\nNorthwind gift cards. We do not accept cheques, bank transfer, cryptocurrency\nor cash on delivery.\n\n## When you are charged\n\nPlacing an order creates an **authorisation**, which reserves the funds but\ndoes not take them. The charge is **captured** when the parcel is dispatched.\nFor a split shipment each parcel is captured separately, so your statement may\nshow two smaller charges rather than one.\n\nAn authorisation that is not captured within 7 days expires and the funds are\nreleased by your bank automatically.\n\n## Paying with more than one method\n\nA gift card can be combined with one card or wallet. The gift card balance is\nconsumed first and the remainder goes to the second method. Two credit cards\ncannot be combined on a single order.\n\n## Declined payments"
+        },
+        {
+          "id": "payment-methods.md#c2",
+          "text": "balance is\nconsumed first and the remainder goes to the second method. Two credit cards\ncannot be combined on a single order.\n\n## Declined payments\n\nThe most common causes are an address mismatch with the card issuer, an expired\ncard, and a daily spending limit. We are not told the specific reason a bank\ndeclines a transaction, so if a card is repeatedly refused the issuer is the\nonly source of the answer. The order stays in Processing for 48 hours to give\nyou time to change the payment method before it is cancelled."
+        },
+        {
+          "id": "gift-cards.md#c1",
+          "text": "# Gift cards\n\nDigital gift cards are delivered by email within 15 minutes of purchase and are\navailable from $25 to $500. Physical gift cards ship as a normal order and\nfollow the delivery times in `shipping-and-delivery.md`.\n\n## Using a card\n\nEnter the 16-digit code at checkout. The balance is applied before any card or\nwallet payment. A card can be split across as many orders as you like until the\nbalance reaches zero.\n\n## Expiry\n\nGift card balances **do not expire**. Promotional credit issued as an apology or\nas part of a campaign is different: it expires 12 months after issue and the\nexpiry date is shown in your account.\n\n## Refunds involving gift cards\n\nWhen an order paid partly by gift card is refunded, the gift card portion goes\nback to the gift card and the remainder to the original payment method. A gift\ncard balance is never refunded as cash.\n\n## Lost cards and fraud"
+        },
+        {
+          "id": "gift-cards.md#c2",
+          "text": "goes\nback to the gift card and the remainder to the original payment method. A gift\ncard balance is never refunded as cash.\n\n## Lost cards and fraud\n\nA digital card can be reissued to the original purchaser if it has not been\nredeemed. We cannot reissue a redeemed card, and we cannot tell you who\nredeemed it. Gift cards themselves cannot be returned or refunded, which is why\nthey appear in the non-returnable list in `returns-and-refunds.md`."
+        },
+        {
+          "id": "returns-and-refunds.md#c2",
+          "text": "by email within\none business hour. Attach the label to the outside of the parcel and drop it at\nany carrier access point.\n\n## When the money arrives\n\nRefunds are issued to the original payment method once the warehouse has\ninspected the returned item. Inspection takes up to 3 business days from the\nmoment the parcel is scanned in. After inspection the refund is released\nimmediately, but the card issuer may take a further 5 to 10 business days to\npost it to your statement.\n\n## Non-returnable items\n\nPerishable food, climbing rope cut to a custom length, personalised engraving,\nand any item marked *Final Sale* on the product page cannot be returned.\nGift cards are also non-returnable. See `gift-cards.md` for the separate rules\nthat cover unused gift card balances."
+        }
+      ],
+      "scores": {
+        "context_precision": 0.9999999999,
+        "context_recall": 1,
+        "faithfulness": 1,
+        "answer_relevancy": 0.9999999999999991
+      },
+      "scores_stddev": {
+        "context_precision": null,
+        "context_recall": null,
+        "faithfulness": null,
+        "answer_relevancy": null
+      },
+      "score_errors": {},
+      "latency_ms": 940
+    },
+    {
+      "case_id": "tc-017",
+      "question": "whats the plus earlly accees policy for price drops and refunds?",
+      "status": "ok",
+      "error": null,
+      "answer": "If an item you bought drops in price within 14 days of your order date, Northwind Supply Co. will refund the difference to the original payment method. This applies once per item and is not available on items bought during a sitewide sale event. Items purchased at full price in the 14 days before a Plus early access event are eligible for the price drop refund.",
+      "contexts": [
+        {
+          "id": "price-matching.md#c1",
+          "text": "# Price matching and price drops\n\n## Matching a competitor\n\nWe match the advertised price of an identical item — same brand, model, colour\nand size — sold new and in stock by an authorised retailer that ships to your\nregion. Send a link before you order and we apply the difference as a discount.\n\nWe do not match marketplace sellers, auction listings, membership-only pricing,\nclearance of discontinued stock, bundle pricing, or prices that include a\ncompetitor's own loyalty credit.\n\n## Our own price drops\n\nIf an item you bought drops in price within **14 days of your order date**, we\nrefund the difference to the original payment method. Request it through\nsupport with the order number. This applies once per item and is not available\non items bought during a sitewide sale event.\n\n## Sale events"
+        },
+        {
+          "id": "price-matching.md#c2",
+          "text": "through\nsupport with the order number. This applies once per item and is not available\non items bought during a sitewide sale event.\n\n## Sale events\n\nPrices during Black Friday, end-of-season clearance and Plus early access are\nfinal for the duration of the event. Items bought at full price in the 14 days\nbefore an event **are** eligible for the price drop refund, which is the main\nreason to buy early rather than wait.\n\n## Interaction with returns\n\nA price adjustment does not restart the 30-day return window in\n`returns-and-refunds.md`. The window still runs from the original delivery date."
+        },
+        {
+          "id": "cancellations.md#c2",
+          "text": "items to drop the order below the $75 free\nshipping threshold adds the $6.95 Standard shipping fee to the remaining\nitems.\n\n## Cancellations we make\n\nWe cancel an order ourselves when stock cannot be fulfilled, when an address\nfails carrier validation, or when a payment authorisation is declined on\ncapture. You are told by email within one business day and never charged. A\nprice error on the product page is also grounds for cancellation; we honour the\nlisted price only where the error was not obvious."
+        },
+        {
+          "id": "exchanges.md#c1",
+          "text": "# Exchanges\n\nAn exchange is a return and a new order handled together, so the same 30-day\nwindow described in `returns-and-refunds.md` applies.\n\n## Same product, different size or colour\n\nChoose *Exchange* rather than *Refund* in the Returns Centre and pick the\nreplacement variant. The replacement ships as soon as the return label is\nscanned by the carrier, so you are not waiting for the warehouse to receive the\noriginal. This is called an advance exchange and it is available once per\norder.\n\nIf the returned item never arrives within 21 days of the label being scanned,\nthe replacement is charged to the original payment method at the price you\noriginally paid.\n\n## Different product"
+        },
+        {
+          "id": "cancellations.md#c1",
+          "text": "# Cancelling an order\n\nAn order can be cancelled by you, without contacting anyone, for as long as it\nis in **Processing** status. Open the order in your account and choose *Cancel\norder*. The authorisation on your card is released immediately, though your\nbank may take a few days to remove the pending charge.\n\n## After dispatch\n\nOnce an order reaches **Dispatched** it can no longer be cancelled, because the\nparcel has physically left the warehouse. Refuse the delivery at the door or\nreturn the item under the normal 30-day policy in `returns-and-refunds.md`.\n\n## Partial cancellation\n\nYou can cancel individual lines of a multi-item order while it is in\nProcessing. Cancelling enough items to drop the order below the $75 free\nshipping threshold adds the $6.95 Standard shipping fee to the remaining\nitems.\n\n## Cancellations we make"
+        }
+      ],
+      "scores": {
+        "context_precision": 0.49999999995,
+        "context_recall": 1,
+        "faithfulness": 1,
+        "answer_relevancy": 0.7005209149697783
+      },
+      "scores_stddev": {
+        "context_precision": null,
+        "context_recall": null,
+        "faithfulness": null,
+        "answer_relevancy": null
+      },
+      "score_errors": {},
+      "latency_ms": 1727
+    },
+    {
+      "case_id": "tc-018",
+      "question": "What is the paymet processor responsible for?",
+      "status": "ok",
+      "error": null,
+      "answer": "I don't know. The provided context passages do not mention a payment processor or its responsibilities.",
+      "contexts": [
+        {
+          "id": "payment-methods.md#c1",
+          "text": "# Payment methods\n\nWe accept Visa, Mastercard, American Express, Apple Pay, Google Pay, PayPal and\nNorthwind gift cards. We do not accept cheques, bank transfer, cryptocurrency\nor cash on delivery.\n\n## When you are charged\n\nPlacing an order creates an **authorisation**, which reserves the funds but\ndoes not take them. The charge is **captured** when the parcel is dispatched.\nFor a split shipment each parcel is captured separately, so your statement may\nshow two smaller charges rather than one.\n\nAn authorisation that is not captured within 7 days expires and the funds are\nreleased by your bank automatically.\n\n## Paying with more than one method\n\nA gift card can be combined with one card or wallet. The gift card balance is\nconsumed first and the remainder goes to the second method. Two credit cards\ncannot be combined on a single order.\n\n## Declined payments"
+        },
+        {
+          "id": "exchanges.md#c1",
+          "text": "# Exchanges\n\nAn exchange is a return and a new order handled together, so the same 30-day\nwindow described in `returns-and-refunds.md` applies.\n\n## Same product, different size or colour\n\nChoose *Exchange* rather than *Refund* in the Returns Centre and pick the\nreplacement variant. The replacement ships as soon as the return label is\nscanned by the carrier, so you are not waiting for the warehouse to receive the\noriginal. This is called an advance exchange and it is available once per\norder.\n\nIf the returned item never arrives within 21 days of the label being scanned,\nthe replacement is charged to the original payment method at the price you\noriginally paid.\n\n## Different product"
+        },
+        {
+          "id": "order-tracking.md#c1",
+          "text": "# Tracking an order\n\nEvery dispatched parcel gets a tracking number. You will find it in the\ndispatch confirmation email and on the order page in your account.\n\n## Status meanings\n\n- **Processing** — the order is accepted but has not left the warehouse. You\n  can still cancel it at this stage; see `cancellations.md`.\n- **Dispatched** — the carrier has collected the parcel and the tracking number\n  is live. Tracking can take up to 6 hours to show its first scan.\n- **In transit** — the parcel is moving through the carrier network.\n- **Out for delivery** — the parcel is on a vehicle and will be attempted today.\n- **Delivered** — the carrier has recorded a successful delivery.\n\n## Tracking has not updated"
+        },
+        {
+          "id": "price-matching.md#c1",
+          "text": "# Price matching and price drops\n\n## Matching a competitor\n\nWe match the advertised price of an identical item — same brand, model, colour\nand size — sold new and in stock by an authorised retailer that ships to your\nregion. Send a link before you order and we apply the difference as a discount.\n\nWe do not match marketplace sellers, auction listings, membership-only pricing,\nclearance of discontinued stock, bundle pricing, or prices that include a\ncompetitor's own loyalty credit.\n\n## Our own price drops\n\nIf an item you bought drops in price within **14 days of your order date**, we\nrefund the difference to the original payment method. Request it through\nsupport with the order number. This applies once per item and is not available\non items bought during a sitewide sale event.\n\n## Sale events"
+        },
+        {
+          "id": "customs-and-duties.md#c1",
+          "text": "# Customs, duties and taxes\n\nPrices on each regional storefront include that region's consumption tax. US\nprices exclude sales tax, which is calculated at checkout from the delivery\naddress.\n\n## Delivered duty paid\n\nOrders shipped within the United States, Canada, the United Kingdom or the\nEuropean Union from their own regional warehouse are **delivered duty paid**.\nYou pay nothing further on arrival and the carrier will not ask you for money.\n\nIf a carrier demands a payment on a domestic order, do not pay it — it is\neither a misclassification or a scam. Photograph the notice and send it to\nsupport.\n\n## Orders that cross a border"
+        }
+      ],
+      "scores": {
+        "context_precision": 0,
+        "context_recall": 0,
+        "faithfulness": 0,
+        "answer_relevancy": 0
+      },
+      "scores_stddev": {
+        "context_precision": null,
+        "context_recall": null,
+        "faithfulness": null,
+        "answer_relevancy": null
+      },
+      "score_errors": {},
+      "latency_ms": 973
+    },
+    {
+      "case_id": "tc-019",
+      "question": "how do i start a return at the returns centre?",
+      "status": "ok",
+      "error": null,
+      "answer": "To start a return at the Returns Centre, open it in your account, select the order, and choose the items you are sending back. You will receive a prepaid return label by email within one business hour. Attach the label to the outside of the parcel and drop it at any carrier access point.",
+      "contexts": [
+        {
+          "id": "returns-and-refunds.md#c1",
+          "text": "# Returns and refunds\n\nNorthwind Supply Co. accepts returns on most items within **30 days of\ndelivery**. The 30-day window starts on the date the carrier marks the parcel\nas delivered, not the date the order was placed.\n\nTo qualify for a refund an item must be unused, in its original packaging, and\naccompanied by the order number. Items that show signs of wear, are missing\ntags, or have been washed are not eligible.\n\n## How to start a return\n\nOpen the Returns Centre in your account, select the order, and choose the items\nyou are sending back. You will receive a prepaid return label by email within\none business hour. Attach the label to the outside of the parcel and drop it at\nany carrier access point.\n\n## When the money arrives"
+        },
+        {
+          "id": "store-pickup.md#c2",
+          "text": "Uncollected\norders are returned to the warehouse and refunded in full automatically,\nincluding any shipping paid.\n\n## Collection by someone else\n\nName a nominated collector at checkout. They need the code and their own photo\nidentification. We cannot release an order to someone who is not named, even\nwith the code.\n\n## Returns at a store\n\nAny item can be returned at a Northwind store within the normal 30-day window,\nincluding items originally delivered to an address. Bring the order number.\nStore returns are inspected on the spot, so the refund is released the same day\nrather than after warehouse inspection (`returns-and-refunds.md`)."
+        },
+        {
+          "id": "returns-and-refunds.md#c2",
+          "text": "by email within\none business hour. Attach the label to the outside of the parcel and drop it at\nany carrier access point.\n\n## When the money arrives\n\nRefunds are issued to the original payment method once the warehouse has\ninspected the returned item. Inspection takes up to 3 business days from the\nmoment the parcel is scanned in. After inspection the refund is released\nimmediately, but the card issuer may take a further 5 to 10 business days to\npost it to your statement.\n\n## Non-returnable items\n\nPerishable food, climbing rope cut to a custom length, personalised engraving,\nand any item marked *Final Sale* on the product page cannot be returned.\nGift cards are also non-returnable. See `gift-cards.md` for the separate rules\nthat cover unused gift card balances."
+        },
+        {
+          "id": "exchanges.md#c1",
+          "text": "# Exchanges\n\nAn exchange is a return and a new order handled together, so the same 30-day\nwindow described in `returns-and-refunds.md` applies.\n\n## Same product, different size or colour\n\nChoose *Exchange* rather than *Refund* in the Returns Centre and pick the\nreplacement variant. The replacement ships as soon as the return label is\nscanned by the carrier, so you are not waiting for the warehouse to receive the\noriginal. This is called an advance exchange and it is available once per\norder.\n\nIf the returned item never arrives within 21 days of the label being scanned,\nthe replacement is charged to the original payment method at the price you\noriginally paid.\n\n## Different product"
+        },
+        {
+          "id": "store-pickup.md#c1",
+          "text": "# Store and locker pickup\n\nPickup is available at the 14 Northwind stores and at roughly 3,000 carrier\nlocker points across our regions. Pickup is free regardless of order value.\n\n## How it works\n\nChoose *Collect* at checkout and pick a location. You are emailed a collection\ncode when the order is ready — usually the next business day for store stock\nand 2 to 3 business days for warehouse stock. Bring the code and photo\nidentification.\n\n## Collection window\n\nOrders are held for **10 calendar days** for store pickup and **3 calendar\ndays** at a locker, which is a carrier limit we cannot extend. Uncollected\norders are returned to the warehouse and refunded in full automatically,\nincluding any shipping paid.\n\n## Collection by someone else"
+        }
+      ],
+      "scores": {
+        "context_precision": 0.9999999999,
+        "context_recall": 1,
+        "faithfulness": 1,
+        "answer_relevancy": 0.9706386003332597
+      },
+      "scores_stddev": {
+        "context_precision": null,
+        "context_recall": null,
+        "faithfulness": null,
+        "answer_relevancy": null
+      },
+      "score_errors": {},
+      "latency_ms": 1517
+    },
+    {
+      "case_id": "tc-020",
+      "question": "How does the refund timeline interact with the points posting delay for customers returning items?",
+      "status": "ok",
+      "error": null,
+      "answer": "Once the warehouse inspects the returned item, the refund is released immediately. However, the card issuer may take an additional 5 to 10 business days to post the refund to your statement. This delay does not affect the return window or the timeline for processing the return itself.",
+      "contexts": [
+        {
+          "id": "price-matching.md#c2",
+          "text": "through\nsupport with the order number. This applies once per item and is not available\non items bought during a sitewide sale event.\n\n## Sale events\n\nPrices during Black Friday, end-of-season clearance and Plus early access are\nfinal for the duration of the event. Items bought at full price in the 14 days\nbefore an event **are** eligible for the price drop refund, which is the main\nreason to buy early rather than wait.\n\n## Interaction with returns\n\nA price adjustment does not restart the 30-day return window in\n`returns-and-refunds.md`. The window still runs from the original delivery date."
+        },
+        {
+          "id": "returns-and-refunds.md#c1",
+          "text": "# Returns and refunds\n\nNorthwind Supply Co. accepts returns on most items within **30 days of\ndelivery**. The 30-day window starts on the date the carrier marks the parcel\nas delivered, not the date the order was placed.\n\nTo qualify for a refund an item must be unused, in its original packaging, and\naccompanied by the order number. Items that show signs of wear, are missing\ntags, or have been washed are not eligible.\n\n## How to start a return\n\nOpen the Returns Centre in your account, select the order, and choose the items\nyou are sending back. You will receive a prepaid return label by email within\none business hour. Attach the label to the outside of the parcel and drop it at\nany carrier access point.\n\n## When the money arrives"
+        },
+        {
+          "id": "returns-and-refunds.md#c2",
+          "text": "by email within\none business hour. Attach the label to the outside of the parcel and drop it at\nany carrier access point.\n\n## When the money arrives\n\nRefunds are issued to the original payment method once the warehouse has\ninspected the returned item. Inspection takes up to 3 business days from the\nmoment the parcel is scanned in. After inspection the refund is released\nimmediately, but the card issuer may take a further 5 to 10 business days to\npost it to your statement.\n\n## Non-returnable items\n\nPerishable food, climbing rope cut to a custom length, personalised engraving,\nand any item marked *Final Sale* on the product page cannot be returned.\nGift cards are also non-returnable. See `gift-cards.md` for the separate rules\nthat cover unused gift card balances."
+        },
+        {
+          "id": "subscription-plans.md#c2",
+          "text": "are billed\non the same day each month; where that day does not exist in a shorter month,\nbilling moves to the last day of the month.\n\n## Cancelling\n\nCancel at any time in Account Settings. Benefits continue until the end of the\nperiod you have already paid for and the plan does not renew. We do not\npro-rate a partial year: cancelling an annual plan in month two still gives you\nthe remaining ten months of benefits, with no refund.\n\n## Interaction with the return window\n\nThe 60-day Plus return window applies to orders placed while the membership was\nactive. Letting a membership lapse does not shorten the window on orders that\nwere already placed."
+        },
+        {
+          "id": "exchanges.md#c1",
+          "text": "# Exchanges\n\nAn exchange is a return and a new order handled together, so the same 30-day\nwindow described in `returns-and-refunds.md` applies.\n\n## Same product, different size or colour\n\nChoose *Exchange* rather than *Refund* in the Returns Centre and pick the\nreplacement variant. The replacement ships as soon as the return label is\nscanned by the carrier, so you are not waiting for the warehouse to receive the\noriginal. This is called an advance exchange and it is available once per\norder.\n\nIf the returned item never arrives within 21 days of the label being scanned,\nthe replacement is charged to the original payment method at the price you\noriginally paid.\n\n## Different product"
+        }
+      ],
+      "scores": {
+        "context_precision": 0,
+        "context_recall": 0.5,
+        "faithfulness": 0.5,
+        "answer_relevancy": 0.7535102416302927
+      },
+      "scores_stddev": {
+        "context_precision": null,
+        "context_recall": null,
+        "faithfulness": null,
+        "answer_relevancy": null
+      },
+      "score_errors": {},
+      "latency_ms": 1474
+    },
+    {
+      "case_id": "tc-021",
+      "question": "how long do i have to return an item and how long does it take to get my money back after sending it back",
+      "status": "ok",
+      "error": null,
+      "answer": "You have 30 days from the delivery date to return an item. Once the returned item is scanned in by the warehouse, it takes up to 3 business days for inspection, and the refund is released immediately after that. However, it may take an additional 5 to 10 business days for the refund to appear on your statement, depending on your card issuer.",
+      "contexts": [
+        {
+          "id": "returns-and-refunds.md#c2",
+          "text": "by email within\none business hour. Attach the label to the outside of the parcel and drop it at\nany carrier access point.\n\n## When the money arrives\n\nRefunds are issued to the original payment method once the warehouse has\ninspected the returned item. Inspection takes up to 3 business days from the\nmoment the parcel is scanned in. After inspection the refund is released\nimmediately, but the card issuer may take a further 5 to 10 business days to\npost it to your statement.\n\n## Non-returnable items\n\nPerishable food, climbing rope cut to a custom length, personalised engraving,\nand any item marked *Final Sale* on the product page cannot be returned.\nGift cards are also non-returnable. See `gift-cards.md` for the separate rules\nthat cover unused gift card balances."
+        },
+        {
+          "id": "returns-and-refunds.md#c1",
+          "text": "# Returns and refunds\n\nNorthwind Supply Co. accepts returns on most items within **30 days of\ndelivery**. The 30-day window starts on the date the carrier marks the parcel\nas delivered, not the date the order was placed.\n\nTo qualify for a refund an item must be unused, in its original packaging, and\naccompanied by the order number. Items that show signs of wear, are missing\ntags, or have been washed are not eligible.\n\n## How to start a return\n\nOpen the Returns Centre in your account, select the order, and choose the items\nyou are sending back. You will receive a prepaid return label by email within\none business hour. Attach the label to the outside of the parcel and drop it at\nany carrier access point.\n\n## When the money arrives"
+        },
+        {
+          "id": "warranty.md#c2",
+          "text": "any modification to the product. Items bought\nsecond-hand or from an unauthorised reseller are outside the warranty\naltogether.\n\n## Making a claim\n\nSubmit photographs of the defect and the original order number through the\nWarranty Claim form. A decision takes up to 10 business days. Approved claims\nship the repair or replacement free; you pay nothing for return postage.\n\n## Warranty is not a return\n\nA warranty claim is about a defect and has no time limit beyond the 2 years. A\nreturn is about changing your mind and closes after 30 days\n(`returns-and-refunds.md`). Do not use a return to report a defect that appears\nin month four — you will be refused the return and should claim instead."
+        },
+        {
+          "id": "exchanges.md#c1",
+          "text": "# Exchanges\n\nAn exchange is a return and a new order handled together, so the same 30-day\nwindow described in `returns-and-refunds.md` applies.\n\n## Same product, different size or colour\n\nChoose *Exchange* rather than *Refund* in the Returns Centre and pick the\nreplacement variant. The replacement ships as soon as the return label is\nscanned by the carrier, so you are not waiting for the warehouse to receive the\noriginal. This is called an advance exchange and it is available once per\norder.\n\nIf the returned item never arrives within 21 days of the label being scanned,\nthe replacement is charged to the original payment method at the price you\noriginally paid.\n\n## Different product"
+        },
+        {
+          "id": "store-pickup.md#c2",
+          "text": "Uncollected\norders are returned to the warehouse and refunded in full automatically,\nincluding any shipping paid.\n\n## Collection by someone else\n\nName a nominated collector at checkout. They need the code and their own photo\nidentification. We cannot release an order to someone who is not named, even\nwith the code.\n\n## Returns at a store\n\nAny item can be returned at a Northwind store within the normal 30-day window,\nincluding items originally delivered to an address. Bring the order number.\nStore returns are inspected on the spot, so the refund is released the same day\nrather than after warehouse inspection (`returns-and-refunds.md`)."
+        }
+      ],
+      "scores": {
+        "context_precision": 0.19999999998,
+        "context_recall": 1,
+        "faithfulness": 1,
+        "answer_relevancy": 0.8171757174453752
+      },
+      "scores_stddev": {
+        "context_precision": null,
+        "context_recall": null,
+        "faithfulness": null,
+        "answer_relevancy": null
+      },
+      "score_errors": {},
+      "latency_ms": 1708
+    },
+    {
+      "case_id": "tc-022",
+      "question": "How can a customer use a gift card in combination with Trailhead loyalty points during checkout, and what are the limitations of this combination?",
+      "status": "ok",
+      "error": null,
+      "answer": "A customer can use a gift card in combination with Trailhead loyalty points during checkout by redeeming points in blocks of 100, which are worth $5 off an order. The gift card balance is applied before any card or wallet payment, and points can be combined with a gift card but not with a percentage-off promotion code. There is no restriction on using both a gift card and loyalty points together, as long as the points are redeemed in the specified blocks.",
+      "contexts": [
+        {
+          "id": "loyalty-program.md#c1",
+          "text": "# Trailhead loyalty points\n\nEvery account earns **1 point per dollar** spent, excluding shipping, tax and\ngift card purchases. Northwind Plus members earn 2 points per dollar; see\n`subscription-plans.md`.\n\n## Redeeming\n\n100 points is worth $5 off an order. Points are redeemed in blocks of 100 at\ncheckout and can be combined with a gift card but not with a percentage-off\npromotion code.\n\n## When points arrive\n\nPoints post **14 days after delivery**, not at purchase. The delay covers the\nreturn window, so points are not earned on items that come straight back. A\nrefund removes the points that item earned; if they have already been spent,\nthe balance goes negative and future earnings pay it down.\n\n## Expiry\n\nPoints expire after **24 months of account inactivity**. Any order, return or\nsign-in resets the clock. You are emailed 30 days before expiry.\n\n## Tiers"
+        },
+        {
+          "id": "gift-cards.md#c1",
+          "text": "# Gift cards\n\nDigital gift cards are delivered by email within 15 minutes of purchase and are\navailable from $25 to $500. Physical gift cards ship as a normal order and\nfollow the delivery times in `shipping-and-delivery.md`.\n\n## Using a card\n\nEnter the 16-digit code at checkout. The balance is applied before any card or\nwallet payment. A card can be split across as many orders as you like until the\nbalance reaches zero.\n\n## Expiry\n\nGift card balances **do not expire**. Promotional credit issued as an apology or\nas part of a campaign is different: it expires 12 months after issue and the\nexpiry date is shown in your account.\n\n## Refunds involving gift cards\n\nWhen an order paid partly by gift card is refunded, the gift card portion goes\nback to the gift card and the remainder to the original payment method. A gift\ncard balance is never refunded as cash.\n\n## Lost cards and fraud"
+        },
+        {
+          "id": "payment-methods.md#c1",
+          "text": "# Payment methods\n\nWe accept Visa, Mastercard, American Express, Apple Pay, Google Pay, PayPal and\nNorthwind gift cards. We do not accept cheques, bank transfer, cryptocurrency\nor cash on delivery.\n\n## When you are charged\n\nPlacing an order creates an **authorisation**, which reserves the funds but\ndoes not take them. The charge is **captured** when the parcel is dispatched.\nFor a split shipment each parcel is captured separately, so your statement may\nshow two smaller charges rather than one.\n\nAn authorisation that is not captured within 7 days expires and the funds are\nreleased by your bank automatically.\n\n## Paying with more than one method\n\nA gift card can be combined with one card or wallet. The gift card balance is\nconsumed first and the remainder goes to the second method. Two credit cards\ncannot be combined on a single order.\n\n## Declined payments"
+        },
+        {
+          "id": "gift-cards.md#c2",
+          "text": "goes\nback to the gift card and the remainder to the original payment method. A gift\ncard balance is never refunded as cash.\n\n## Lost cards and fraud\n\nA digital card can be reissued to the original purchaser if it has not been\nredeemed. We cannot reissue a redeemed card, and we cannot tell you who\nredeemed it. Gift cards themselves cannot be returned or refunded, which is why\nthey appear in the non-returnable list in `returns-and-refunds.md`."
+        },
+        {
+          "id": "account-and-login.md#c1",
+          "text": "# Accounts and signing in\n\nAn account is not required to place an order — guest checkout is available —\nbut it is required to use the Returns Centre, track orders and hold loyalty\npoints.\n\n## Resetting a password\n\nChoose *Forgot password* on the sign-in page. The reset link is valid for **60\nminutes** and can be used once. Requesting a new link immediately invalidates\nthe previous one. If the email has not arrived within 10 minutes, check the\nspam folder and confirm you are using the address the order was placed with.\n\n## Two-factor authentication"
+        }
+      ],
+      "scores": {
+        "context_precision": 0.9999999999,
+        "context_recall": 1,
+        "faithfulness": 1,
+        "answer_relevancy": 0.9620158010446911
+      },
+      "scores_stddev": {
+        "context_precision": null,
+        "context_recall": null,
+        "faithfulness": null,
+        "answer_relevancy": null
+      },
+      "score_errors": {},
+      "latency_ms": 1953
+    },
+    {
+      "case_id": "tc-023",
+      "question": "how long does it take for email support to respond to a customer query?",
+      "status": "ok",
+      "error": null,
+      "answer": "Email support is answered within one business day. Complex cases involving a carrier investigation or a warranty decision take longer.",
+      "contexts": [
+        {
+          "id": "contacting-support.md#c1",
+          "text": "# Contacting support\n\n## Channels and hours\n\nLive chat runs 07:00 to 22:00 local time, seven days a week, and is the fastest\nchannel. Email is answered within **one business day**; complex cases involving\na carrier investigation or a warranty decision take longer. Phone support runs\n09:00 to 17:00 on business days. There is no support on 25 December or\n1 January.\n\n## What to have ready\n\nThe order number is the single most useful thing. With it, most questions are\nanswered in one message. Without it, we need the email address the order was\nplaced with plus the delivery postcode, and identity checks add time.\n\n## Escalation\n\nIf a case has been open for more than 5 business days without a resolution, ask\nfor it to be escalated. Escalated cases go to a senior agent with authority to\nissue a goodwill refund or replacement without a carrier decision.\n\n## What support cannot do"
+        },
+        {
+          "id": "account-and-login.md#c2",
+          "text": "not arrived within 10 minutes, check the\nspam folder and confirm you are using the address the order was placed with.\n\n## Two-factor authentication\n\nTwo-factor authentication is optional and uses an authenticator app; we do not\nsend codes by SMS. Enabling it invalidates existing sessions on other devices.\nRecovery codes are shown once at setup and cannot be retrieved later — losing\nboth the authenticator and the recovery codes means identity verification with\nsupport, which takes up to 5 business days.\n\n## Changing the email address\n\nThe account email can be changed in Account Settings and requires confirmation\nfrom both the old and the new address. Orders already placed keep the old\naddress on their records, so dispatch notifications for an in-flight order go\nto the address that was current when it was placed.\n\n## Closing an account"
+        },
+        {
+          "id": "privacy-and-data.md#c2",
+          "text": "accounting obligations.\nSupport conversations are kept for 24 months. Marketing preferences are kept\nuntil you change them.\n\n## Access and deletion\n\nYou can request a copy of your data or its deletion from Account Settings. A\ncopy arrives within 30 days. Deletion removes the account, addresses, marketing\npreferences and support history, but **not** order records inside the 7-year\nretention period, which are retained in a restricted form that is not linked to\na live account.\n\n## Sharing\n\nWe share addresses with carriers to deliver, and transaction data with the\npayment processor and with tax authorities where required. We do not sell\npersonal data."
+        },
+        {
+          "id": "contacting-support.md#c2",
+          "text": "Escalated cases go to a senior agent with authority to\nissue a goodwill refund or replacement without a carrier decision.\n\n## What support cannot do\n\nSupport cannot change the delivery address after dispatch, cannot tell you why\na bank declined a card (`payment-methods.md`), cannot reverse a completed\ncarrier delivery, and cannot extend the 30-day return window except where\nNorthwind Plus applies (`subscription-plans.md`)."
+        },
+        {
+          "id": "account-and-login.md#c1",
+          "text": "# Accounts and signing in\n\nAn account is not required to place an order — guest checkout is available —\nbut it is required to use the Returns Centre, track orders and hold loyalty\npoints.\n\n## Resetting a password\n\nChoose *Forgot password* on the sign-in page. The reset link is valid for **60\nminutes** and can be used once. Requesting a new link immediately invalidates\nthe previous one. If the email has not arrived within 10 minutes, check the\nspam folder and confirm you are using the address the order was placed with.\n\n## Two-factor authentication"
+        }
+      ],
+      "scores": {
+        "context_precision": 0.9999999999,
+        "context_recall": 1,
+        "faithfulness": 1,
+        "answer_relevancy": 0.942052115024001
+      },
+      "scores_stddev": {
+        "context_precision": null,
+        "context_recall": null,
+        "faithfulness": null,
+        "answer_relevancy": null
+      },
+      "score_errors": {},
+      "latency_ms": 991
+    },
+    {
+      "case_id": "tc-024",
+      "question": "What is the minimum order for business pricing?",
+      "status": "ok",
+      "error": null,
+      "answer": "The minimum order for business pricing is 12 units of a single item, or any order above $2,500.",
+      "contexts": [
+        {
+          "id": "bulk-and-business-orders.md#c1",
+          "text": "# Bulk and business orders\n\nOrders of **12 or more units** of a single item, or any order above $2,500,\nqualify for business pricing. Submit the request through the Business Orders\nform rather than checking out normally; a quote follows within 2 business days.\n\n## What business pricing includes\n\nTiered discounts starting at 10% for 12 units and reaching 25% at 100 units,\nfree Standard delivery at any value, consolidated invoicing, and payment terms\nof net 30 for approved accounts. Custom embroidery and logo application are\navailable with a 15-unit minimum.\n\n## Stock and lead time\n\nBusiness orders draw on reserved stock rather than the consumer pool, so\navailability shown on the website is not a reliable guide. Typical lead time is\n5 business days for stocked items and 4 to 6 weeks where a production run is\nneeded. Custom decoration adds 10 business days.\n\n## Returns on business orders"
+        },
+        {
+          "id": "shipping-and-delivery.md#c1",
+          "text": "# Shipping and delivery\n\nOrders placed before 14:00 local warehouse time on a business day are picked\nthe same day. Orders placed after that cut-off, at a weekend, or on a public\nholiday are picked on the next business day.\n\n## Delivery speeds and cost\n\n| Service | Delivery estimate | Cost |\n|---|---|---|\n| Standard | 3 to 5 business days | Free over $75, otherwise $6.95 |\n| Express | 1 to 2 business days | $14.95 |\n| Next Day | Next business day if ordered before 14:00 | $24.95 |\n\nDelivery estimates count business days from dispatch, not from when the order\nwas placed. A Standard order placed on a Friday afternoon typically dispatches\non Monday and arrives the following Thursday or Friday.\n\n## Where we ship"
+        },
+        {
+          "id": "cancellations.md#c2",
+          "text": "items to drop the order below the $75 free\nshipping threshold adds the $6.95 Standard shipping fee to the remaining\nitems.\n\n## Cancellations we make\n\nWe cancel an order ourselves when stock cannot be fulfilled, when an address\nfails carrier validation, or when a payment authorisation is declined on\ncapture. You are told by email within one business day and never charged. A\nprice error on the product page is also grounds for cancellation; we honour the\nlisted price only where the error was not obvious."
+        },
+        {
+          "id": "price-matching.md#c1",
+          "text": "# Price matching and price drops\n\n## Matching a competitor\n\nWe match the advertised price of an identical item — same brand, model, colour\nand size — sold new and in stock by an authorised retailer that ships to your\nregion. Send a link before you order and we apply the difference as a discount.\n\nWe do not match marketplace sellers, auction listings, membership-only pricing,\nclearance of discontinued stock, bundle pricing, or prices that include a\ncompetitor's own loyalty credit.\n\n## Our own price drops\n\nIf an item you bought drops in price within **14 days of your order date**, we\nrefund the difference to the original payment method. Request it through\nsupport with the order number. This applies once per item and is not available\non items bought during a sitewide sale event.\n\n## Sale events"
+        },
+        {
+          "id": "customs-and-duties.md#c1",
+          "text": "# Customs, duties and taxes\n\nPrices on each regional storefront include that region's consumption tax. US\nprices exclude sales tax, which is calculated at checkout from the delivery\naddress.\n\n## Delivered duty paid\n\nOrders shipped within the United States, Canada, the United Kingdom or the\nEuropean Union from their own regional warehouse are **delivered duty paid**.\nYou pay nothing further on arrival and the carrier will not ask you for money.\n\nIf a carrier demands a payment on a domestic order, do not pay it — it is\neither a misclassification or a scam. Photograph the notice and send it to\nsupport.\n\n## Orders that cross a border"
+        }
+      ],
+      "scores": {
+        "context_precision": 0.9999999999,
+        "context_recall": 1,
+        "faithfulness": 1,
+        "answer_relevancy": 0.9999999999999991
+      },
+      "scores_stddev": {
+        "context_precision": null,
+        "context_recall": null,
+        "faithfulness": null,
+        "answer_relevancy": null
+      },
+      "score_errors": {},
+      "latency_ms": 1059
+    },
+    {
+      "case_id": "tc-025",
+      "question": "How is the storefront for an order chosen?",
+      "status": "ok",
+      "error": null,
+      "answer": "The storefront for an order is chosen based on the delivery address provided during checkout. A visitor in Germany sending a gift to a Canadian address checks out on the Canadian storefront and is billed in Canadian dollars. This ensures that the order is processed in the correct region and currency.",
+      "contexts": [
+        {
+          "id": "international-orders.md#c1",
+          "text": "# International orders\n\nWe operate storefronts for the United States, Canada, the United Kingdom and\nthe European Union. Each storefront prices in its local currency, holds its own\nstock and ships domestically within its region.\n\n## Choosing a storefront\n\nThe storefront is chosen at checkout by the delivery address, not by your\nlocation. A visitor in Germany sending a gift to a Canadian address checks out\non the Canadian storefront and is billed in Canadian dollars.\n\n## What differs by region\n\nAssortment differs: some brands are not licensed for sale in every region.\nPrices differ because they include the local tax treatment. The return window\nis 30 days everywhere, but EU customers also have the statutory 14-day right of\nwithdrawal, which runs in parallel and is not reduced by our policy.\n\n## Delivery times"
+        },
+        {
+          "id": "store-pickup.md#c1",
+          "text": "# Store and locker pickup\n\nPickup is available at the 14 Northwind stores and at roughly 3,000 carrier\nlocker points across our regions. Pickup is free regardless of order value.\n\n## How it works\n\nChoose *Collect* at checkout and pick a location. You are emailed a collection\ncode when the order is ready — usually the next business day for store stock\nand 2 to 3 business days for warehouse stock. Bring the code and photo\nidentification.\n\n## Collection window\n\nOrders are held for **10 calendar days** for store pickup and **3 calendar\ndays** at a locker, which is a carrier limit we cannot extend. Uncollected\norders are returned to the warehouse and refunded in full automatically,\nincluding any shipping paid.\n\n## Collection by someone else"
+        },
+        {
+          "id": "bulk-and-business-orders.md#c1",
+          "text": "# Bulk and business orders\n\nOrders of **12 or more units** of a single item, or any order above $2,500,\nqualify for business pricing. Submit the request through the Business Orders\nform rather than checking out normally; a quote follows within 2 business days.\n\n## What business pricing includes\n\nTiered discounts starting at 10% for 12 units and reaching 25% at 100 units,\nfree Standard delivery at any value, consolidated invoicing, and payment terms\nof net 30 for approved accounts. Custom embroidery and logo application are\navailable with a 15-unit minimum.\n\n## Stock and lead time\n\nBusiness orders draw on reserved stock rather than the consumer pool, so\navailability shown on the website is not a reliable guide. Typical lead time is\n5 business days for stocked items and 4 to 6 weeks where a production run is\nneeded. Custom decoration adds 10 business days.\n\n## Returns on business orders"
+        },
+        {
+          "id": "shipping-and-delivery.md#c2",
+          "text": "placed. A Standard order placed on a Friday afternoon typically dispatches\non Monday and arrives the following Thursday or Friday.\n\n## Where we ship\n\nWe ship to street addresses and carrier pickup points in the United States,\nCanada, the United Kingdom and the European Union. We do not deliver to PO\nboxes, and we cannot ship hazardous goods such as camping gas canisters or\nbear spray by air, so those items are restricted to Standard ground delivery\nwithin the contiguous United States.\n\n## Split shipments\n\nWhen one part of an order is on backorder we ship the available items\nimmediately at no extra charge and send the remainder when stock arrives. You\nare charged shipping once."
+        },
+        {
+          "id": "price-matching.md#c1",
+          "text": "# Price matching and price drops\n\n## Matching a competitor\n\nWe match the advertised price of an identical item — same brand, model, colour\nand size — sold new and in stock by an authorised retailer that ships to your\nregion. Send a link before you order and we apply the difference as a discount.\n\nWe do not match marketplace sellers, auction listings, membership-only pricing,\nclearance of discontinued stock, bundle pricing, or prices that include a\ncompetitor's own loyalty credit.\n\n## Our own price drops\n\nIf an item you bought drops in price within **14 days of your order date**, we\nrefund the difference to the original payment method. Request it through\nsupport with the order number. This applies once per item and is not available\non items bought during a sitewide sale event.\n\n## Sale events"
+        }
+      ],
+      "scores": {
+        "context_precision": 0.9999999999,
+        "context_recall": 1,
+        "faithfulness": 1,
+        "answer_relevancy": 0.8849922573543232
+      },
+      "scores_stddev": {
+        "context_precision": null,
+        "context_recall": null,
+        "faithfulness": null,
+        "answer_relevancy": null
+      },
+      "score_errors": {},
+      "latency_ms": 1457
+    },
+    {
+      "case_id": "tc-026",
+      "question": "What does the Summit tier of the Trailhead loyalty program give, and how do you reach it?",
+      "status": "ok",
+      "error": null,
+      "answer": "The Summit tier of the Trailhead loyalty program provides free Express delivery and a dedicated support queue. You reach this tier by spending $500 in a calendar year. The tier is assessed on January 1 and remains active for the entire following year.",
+      "contexts": [
+        {
+          "id": "loyalty-program.md#c1",
+          "text": "# Trailhead loyalty points\n\nEvery account earns **1 point per dollar** spent, excluding shipping, tax and\ngift card purchases. Northwind Plus members earn 2 points per dollar; see\n`subscription-plans.md`.\n\n## Redeeming\n\n100 points is worth $5 off an order. Points are redeemed in blocks of 100 at\ncheckout and can be combined with a gift card but not with a percentage-off\npromotion code.\n\n## When points arrive\n\nPoints post **14 days after delivery**, not at purchase. The delay covers the\nreturn window, so points are not earned on items that come straight back. A\nrefund removes the points that item earned; if they have already been spent,\nthe balance goes negative and future earnings pay it down.\n\n## Expiry\n\nPoints expire after **24 months of account inactivity**. Any order, return or\nsign-in resets the clock. You are emailed 30 days before expiry.\n\n## Tiers"
+        },
+        {
+          "id": "loyalty-program.md#c2",
+          "text": "expire after **24 months of account inactivity**. Any order, return or\nsign-in resets the clock. You are emailed 30 days before expiry.\n\n## Tiers\n\nSpending $500 in a calendar year reaches Summit tier, which adds free Express\ndelivery and a dedicated support queue. Tier is assessed on 1 January and held\nfor the whole of the following year, so a strong year protects you through a\nquiet one."
+        },
+        {
+          "id": "account-and-login.md#c1",
+          "text": "# Accounts and signing in\n\nAn account is not required to place an order — guest checkout is available —\nbut it is required to use the Returns Centre, track orders and hold loyalty\npoints.\n\n## Resetting a password\n\nChoose *Forgot password* on the sign-in page. The reset link is valid for **60\nminutes** and can be used once. Requesting a new link immediately invalidates\nthe previous one. If the email has not arrived within 10 minutes, check the\nspam folder and confirm you are using the address the order was placed with.\n\n## Two-factor authentication"
+        },
+        {
+          "id": "subscription-plans.md#c1",
+          "text": "# Northwind Plus subscription\n\nNorthwind Plus costs **$49 per year** or $5.50 per month. It includes free\nExpress delivery with no minimum order value, double loyalty points, a 60-day\nreturn window instead of 30, and early access to sale events 24 hours before\nthey open publicly.\n\n## Free trial\n\nNew members get a 30-day free trial, once per household. The trial converts to\na paid plan automatically unless cancelled, and you are told by email 3 days\nbefore it converts.\n\n## Billing\n\nAnnual plans are billed on the anniversary of sign-up. Monthly plans are billed\non the same day each month; where that day does not exist in a shorter month,\nbilling moves to the last day of the month.\n\n## Cancelling"
+        },
+        {
+          "id": "price-matching.md#c1",
+          "text": "# Price matching and price drops\n\n## Matching a competitor\n\nWe match the advertised price of an identical item — same brand, model, colour\nand size — sold new and in stock by an authorised retailer that ships to your\nregion. Send a link before you order and we apply the difference as a discount.\n\nWe do not match marketplace sellers, auction listings, membership-only pricing,\nclearance of discontinued stock, bundle pricing, or prices that include a\ncompetitor's own loyalty credit.\n\n## Our own price drops\n\nIf an item you bought drops in price within **14 days of your order date**, we\nrefund the difference to the original payment method. Request it through\nsupport with the order number. This applies once per item and is not available\non items bought during a sitewide sale event.\n\n## Sale events"
+        }
+      ],
+      "scores": {
+        "context_precision": 0.49999999995,
+        "context_recall": 1,
+        "faithfulness": 1,
+        "answer_relevancy": 0.9275536309833715
+      },
+      "scores_stddev": {
+        "context_precision": null,
+        "context_recall": null,
+        "faithfulness": null,
+        "answer_relevancy": null
+      },
+      "score_errors": {},
+      "latency_ms": 1361
+    },
+    {
+      "case_id": "tc-027",
+      "question": "Which items can't be returned?",
+      "status": "ok",
+      "error": null,
+      "answer": "Items that cannot be returned include perishable food, climbing rope cut to a custom length, personalised engraving, items marked *Final Sale*, and gift cards. Additionally, custom and decorated items, as well as business orders, have specific restrictions or cannot be returned at all.",
+      "contexts": [
+        {
+          "id": "returns-and-refunds.md#c2",
+          "text": "by email within\none business hour. Attach the label to the outside of the parcel and drop it at\nany carrier access point.\n\n## When the money arrives\n\nRefunds are issued to the original payment method once the warehouse has\ninspected the returned item. Inspection takes up to 3 business days from the\nmoment the parcel is scanned in. After inspection the refund is released\nimmediately, but the card issuer may take a further 5 to 10 business days to\npost it to your statement.\n\n## Non-returnable items\n\nPerishable food, climbing rope cut to a custom length, personalised engraving,\nand any item marked *Final Sale* on the product page cannot be returned.\nGift cards are also non-returnable. See `gift-cards.md` for the separate rules\nthat cover unused gift card balances."
+        },
+        {
+          "id": "gift-cards.md#c2",
+          "text": "goes\nback to the gift card and the remainder to the original payment method. A gift\ncard balance is never refunded as cash.\n\n## Lost cards and fraud\n\nA digital card can be reissued to the original purchaser if it has not been\nredeemed. We cannot reissue a redeemed card, and we cannot tell you who\nredeemed it. Gift cards themselves cannot be returned or refunded, which is why\nthey appear in the non-returnable list in `returns-and-refunds.md`."
+        },
+        {
+          "id": "store-pickup.md#c2",
+          "text": "Uncollected\norders are returned to the warehouse and refunded in full automatically,\nincluding any shipping paid.\n\n## Collection by someone else\n\nName a nominated collector at checkout. They need the code and their own photo\nidentification. We cannot release an order to someone who is not named, even\nwith the code.\n\n## Returns at a store\n\nAny item can be returned at a Northwind store within the normal 30-day window,\nincluding items originally delivered to an address. Bring the order number.\nStore returns are inspected on the spot, so the refund is released the same day\nrather than after warehouse inspection (`returns-and-refunds.md`)."
+        },
+        {
+          "id": "returns-and-refunds.md#c1",
+          "text": "# Returns and refunds\n\nNorthwind Supply Co. accepts returns on most items within **30 days of\ndelivery**. The 30-day window starts on the date the carrier marks the parcel\nas delivered, not the date the order was placed.\n\nTo qualify for a refund an item must be unused, in its original packaging, and\naccompanied by the order number. Items that show signs of wear, are missing\ntags, or have been washed are not eligible.\n\n## How to start a return\n\nOpen the Returns Centre in your account, select the order, and choose the items\nyou are sending back. You will receive a prepaid return label by email within\none business hour. Attach the label to the outside of the parcel and drop it at\nany carrier access point.\n\n## When the money arrives"
+        },
+        {
+          "id": "bulk-and-business-orders.md#c2",
+          "text": "days for stocked items and 4 to 6 weeks where a production run is\nneeded. Custom decoration adds 10 business days.\n\n## Returns on business orders\n\nBusiness orders are **not covered by the 30-day consumer return policy** in\n`returns-and-refunds.md`. Returns are by prior agreement only, within 14 days\nof delivery, and a 15% restocking fee applies to unopened cases. Decorated and\ncustom items cannot be returned at all.\n\n## Tax exemption\n\nRegistered tax-exempt organisations submit their certificate once; it is\napplied to all future orders on the account."
+        }
+      ],
+      "scores": {
+        "context_precision": 0.9999999999,
+        "context_recall": 1,
+        "faithfulness": 1,
+        "answer_relevancy": 0.9124886768316195
+      },
+      "scores_stddev": {
+        "context_precision": null,
+        "context_recall": null,
+        "faithfulness": null,
+        "answer_relevancy": null
+      },
+      "score_errors": {},
+      "latency_ms": 1396
+    },
+    {
+      "case_id": "tc-028",
+      "question": "I found a defect four months after delivery. Should I return the item or make a warranty claim?",
+      "status": "ok",
+      "error": null,
+      "answer": "You should make a warranty claim, as warranty claims have no time limit beyond 2 years and are meant for defects. Returns are only for changing your mind and close after 30 days. Since the defect appeared in month four, you should not use a return but instead claim under the warranty.",
+      "contexts": [
+        {
+          "id": "warranty.md#c2",
+          "text": "any modification to the product. Items bought\nsecond-hand or from an unauthorised reseller are outside the warranty\naltogether.\n\n## Making a claim\n\nSubmit photographs of the defect and the original order number through the\nWarranty Claim form. A decision takes up to 10 business days. Approved claims\nship the repair or replacement free; you pay nothing for return postage.\n\n## Warranty is not a return\n\nA warranty claim is about a defect and has no time limit beyond the 2 years. A\nreturn is about changing your mind and closes after 30 days\n(`returns-and-refunds.md`). Do not use a return to report a defect that appears\nin month four — you will be refused the return and should claim instead."
+        },
+        {
+          "id": "damaged-or-missing-items.md#c1",
+          "text": "# Damaged, wrong or missing items\n\nReport any of these within **7 days of delivery** so we can hold the carrier\naccountable. Reports after 7 days are still investigated but the carrier will\nusually refuse the claim, which limits what we can recover.\n\n## Damaged in transit\n\nPhotograph the outer packaging before you unpack anything else, then the item.\nThe packaging photograph is what carriers accept as evidence. We ship a\nreplacement immediately and send a prepaid label for the damaged item; you do\nnot wait for the return to arrive.\n\n## Wrong item received\n\nKeep the item and the packing slip and report it. We ship the correct item and\ncollect the wrong one. You are never asked to pay the difference if the item we\nsent by mistake is more expensive.\n\n## Missing from a multi-item parcel"
+        },
+        {
+          "id": "warranty.md#c1",
+          "text": "# Warranty\n\nNorthwind-branded gear carries a **2-year limited warranty** against defects in\nmaterials and workmanship, starting on the delivery date. Third-party brands\nsold by Northwind carry whatever warranty their manufacturer offers, which is\nstated on the product page.\n\n## What is covered\n\nSeam failure, delamination, zip and buckle failure, broken frames, and coatings\nthat fail under normal use are covered. We repair where a repair restores the\nitem, and replace where it does not. If the exact product is discontinued we\nsubstitute the closest current equivalent.\n\n## What is not covered\n\nNormal wear, UV fading, abrasion from rock or bark, damage from improper\nstorage, accidental damage, and any modification to the product. Items bought\nsecond-hand or from an unauthorised reseller are outside the warranty\naltogether.\n\n## Making a claim"
+        },
+        {
+          "id": "returns-and-refunds.md#c2",
+          "text": "by email within\none business hour. Attach the label to the outside of the parcel and drop it at\nany carrier access point.\n\n## When the money arrives\n\nRefunds are issued to the original payment method once the warehouse has\ninspected the returned item. Inspection takes up to 3 business days from the\nmoment the parcel is scanned in. After inspection the refund is released\nimmediately, but the card issuer may take a further 5 to 10 business days to\npost it to your statement.\n\n## Non-returnable items\n\nPerishable food, climbing rope cut to a custom length, personalised engraving,\nand any item marked *Final Sale* on the product page cannot be returned.\nGift cards are also non-returnable. See `gift-cards.md` for the separate rules\nthat cover unused gift card balances."
+        },
+        {
+          "id": "order-tracking.md#c2",
+          "text": "parcel is on a vehicle and will be attempted today.\n- **Delivered** — the carrier has recorded a successful delivery.\n\n## Tracking has not updated\n\nCarriers sometimes go quiet for 24 to 48 hours in the middle of a journey,\nparticularly on international routes where the parcel is between networks. This\nis normal. If tracking has not moved for **5 consecutive business days**, treat\nthe parcel as lost and contact support; see `damaged-or-missing-items.md`.\n\n## Marked delivered but not received\n\nCheck with neighbours and around the property first, as carriers often leave\nparcels in a safe place and photograph them. If it has not appeared within 24\nhours of the delivery scan, report it and we will open a carrier investigation."
+        }
+      ],
+      "scores": {
+        "context_precision": 0.8333333332916666,
+        "context_recall": 1,
+        "faithfulness": 0.6,
+        "answer_relevancy": 0.7871928663939695
+      },
+      "scores_stddev": {
+        "context_precision": null,
+        "context_recall": null,
+        "faithfulness": null,
+        "answer_relevancy": null
+      },
+      "score_errors": {},
+      "latency_ms": 1515
+    },
+    {
+      "case_id": "tc-029",
+      "question": "Can I cancel an order after it has been dispatched?",
+      "status": "ok",
+      "error": null,
+      "answer": "No, you cannot cancel an order once it has been dispatched. After an order reaches the **Dispatched** status, the parcel has physically left the warehouse, and cancellation is no longer possible. You may refuse the delivery or return the item under the 30-day return policy.",
+      "contexts": [
+        {
+          "id": "cancellations.md#c1",
+          "text": "# Cancelling an order\n\nAn order can be cancelled by you, without contacting anyone, for as long as it\nis in **Processing** status. Open the order in your account and choose *Cancel\norder*. The authorisation on your card is released immediately, though your\nbank may take a few days to remove the pending charge.\n\n## After dispatch\n\nOnce an order reaches **Dispatched** it can no longer be cancelled, because the\nparcel has physically left the warehouse. Refuse the delivery at the door or\nreturn the item under the normal 30-day policy in `returns-and-refunds.md`.\n\n## Partial cancellation\n\nYou can cancel individual lines of a multi-item order while it is in\nProcessing. Cancelling enough items to drop the order below the $75 free\nshipping threshold adds the $6.95 Standard shipping fee to the remaining\nitems.\n\n## Cancellations we make"
+        },
+        {
+          "id": "cancellations.md#c2",
+          "text": "items to drop the order below the $75 free\nshipping threshold adds the $6.95 Standard shipping fee to the remaining\nitems.\n\n## Cancellations we make\n\nWe cancel an order ourselves when stock cannot be fulfilled, when an address\nfails carrier validation, or when a payment authorisation is declined on\ncapture. You are told by email within one business day and never charged. A\nprice error on the product page is also grounds for cancellation; we honour the\nlisted price only where the error was not obvious."
+        },
+        {
+          "id": "order-tracking.md#c1",
+          "text": "# Tracking an order\n\nEvery dispatched parcel gets a tracking number. You will find it in the\ndispatch confirmation email and on the order page in your account.\n\n## Status meanings\n\n- **Processing** — the order is accepted but has not left the warehouse. You\n  can still cancel it at this stage; see `cancellations.md`.\n- **Dispatched** — the carrier has collected the parcel and the tracking number\n  is live. Tracking can take up to 6 hours to show its first scan.\n- **In transit** — the parcel is moving through the carrier network.\n- **Out for delivery** — the parcel is on a vehicle and will be attempted today.\n- **Delivered** — the carrier has recorded a successful delivery.\n\n## Tracking has not updated"
+        },
+        {
+          "id": "payment-methods.md#c2",
+          "text": "balance is\nconsumed first and the remainder goes to the second method. Two credit cards\ncannot be combined on a single order.\n\n## Declined payments\n\nThe most common causes are an address mismatch with the card issuer, an expired\ncard, and a daily spending limit. We are not told the specific reason a bank\ndeclines a transaction, so if a card is repeatedly refused the issuer is the\nonly source of the answer. The order stays in Processing for 48 hours to give\nyou time to change the payment method before it is cancelled."
+        },
+        {
+          "id": "customs-and-duties.md#c2",
+          "text": "order, do not pay it — it is\neither a misclassification or a scam. Photograph the notice and send it to\nsupport.\n\n## Orders that cross a border\n\nA small number of specialist items ship direct from a supplier outside your\nregion. These are flagged *Ships internationally* on the product page and are\n**delivered duty unpaid**: the carrier collects import duty and handling before\nrelease. The amount is set by your customs authority, not by us, and we cannot\nestimate it.\n\n## Duties on a return\n\nImport duty paid on a cross-border order is refundable by your customs\nauthority, not by us. We refund the item price and, where the return is due to\na defect, the original shipping. Reclaiming duty is a form you file yourself;\nkeep the carrier's paperwork."
+        }
+      ],
+      "scores": {
+        "context_precision": 0.8333333332916666,
+        "context_recall": 1,
+        "faithfulness": 1,
+        "answer_relevancy": 0.9355529417702794
+      },
+      "scores_stddev": {
+        "context_precision": null,
+        "context_recall": null,
+        "faithfulness": null,
+        "answer_relevancy": null
+      },
+      "score_errors": {},
+      "latency_ms": 1456
+    },
+    {
+      "case_id": "tc-030",
+      "question": "Who does Northwind share my personal data with?",
+      "status": "ok",
+      "error": null,
+      "answer": "Northwind shares your personal data with carriers to deliver your orders, with the payment processor to handle transactions, and with tax authorities where required. They do not sell personal data.",
+      "contexts": [
+        {
+          "id": "subscription-plans.md#c1",
+          "text": "# Northwind Plus subscription\n\nNorthwind Plus costs **$49 per year** or $5.50 per month. It includes free\nExpress delivery with no minimum order value, double loyalty points, a 60-day\nreturn window instead of 30, and early access to sale events 24 hours before\nthey open publicly.\n\n## Free trial\n\nNew members get a 30-day free trial, once per household. The trial converts to\na paid plan automatically unless cancelled, and you are told by email 3 days\nbefore it converts.\n\n## Billing\n\nAnnual plans are billed on the anniversary of sign-up. Monthly plans are billed\non the same day each month; where that day does not exist in a shorter month,\nbilling moves to the last day of the month.\n\n## Cancelling"
+        },
+        {
+          "id": "privacy-and-data.md#c1",
+          "text": "# Privacy and your data\n\nWe collect the data needed to take an order and run an account: name, delivery\nand billing address, email, phone number, order history and support\ncorrespondence. Payment card numbers are handled by our payment processor and\nnever reach Northwind systems.\n\n## Marketing\n\nMarketing email requires explicit opt-in and every message carries an\nunsubscribe link that takes effect within 48 hours. Transactional messages —\norder confirmation, dispatch, delivery, returns — are not marketing and cannot\nbe switched off while an order is open.\n\n## Retention\n\nOrder records are kept for **7 years** to meet tax and accounting obligations.\nSupport conversations are kept for 24 months. Marketing preferences are kept\nuntil you change them.\n\n## Access and deletion"
+        },
+        {
+          "id": "account-and-login.md#c3",
+          "text": "on their records, so dispatch notifications for an in-flight order go\nto the address that was current when it was placed.\n\n## Closing an account\n\nClosure is requested in Account Settings. See `privacy-and-data.md` for what is\ndeleted and what is retained."
+        },
+        {
+          "id": "store-pickup.md#c1",
+          "text": "# Store and locker pickup\n\nPickup is available at the 14 Northwind stores and at roughly 3,000 carrier\nlocker points across our regions. Pickup is free regardless of order value.\n\n## How it works\n\nChoose *Collect* at checkout and pick a location. You are emailed a collection\ncode when the order is ready — usually the next business day for store stock\nand 2 to 3 business days for warehouse stock. Bring the code and photo\nidentification.\n\n## Collection window\n\nOrders are held for **10 calendar days** for store pickup and **3 calendar\ndays** at a locker, which is a carrier limit we cannot extend. Uncollected\norders are returned to the warehouse and refunded in full automatically,\nincluding any shipping paid.\n\n## Collection by someone else"
+        },
+        {
+          "id": "privacy-and-data.md#c2",
+          "text": "accounting obligations.\nSupport conversations are kept for 24 months. Marketing preferences are kept\nuntil you change them.\n\n## Access and deletion\n\nYou can request a copy of your data or its deletion from Account Settings. A\ncopy arrives within 30 days. Deletion removes the account, addresses, marketing\npreferences and support history, but **not** order records inside the 7-year\nretention period, which are retained in a restricted form that is not linked to\na live account.\n\n## Sharing\n\nWe share addresses with carriers to deliver, and transaction data with the\npayment processor and with tax authorities where required. We do not sell\npersonal data."
+        }
+      ],
+      "scores": {
+        "context_precision": 0.4499999999775,
+        "context_recall": 1,
+        "faithfulness": 1,
+        "answer_relevancy": 0.971494058686865
+      },
+      "scores_stddev": {
+        "context_precision": null,
+        "context_recall": null,
+        "faithfulness": null,
+        "answer_relevancy": null
+      },
+      "score_errors": {},
+      "latency_ms": 1176
+    },
+    {
+      "case_id": "tc-031",
+      "question": "How long will a store or a locker hold my pickup order?",
+      "status": "ok",
+      "error": null,
+      "answer": "A store will hold your pickup order for 10 calendar days, and a locker will hold it for 3 calendar days. After these periods, uncollected orders are returned to the warehouse and refunded automatically.",
+      "contexts": [
+        {
+          "id": "store-pickup.md#c1",
+          "text": "# Store and locker pickup\n\nPickup is available at the 14 Northwind stores and at roughly 3,000 carrier\nlocker points across our regions. Pickup is free regardless of order value.\n\n## How it works\n\nChoose *Collect* at checkout and pick a location. You are emailed a collection\ncode when the order is ready — usually the next business day for store stock\nand 2 to 3 business days for warehouse stock. Bring the code and photo\nidentification.\n\n## Collection window\n\nOrders are held for **10 calendar days** for store pickup and **3 calendar\ndays** at a locker, which is a carrier limit we cannot extend. Uncollected\norders are returned to the warehouse and refunded in full automatically,\nincluding any shipping paid.\n\n## Collection by someone else"
+        },
+        {
+          "id": "store-pickup.md#c2",
+          "text": "Uncollected\norders are returned to the warehouse and refunded in full automatically,\nincluding any shipping paid.\n\n## Collection by someone else\n\nName a nominated collector at checkout. They need the code and their own photo\nidentification. We cannot release an order to someone who is not named, even\nwith the code.\n\n## Returns at a store\n\nAny item can be returned at a Northwind store within the normal 30-day window,\nincluding items originally delivered to an address. Bring the order number.\nStore returns are inspected on the spot, so the refund is released the same day\nrather than after warehouse inspection (`returns-and-refunds.md`)."
+        },
+        {
+          "id": "shipping-and-delivery.md#c1",
+          "text": "# Shipping and delivery\n\nOrders placed before 14:00 local warehouse time on a business day are picked\nthe same day. Orders placed after that cut-off, at a weekend, or on a public\nholiday are picked on the next business day.\n\n## Delivery speeds and cost\n\n| Service | Delivery estimate | Cost |\n|---|---|---|\n| Standard | 3 to 5 business days | Free over $75, otherwise $6.95 |\n| Express | 1 to 2 business days | $14.95 |\n| Next Day | Next business day if ordered before 14:00 | $24.95 |\n\nDelivery estimates count business days from dispatch, not from when the order\nwas placed. A Standard order placed on a Friday afternoon typically dispatches\non Monday and arrives the following Thursday or Friday.\n\n## Where we ship"
+        },
+        {
+          "id": "shipping-and-delivery.md#c2",
+          "text": "placed. A Standard order placed on a Friday afternoon typically dispatches\non Monday and arrives the following Thursday or Friday.\n\n## Where we ship\n\nWe ship to street addresses and carrier pickup points in the United States,\nCanada, the United Kingdom and the European Union. We do not deliver to PO\nboxes, and we cannot ship hazardous goods such as camping gas canisters or\nbear spray by air, so those items are restricted to Standard ground delivery\nwithin the contiguous United States.\n\n## Split shipments\n\nWhen one part of an order is on backorder we ship the available items\nimmediately at no extra charge and send the remainder when stock arrives. You\nare charged shipping once."
+        },
+        {
+          "id": "international-orders.md#c1",
+          "text": "# International orders\n\nWe operate storefronts for the United States, Canada, the United Kingdom and\nthe European Union. Each storefront prices in its local currency, holds its own\nstock and ships domestically within its region.\n\n## Choosing a storefront\n\nThe storefront is chosen at checkout by the delivery address, not by your\nlocation. A visitor in Germany sending a gift to a Canadian address checks out\non the Canadian storefront and is billed in Canadian dollars.\n\n## What differs by region\n\nAssortment differs: some brands are not licensed for sale in every region.\nPrices differ because they include the local tax treatment. The return window\nis 30 days everywhere, but EU customers also have the statutory 14-day right of\nwithdrawal, which runs in parallel and is not reduced by our policy.\n\n## Delivery times"
+        }
+      ],
+      "scores": {
+        "context_precision": 0.9999999999,
+        "context_recall": 1,
+        "faithfulness": 1,
+        "answer_relevancy": 0.9687869754663839
+      },
+      "scores_stddev": {
+        "context_precision": null,
+        "context_recall": null,
+        "faithfulness": null,
+        "answer_relevancy": null
+      },
+      "score_errors": {},
+      "latency_ms": 1315
+    },
+    {
+      "case_id": "tc-032",
+      "question": "If I return an item at a Northwind store, how quickly is the refund released?",
+      "status": "ok",
+      "error": null,
+      "answer": "If you return an item at a Northwind store, the refund is released the same day, as the item is inspected on the spot.",
+      "contexts": [
+        {
+          "id": "returns-and-refunds.md#c1",
+          "text": "# Returns and refunds\n\nNorthwind Supply Co. accepts returns on most items within **30 days of\ndelivery**. The 30-day window starts on the date the carrier marks the parcel\nas delivered, not the date the order was placed.\n\nTo qualify for a refund an item must be unused, in its original packaging, and\naccompanied by the order number. Items that show signs of wear, are missing\ntags, or have been washed are not eligible.\n\n## How to start a return\n\nOpen the Returns Centre in your account, select the order, and choose the items\nyou are sending back. You will receive a prepaid return label by email within\none business hour. Attach the label to the outside of the parcel and drop it at\nany carrier access point.\n\n## When the money arrives"
+        },
+        {
+          "id": "store-pickup.md#c2",
+          "text": "Uncollected\norders are returned to the warehouse and refunded in full automatically,\nincluding any shipping paid.\n\n## Collection by someone else\n\nName a nominated collector at checkout. They need the code and their own photo\nidentification. We cannot release an order to someone who is not named, even\nwith the code.\n\n## Returns at a store\n\nAny item can be returned at a Northwind store within the normal 30-day window,\nincluding items originally delivered to an address. Bring the order number.\nStore returns are inspected on the spot, so the refund is released the same day\nrather than after warehouse inspection (`returns-and-refunds.md`)."
+        },
+        {
+          "id": "returns-and-refunds.md#c2",
+          "text": "by email within\none business hour. Attach the label to the outside of the parcel and drop it at\nany carrier access point.\n\n## When the money arrives\n\nRefunds are issued to the original payment method once the warehouse has\ninspected the returned item. Inspection takes up to 3 business days from the\nmoment the parcel is scanned in. After inspection the refund is released\nimmediately, but the card issuer may take a further 5 to 10 business days to\npost it to your statement.\n\n## Non-returnable items\n\nPerishable food, climbing rope cut to a custom length, personalised engraving,\nand any item marked *Final Sale* on the product page cannot be returned.\nGift cards are also non-returnable. See `gift-cards.md` for the separate rules\nthat cover unused gift card balances."
+        },
+        {
+          "id": "store-pickup.md#c1",
+          "text": "# Store and locker pickup\n\nPickup is available at the 14 Northwind stores and at roughly 3,000 carrier\nlocker points across our regions. Pickup is free regardless of order value.\n\n## How it works\n\nChoose *Collect* at checkout and pick a location. You are emailed a collection\ncode when the order is ready — usually the next business day for store stock\nand 2 to 3 business days for warehouse stock. Bring the code and photo\nidentification.\n\n## Collection window\n\nOrders are held for **10 calendar days** for store pickup and **3 calendar\ndays** at a locker, which is a carrier limit we cannot extend. Uncollected\norders are returned to the warehouse and refunded in full automatically,\nincluding any shipping paid.\n\n## Collection by someone else"
+        },
+        {
+          "id": "exchanges.md#c1",
+          "text": "# Exchanges\n\nAn exchange is a return and a new order handled together, so the same 30-day\nwindow described in `returns-and-refunds.md` applies.\n\n## Same product, different size or colour\n\nChoose *Exchange* rather than *Refund* in the Returns Centre and pick the\nreplacement variant. The replacement ships as soon as the return label is\nscanned by the carrier, so you are not waiting for the warehouse to receive the\noriginal. This is called an advance exchange and it is available once per\norder.\n\nIf the returned item never arrives within 21 days of the label being scanned,\nthe replacement is charged to the original payment method at the price you\noriginally paid.\n\n## Different product"
+        }
+      ],
+      "scores": {
+        "context_precision": 0.49999999995,
+        "context_recall": 1,
+        "faithfulness": 1,
+        "answer_relevancy": 0.9565704870978946
+      },
+      "scores_stddev": {
+        "context_precision": null,
+        "context_recall": null,
+        "faithfulness": null,
+        "answer_relevancy": null
+      },
+      "score_errors": {},
+      "latency_ms": 1073
+    },
+    {
+      "case_id": "tc-033",
+      "question": "What does the warranty on Northwind-branded gear cover?",
+      "status": "ok",
+      "error": null,
+      "answer": "The warranty on Northwind-branded gear covers defects in materials and workmanship for 2 years from the delivery date. It includes issues like seam failure, delamination, zip and buckle failure, broken frames, and coatings that fail under normal use. Repairs or replacements are provided where possible.",
+      "contexts": [
+        {
+          "id": "warranty.md#c1",
+          "text": "# Warranty\n\nNorthwind-branded gear carries a **2-year limited warranty** against defects in\nmaterials and workmanship, starting on the delivery date. Third-party brands\nsold by Northwind carry whatever warranty their manufacturer offers, which is\nstated on the product page.\n\n## What is covered\n\nSeam failure, delamination, zip and buckle failure, broken frames, and coatings\nthat fail under normal use are covered. We repair where a repair restores the\nitem, and replace where it does not. If the exact product is discontinued we\nsubstitute the closest current equivalent.\n\n## What is not covered\n\nNormal wear, UV fading, abrasion from rock or bark, damage from improper\nstorage, accidental damage, and any modification to the product. Items bought\nsecond-hand or from an unauthorised reseller are outside the warranty\naltogether.\n\n## Making a claim"
+        },
+        {
+          "id": "subscription-plans.md#c1",
+          "text": "# Northwind Plus subscription\n\nNorthwind Plus costs **$49 per year** or $5.50 per month. It includes free\nExpress delivery with no minimum order value, double loyalty points, a 60-day\nreturn window instead of 30, and early access to sale events 24 hours before\nthey open publicly.\n\n## Free trial\n\nNew members get a 30-day free trial, once per household. The trial converts to\na paid plan automatically unless cancelled, and you are told by email 3 days\nbefore it converts.\n\n## Billing\n\nAnnual plans are billed on the anniversary of sign-up. Monthly plans are billed\non the same day each month; where that day does not exist in a shorter month,\nbilling moves to the last day of the month.\n\n## Cancelling"
+        },
+        {
+          "id": "returns-and-refunds.md#c1",
+          "text": "# Returns and refunds\n\nNorthwind Supply Co. accepts returns on most items within **30 days of\ndelivery**. The 30-day window starts on the date the carrier marks the parcel\nas delivered, not the date the order was placed.\n\nTo qualify for a refund an item must be unused, in its original packaging, and\naccompanied by the order number. Items that show signs of wear, are missing\ntags, or have been washed are not eligible.\n\n## How to start a return\n\nOpen the Returns Centre in your account, select the order, and choose the items\nyou are sending back. You will receive a prepaid return label by email within\none business hour. Attach the label to the outside of the parcel and drop it at\nany carrier access point.\n\n## When the money arrives"
+        },
+        {
+          "id": "product-care.md#c2",
+          "text": "heat, and never on a\nradiator — heat cracks leather and delaminates soles. Condition full-grain\nleather every 20 days of use.\n\n## Climbing rope\n\nRetire any rope that has held a factor-2 fall, shows core exposure, or is\n10 years old from manufacture regardless of use. Wash in cool water with no\ndetergent and dry flat out of sunlight.\n\nCare failures are not warranty defects; see `warranty.md`."
+        },
+        {
+          "id": "store-pickup.md#c1",
+          "text": "# Store and locker pickup\n\nPickup is available at the 14 Northwind stores and at roughly 3,000 carrier\nlocker points across our regions. Pickup is free regardless of order value.\n\n## How it works\n\nChoose *Collect* at checkout and pick a location. You are emailed a collection\ncode when the order is ready — usually the next business day for store stock\nand 2 to 3 business days for warehouse stock. Bring the code and photo\nidentification.\n\n## Collection window\n\nOrders are held for **10 calendar days** for store pickup and **3 calendar\ndays** at a locker, which is a carrier limit we cannot extend. Uncollected\norders are returned to the warehouse and refunded in full automatically,\nincluding any shipping paid.\n\n## Collection by someone else"
+        }
+      ],
+      "scores": {
+        "context_precision": 0.9999999999,
+        "context_recall": 1,
+        "faithfulness": 1,
+        "answer_relevancy": 0.9999999999999991
+      },
+      "scores_stddev": {
+        "context_precision": null,
+        "context_recall": null,
+        "faithfulness": null,
+        "answer_relevancy": null
+      },
+      "score_errors": {},
+      "latency_ms": 1506
+    },
+    {
+      "case_id": "tc-034",
+      "question": "Does a price-drop refund restart the 30-day return window?",
+      "status": "ok",
+      "error": null,
+      "answer": "No, a price-drop refund does not restart the 30-day return window. The return window still runs from the original delivery date, regardless of any price adjustments.",
+      "contexts": [
+        {
+          "id": "price-matching.md#c2",
+          "text": "through\nsupport with the order number. This applies once per item and is not available\non items bought during a sitewide sale event.\n\n## Sale events\n\nPrices during Black Friday, end-of-season clearance and Plus early access are\nfinal for the duration of the event. Items bought at full price in the 14 days\nbefore an event **are** eligible for the price drop refund, which is the main\nreason to buy early rather than wait.\n\n## Interaction with returns\n\nA price adjustment does not restart the 30-day return window in\n`returns-and-refunds.md`. The window still runs from the original delivery date."
+        },
+        {
+          "id": "returns-and-refunds.md#c1",
+          "text": "# Returns and refunds\n\nNorthwind Supply Co. accepts returns on most items within **30 days of\ndelivery**. The 30-day window starts on the date the carrier marks the parcel\nas delivered, not the date the order was placed.\n\nTo qualify for a refund an item must be unused, in its original packaging, and\naccompanied by the order number. Items that show signs of wear, are missing\ntags, or have been washed are not eligible.\n\n## How to start a return\n\nOpen the Returns Centre in your account, select the order, and choose the items\nyou are sending back. You will receive a prepaid return label by email within\none business hour. Attach the label to the outside of the parcel and drop it at\nany carrier access point.\n\n## When the money arrives"
+        },
+        {
+          "id": "subscription-plans.md#c2",
+          "text": "are billed\non the same day each month; where that day does not exist in a shorter month,\nbilling moves to the last day of the month.\n\n## Cancelling\n\nCancel at any time in Account Settings. Benefits continue until the end of the\nperiod you have already paid for and the plan does not renew. We do not\npro-rate a partial year: cancelling an annual plan in month two still gives you\nthe remaining ten months of benefits, with no refund.\n\n## Interaction with the return window\n\nThe 60-day Plus return window applies to orders placed while the membership was\nactive. Letting a membership lapse does not shorten the window on orders that\nwere already placed."
+        },
+        {
+          "id": "exchanges.md#c1",
+          "text": "# Exchanges\n\nAn exchange is a return and a new order handled together, so the same 30-day\nwindow described in `returns-and-refunds.md` applies.\n\n## Same product, different size or colour\n\nChoose *Exchange* rather than *Refund* in the Returns Centre and pick the\nreplacement variant. The replacement ships as soon as the return label is\nscanned by the carrier, so you are not waiting for the warehouse to receive the\noriginal. This is called an advance exchange and it is available once per\norder.\n\nIf the returned item never arrives within 21 days of the label being scanned,\nthe replacement is charged to the original payment method at the price you\noriginally paid.\n\n## Different product"
+        },
+        {
+          "id": "returns-and-refunds.md#c2",
+          "text": "by email within\none business hour. Attach the label to the outside of the parcel and drop it at\nany carrier access point.\n\n## When the money arrives\n\nRefunds are issued to the original payment method once the warehouse has\ninspected the returned item. Inspection takes up to 3 business days from the\nmoment the parcel is scanned in. After inspection the refund is released\nimmediately, but the card issuer may take a further 5 to 10 business days to\npost it to your statement.\n\n## Non-returnable items\n\nPerishable food, climbing rope cut to a custom length, personalised engraving,\nand any item marked *Final Sale* on the product page cannot be returned.\nGift cards are also non-returnable. See `gift-cards.md` for the separate rules\nthat cover unused gift card balances."
+        }
+      ],
+      "scores": {
+        "context_precision": 0.99999999995,
+        "context_recall": 1,
+        "faithfulness": 1,
+        "answer_relevancy": 0.999999999999999
+      },
+      "scores_stddev": {
+        "context_precision": null,
+        "context_recall": null,
+        "faithfulness": null,
+        "answer_relevancy": null
+      },
+      "score_errors": {},
+      "latency_ms": 1245
+    }
+  ],
+  "summary": {
+    "context_precision": 0.7666666666022628,
+    "context_recall": 0.9558823529411765,
+    "faithfulness": 0.9367647058823529,
+    "answer_relevancy": 0.869117603137215
+  },
+  "notes": []
+}
