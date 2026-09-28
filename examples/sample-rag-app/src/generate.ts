@@ -56,6 +56,8 @@ async function generateWithOpenAi(
       model: config.generationModel,
       temperature: 0,
       seed: 42,
+      // Only when set: models that do not reason reject the parameter.
+      ...(config.reasoningEffort === null ? {} : { reasoning_effort: config.reasoningEffort }),
       messages: [
         { role: "system", content: SYSTEM_PROMPT },
         { role: "user", content: buildUserPrompt(question, contexts) },

@@ -14,7 +14,7 @@
 #
 #   PROVIDER=openai OPENAI_API_KEY=ollama \
 #   OPENAI_BASE_URL=http://judge-box:11434/v1 \
-#   GENERATION_MODEL=qwen3:14b EMBEDDING_MODEL=nomic-embed-text
+#   GENERATION_MODEL=qwen3:14b EMBEDDING_MODEL=nomic-embed-text REASONING_EFFORT=none
 #
 # or PROVIDER=local to keep the app offline and only test the plumbing.
 
@@ -30,7 +30,15 @@ app:
   startup_timeout: 300
   query_timeout: 180
   env_passthrough:
-    [PROVIDER, OPENAI_API_KEY, OPENAI_BASE_URL, GENERATION_MODEL, EMBEDDING_MODEL, TOP_K]
+    [
+      PROVIDER,
+      OPENAI_API_KEY,
+      OPENAI_BASE_URL,
+      GENERATION_MODEL,
+      EMBEDDING_MODEL,
+      TOP_K,
+      REASONING_EFFORT,
+    ]
 
 dataset:
   # The frozen test set, generated in stage 4 and reviewed by hand.

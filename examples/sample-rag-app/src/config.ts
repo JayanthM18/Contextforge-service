@@ -6,6 +6,9 @@
 
 export type Provider = "openai" | "local";
 
+const REASONING_EFFORTS = ["none", "minimal", "low", "medium", "high"] as const;
+export type ReasoningEffort = (typeof REASONING_EFFORTS)[number];
+
 export interface AppConfig {
   readonly port: number;
   readonly knowledgeBaseDir: string;
@@ -18,6 +21,8 @@ export interface AppConfig {
   readonly openaiApiKey: string;
   readonly openaiBaseUrl: string;
   readonly requestTimeoutMs: number;
+  /** Sent to the model only when set; `none` stops reasoning models thinking first. */
+  readonly reasoningEffort: ReasoningEffort | null;
 }
 
 export class ConfigError extends Error {
@@ -45,6 +50,17 @@ function integer(env: Env, name: string, fallback: number, min: number, max: num
 function text(env: Env, name: string, fallback: string): string {
   const raw = env[name];
   return raw === undefined || raw === "" ? fallback : raw;
+}
+
+function reasoningEffort(env: Env): ReasoningEffort | null {
+  const raw = text(env, "REASONING_EFFORT", "");
+  if (raw === "") return null;
+  if (!(REASONING_EFFORTS as readonly string[]).includes(raw)) {
+    throw new ConfigError(
+      `REASONING_EFFORT must be one of ${REASONING_EFFORTS.join(", ")}, got "${raw}"`,
+    );
+  }
+  return raw as ReasoningEffort;
 }
 
 export function loadConfig(env: Env = process.env): AppConfig {
@@ -82,5 +98,6 @@ export function loadConfig(env: Env = process.env): AppConfig {
     openaiApiKey,
     openaiBaseUrl: text(env, "OPENAI_BASE_URL", "https://api.openai.com/v1"),
     requestTimeoutMs: integer(env, "REQUEST_TIMEOUT_MS", 60_000, 1_000, 600_000),
+    reasoningEffort: reasoningEffort(env),
   };
 }

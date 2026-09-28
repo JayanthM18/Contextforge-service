@@ -51,6 +51,17 @@ describe("loadConfig", () => {
     expect(loadConfig({ ...local, TOP_K: "" }).topK).toBe(5);
   });
 
+  it("leaves reasoning effort unset by default, since most models reject it", () => {
+    expect(loadConfig(local).reasoningEffort).toBeNull();
+  });
+
+  it("accepts a known reasoning effort and names a bad one", () => {
+    expect(loadConfig({ ...local, REASONING_EFFORT: "none" }).reasoningEffort).toBe("none");
+    expect(() => loadConfig({ ...local, REASONING_EFFORT: "max" })).toThrow(
+      /REASONING_EFFORT.*"max"/,
+    );
+  });
+
   it("takes overrides from the environment", () => {
     const config = loadConfig({ ...local, PORT: "9100", TOP_K: "3", CHUNK_SIZE: "400" });
 
