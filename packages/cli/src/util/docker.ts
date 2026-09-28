@@ -51,4 +51,23 @@ export async function assertDockerAvailable(
         `Docker said: ${tail(result.stderr, 3)}`,
     });
   }
+
+  // Compose v2 is a separate plugin that system updates can remove on their
+  // own. Without this check its absence surfaces as "unknown flag:
+  // --project-name", which points nowhere near the cause.
+  const compose = await run("docker", ["compose", "version"], {
+    env: baseEnv(env),
+    timeoutMs: 20_000,
+  });
+  if (compose.code !== 0) {
+    throw new ContextForgeError(
+      "DOCKER_UNAVAILABLE",
+      "The Docker Compose plugin is not installed",
+      {
+        remedy:
+          "Install Compose v2 so `docker compose version` works: `sudo pacman -S docker-compose` on Arch, " +
+          "the docker-compose-plugin package on Debian, Ubuntu or Fedora, or Docker Desktop elsewhere.",
+      },
+    );
+  }
 }
