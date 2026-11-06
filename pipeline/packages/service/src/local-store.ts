@@ -7,6 +7,8 @@ import { z } from "zod";
 import { ServiceError } from "./errors.js";
 import type {
   EnqueuedJob,
+  DashboardJob,
+  DashboardReader,
   EvaluationJob,
   JobClaim,
   JobCompletion,
@@ -134,7 +136,7 @@ export async function acquireServiceLock(dataDirectory: string): Promise<() => P
   throw new ServiceError("SERVICE_ALREADY_RUNNING", "Could not acquire the service lock.", 500);
 }
 
-export class FileJobStore implements JobQueue, JobExecutionStore {
+export class FileJobStore implements JobQueue, JobExecutionStore, DashboardReader {
   private tail: Promise<void> = Promise.resolve();
 
   private constructor(private readonly statePath: string) {}
@@ -156,6 +158,29 @@ export class FileJobStore implements JobQueue, JobExecutionStore {
       const completion = state.completions[job.id];
       return !state.active.includes(job.id) && !completion?.notificationsDelivered;
     });
+  }
+
+  async listDashboardJobs(): Promise<readonly DashboardJob[]> {
+    const state = await this.load();
+    return state.jobs
+      .slice()
+      .reverse()
+      .slice(0, 50)
+      .map((job) => {
+        const completion = state.completions[job.id];
+        const status = completion
+          ? "completed"
+          : state.active.includes(job.id)
+            ? "running"
+            : "queued";
+        return {
+          repository: job.repository.fullName,
+          commitSha: job.commitSha,
+          pullRequestNumber: job.pullRequestNumber,
+          status,
+          result: completion?.result ?? null,
+        };
+      });
   }
 
   enqueueIfAbsent(job: EvaluationJob): Promise<EnqueuedJob> {

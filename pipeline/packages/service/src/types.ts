@@ -127,6 +127,18 @@ export interface ReportReader {
   read(id: string): Promise<string | null>;
 }
 
+export interface DashboardJob {
+  readonly repository: string;
+  readonly commitSha: string;
+  readonly pullRequestNumber: number | null;
+  readonly status: "queued" | "running" | "completed";
+  readonly result: CheckRunResult | null;
+}
+
+export interface DashboardReader {
+  listDashboardJobs(): Promise<readonly DashboardJob[]>;
+}
+
 export interface CheckRunPublisher {
   createQueued(job: EvaluationJob): Promise<number>;
   start(job: EvaluationJob, checkRunId: number): Promise<void>;

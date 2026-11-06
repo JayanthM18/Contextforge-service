@@ -249,6 +249,13 @@ successfully yet.
 Invoke-RestMethod http://127.0.0.1:3000/health
 ```
 
+Open `http://127.0.0.1:3000/` in your browser for the local results dashboard.
+It polls the persisted webhook queue every three seconds and shows real queued,
+running, and completed PR evaluations, including the actual outcome and a link
+to each detailed report. The dashboard and its job-list API accept loopback
+requests only; the public tunnel is for GitHub webhooks and does not expose
+the dashboard.
+
 **5. Open or update a same-repository PR.** Do not use a fork PR; this local
 development service refuses fork PRs. GitHub sends the event, the service
 fetches the event's exact head and base commits, runs the configured four

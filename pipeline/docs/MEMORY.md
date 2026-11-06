@@ -18,6 +18,26 @@ an entry here before the pull request is opened.
 
 ---
 
+## 2026-11-06 — stage 8 — add local results dashboard
+
+**Changed:** Added a loopback-only dashboard and polling API to the local
+service, safe job summaries derived from persisted queue/completion state,
+dashboard/store/HTTP tests, and README instructions.
+**Why:** The local PR demo needs a live view of actual webhook-triggered
+evaluations without a fake run button or fabricated outcomes.
+**Decisions:** The dashboard shows at most 50 recent jobs and links to the
+existing detailed report for scores and retrieved context. Root and jobs API
+requests with non-loopback Host headers are rejected so a public webhook
+tunnel cannot expose the dashboard.
+**Deferred:** No fake jobs, manual evaluation trigger, or detailed metrics
+endpoint was added; detailed evaluation data stays in the existing report.
+**Notes:** Service tests (8/8), `pnpm build`, and focused ESLint/Prettier checks
+pass. Full `pnpm test` has 269 passing and 19 existing Windows path-assumption
+failures. Full `pnpm lint` is blocked by formatting warnings in 10 unrelated
+existing files; changed files pass focused lint and formatting checks.
+
+---
+
 ## 2026-11-06 — stage 8 — document complete local PR demo
 
 **Changed:** Expanded the README with a PowerShell end-to-end quick-tunnel and

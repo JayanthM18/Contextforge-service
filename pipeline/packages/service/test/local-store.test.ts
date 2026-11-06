@@ -59,6 +59,41 @@ describe("FileJobStore", () => {
     await expect(restarted.listPending()).resolves.toEqual([job]);
   });
 
+  it("projects safe dashboard summaries for queued, running, and completed jobs", async () => {
+    const directory = await temporaryDirectory();
+    const store = await FileJobStore.create(directory);
+    await store.enqueueIfAbsent(job);
+    await expect(store.listDashboardJobs()).resolves.toEqual([
+      {
+        repository: "owner/rag-app",
+        commitSha: job.commitSha,
+        pullRequestNumber: 7,
+        status: "queued",
+        result: null,
+      },
+    ]);
+
+    await store.claim(job.id);
+    await expect(store.listDashboardJobs()).resolves.toMatchObject([{ status: "running" }]);
+    await store.saveCompletion(job.id, {
+      checkRunId: 55,
+      result: { status: "pass", reportUrl: "https://reports.example.test/report/1" },
+      notificationsDelivered: false,
+    });
+    const [summary] = await store.listDashboardJobs();
+    expect(summary).toEqual({
+      repository: "owner/rag-app",
+      commitSha: job.commitSha,
+      pullRequestNumber: 7,
+      status: "completed",
+      result: { status: "pass", reportUrl: "https://reports.example.test/report/1" },
+    });
+    expect(summary).not.toHaveProperty("deliveryId");
+    expect(summary).not.toHaveProperty("installationId");
+    expect(summary).not.toHaveProperty("cloneUrl");
+    expect(summary).not.toHaveProperty("secretsAllowed");
+  });
+
   it("releases interrupted claims on restart and persists completions", async () => {
     const directory = await temporaryDirectory();
     const store = await FileJobStore.create(directory);

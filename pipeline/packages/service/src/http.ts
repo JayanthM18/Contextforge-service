@@ -8,9 +8,11 @@ import {
 } from "node:http";
 
 import { ServiceError } from "./errors.js";
+import { DASHBOARD_HTML } from "./dashboard.js";
 import {
   pullRequestEventSchema,
   pushEventSchema,
+  type DashboardReader,
   type EvaluationJob,
   type ReportReader,
   type WebhookDependencies,
@@ -154,6 +156,20 @@ function send(response: ResponseLike, status: number, body: unknown): void {
   response.end(JSON.stringify(body));
 }
 
+function isLoopbackHost(value: string | undefined): boolean {
+  if (value === undefined) return false;
+  try {
+    const url = new URL(`http://${value}`);
+    return (
+      url.username === "" &&
+      url.password === "" &&
+      ["localhost", "127.0.0.1", "[::1]"].includes(url.hostname.toLowerCase())
+    );
+  } catch {
+    return false;
+  }
+}
+
 export function createWebhookHandler(dependencies: WebhookDependencies) {
   if (dependencies.webhookSecret.length === 0) {
     throw new ServiceError(
@@ -241,11 +257,50 @@ export function createWebhookHandler(dependencies: WebhookDependencies) {
 export function createWebhookServer(
   dependencies: WebhookDependencies,
   reports?: ReportReader,
+  dashboard?: DashboardReader,
 ): Server {
   const handler = createWebhookHandler(dependencies);
   const server = createServer((request: IncomingMessage, response: ServerResponse) => {
     if (request.method === "GET" && request.url === "/health") {
       send(response, 200, { status: "ok" });
+      return;
+    }
+    if (request.method === "GET" && (request.url === "/" || request.url === "/api/jobs")) {
+      if (!isLoopbackHost(header(request.headers, "host"))) {
+        send(response, 403, { error: "local_dashboard_only" });
+        return;
+      }
+      if (dashboard === undefined) {
+        send(response, 404, { error: "not_found" });
+        return;
+      }
+      if (request.url === "/") {
+        response.statusCode = 200;
+        response.setHeader("content-type", "text/html; charset=utf-8");
+        response.setHeader("cache-control", "no-store");
+        response.setHeader(
+          "content-security-policy",
+          "default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'self'; base-uri 'none'; frame-ancestors 'none'",
+        );
+        response.setHeader("x-content-type-options", "nosniff");
+        response.end(DASHBOARD_HTML);
+        return;
+      }
+      void dashboard.listDashboardJobs().then(
+        (jobs) => {
+          response.statusCode = 200;
+          response.setHeader("content-type", "application/json; charset=utf-8");
+          response.setHeader("cache-control", "no-store");
+          response.setHeader("x-content-type-options", "nosniff");
+          response.end(JSON.stringify({ jobs }));
+        },
+        (error: unknown) => {
+          dependencies.logger.error("Could not read dashboard evaluation jobs", {
+            error_name: error instanceof Error ? error.name : "unknown",
+          });
+          send(response, 500, { error: "DASHBOARD_UNAVAILABLE" });
+        },
+      );
       return;
     }
     const reportMatch = request.url?.match(REPORT_PATH);

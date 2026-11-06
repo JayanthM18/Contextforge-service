@@ -288,6 +288,7 @@ export async function startLocalService(environment = process.env): Promise<() =
         acceptPush: false,
       },
       reports,
+      store,
     );
     await new Promise<void>((resolve, reject) => {
       server.once("error", reject);
