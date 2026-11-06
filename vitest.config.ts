@@ -9,22 +9,24 @@ export default defineConfig({
     // next build, and tests would silently run against old code.
     alias: {
       "@contextforge/shared": fileURLToPath(
-        new URL("./packages/shared/src/index.ts", import.meta.url),
+        new URL("./pipeline/packages/shared/src/index.ts", import.meta.url),
       ),
-      "@contextforge/cli": fileURLToPath(new URL("./packages/cli/src/index.ts", import.meta.url)),
+      "@contextforge/cli": fileURLToPath(
+        new URL("./pipeline/packages/cli/src/index.ts", import.meta.url),
+      ),
     },
   },
   test: {
-    include: ["packages/*/test/**/*.test.ts", "examples/*/test/**/*.test.ts"],
+    include: ["pipeline/packages/*/test/**/*.test.ts", "user-repo/*/test/**/*.test.ts"],
     environment: "node",
-    // No network in unit tests (docs/RULES.md). A test that hangs on a socket
+    // No network in unit tests (pipeline/docs/RULES.md). A test that hangs on a socket
     // should fail fast and loudly rather than stall CI.
     testTimeout: 10_000,
     coverage: {
       provider: "v8",
       reporter: ["text", "lcov"],
-      include: ["packages/*/src/**/*.ts", "examples/*/src/**/*.ts"],
-      exclude: ["packages/*/src/**/*.d.ts"],
+      include: ["pipeline/packages/*/src/**/*.ts", "user-repo/*/src/**/*.ts"],
+      exclude: ["pipeline/packages/*/src/**/*.d.ts"],
     },
   },
 });

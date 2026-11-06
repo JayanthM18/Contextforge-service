@@ -14,7 +14,7 @@ export default [
       "**/dist/**",
       "**/node_modules/**",
       "**/coverage/**",
-      "evaluator/**",
+      "pipeline/evaluator/**",
       ".cache/**",
       ".contextforge/**",
     ],
@@ -31,11 +31,11 @@ export default [
       },
     },
     rules: {
-      // docs/RULES.md: no `any`, no non-null assertions, no stray console.
+      // pipeline/docs/RULES.md: no `any`, no non-null assertions, no stray console.
       "@typescript-eslint/no-explicit-any": "error",
       "@typescript-eslint/no-non-null-assertion": "error",
       "no-console": "error",
-      // docs/RULES.md: async/await only, never raw .then chains.
+      // pipeline/docs/RULES.md: async/await only, never raw .then chains.
       "@typescript-eslint/no-floating-promises": "error",
       "@typescript-eslint/no-misused-promises": "error",
       "@typescript-eslint/consistent-type-imports": ["error", { fixStyle: "inline-type-imports" }],

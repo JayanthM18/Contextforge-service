@@ -6,15 +6,15 @@
     "noEmit": true,
     "allowImportingTsExtensions": true,
     "paths": {
-      "@contextforge/shared": ["./packages/shared/src/index.ts"],
-      "@contextforge/cli": ["./packages/cli/src/index.ts"]
+      "@contextforge/shared": ["./pipeline/packages/shared/src/index.ts"],
+      "@contextforge/cli": ["./pipeline/packages/cli/src/index.ts"]
     }
   },
   "include": [
-    "packages/*/src/**/*.ts",
-    "packages/*/test/**/*.ts",
-    "examples/*/src/**/*.ts",
-    "examples/*/test/**/*.ts",
+    "pipeline/packages/*/src/**/*.ts",
+    "pipeline/packages/*/test/**/*.ts",
+    "user-repo/*/src/**/*.ts",
+    "user-repo/*/test/**/*.ts",
     "*.ts"
   ]
 }

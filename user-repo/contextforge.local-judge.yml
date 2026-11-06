@@ -1,0 +1,60 @@
+# Developer-only config for running local sample-app demos against an
+# OpenAI-compatible Ollama endpoint. Copy this to
+# `contextforge.local-judge.local.yml` and replace `judge-box` with the Ollama
+# host. The hosted service does not use this file; it reads the customer
+# repository's `contextforge.yml` at the event's commit.
+
+version: 1
+
+app:
+  compose_file: sample-rag-app/docker-compose.eval.yml
+  service: rag-app
+  port: 8000
+  health_path: /health
+  query_path: /query
+  startup_timeout: 300
+  query_timeout: 180
+  env_passthrough:
+    [
+      PROVIDER,
+      OPENAI_API_KEY,
+      OPENAI_BASE_URL,
+      GENERATION_MODEL,
+      EMBEDDING_MODEL,
+      TOP_K,
+      REASONING_EFFORT,
+    ]
+
+dataset:
+  path: benchmark/testcases.json
+  source_docs: sample-rag-app/docs/knowledge-base
+  size: 40
+
+evaluation:
+  metrics: [context_precision, context_recall, faithfulness, answer_relevancy]
+  judge:
+    provider: openai
+    model: qwen3:14b
+    base_url: http://judge-box:11434/v1
+    api_key_env: null
+    temperature: 0
+    seed: 42
+    reasoning_effort: none
+  embeddings:
+    provider: openai
+    model: nomic-embed-text
+    base_url: http://judge-box:11434/v1
+    api_key_env: null
+  runs: 1
+  concurrency: 2
+
+thresholds:
+  mean_drop:
+    context_precision: 0.05
+    context_recall: 0.05
+    faithfulness: 0.05
+    answer_relevancy: 0.05
+  absolute_floor:
+    faithfulness: 0.70
+  case_drop: 0.30
+  max_regressed_cases: 3

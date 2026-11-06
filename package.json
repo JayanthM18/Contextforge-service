@@ -12,16 +12,16 @@
   "scripts": {
     "build": "tsc --build",
     "clean": "tsc --build --clean",
-    "typecheck": "tsc --build --force && tsc -p examples/sample-rag-app/tsconfig.json && tsc -p tsconfig.eslint.json",
+    "typecheck": "tsc --build --force && tsc -p user-repo/sample-rag-app/tsconfig.json && tsc -p tsconfig.eslint.json",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "lint": "eslint . && prettier --check .",
     "format": "prettier --write .",
     "sample-app": "pnpm --filter @contextforge/sample-rag-app start",
-    "test:evaluator": "docker build --target test --tag contextforge-evaluator-test evaluator && docker run --rm contextforge-evaluator-test",
-    "measure-noise": "node scripts/measure-noise.mjs",
-    "validate-regressions": "scripts/validate-regressions.sh"
+    "test:evaluator": "docker build --target test --tag contextforge-evaluator-test pipeline/evaluator && docker run --rm contextforge-evaluator-test",
+    "measure-noise": "node pipeline/scripts/measure-noise.mjs",
+    "validate-regressions": "pipeline/scripts/validate-regressions.sh"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",

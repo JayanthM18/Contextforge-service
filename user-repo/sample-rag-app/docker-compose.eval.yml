@@ -1,0 +1,35 @@
+# The Compose file ContextForge points at via `app.compose_file`. The service
+# name here is what `app.service` in contextforge.yml must match.
+services:
+  rag-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      PORT: 8000
+      # openai and gemini need their respective API keys. local runs offline
+      # with deterministic embeddings and extractive answers — useful for
+      # exercising the plumbing, useless for measuring quality.
+      PROVIDER: ${PROVIDER:-openai}
+      TOP_K: ${TOP_K:-5}
+      CHUNK_SIZE: ${CHUNK_SIZE:-900}
+      CHUNK_OVERLAP: ${CHUNK_OVERLAP:-150}
+      EMBEDDING_MODEL: ${EMBEDDING_MODEL:-}
+      GENERATION_MODEL: ${GENERATION_MODEL:-}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      OPENAI_BASE_URL: ${OPENAI_BASE_URL:-}
+      GEMINI_EMBEDDING_BASE_URL: ${GEMINI_EMBEDDING_BASE_URL:-https://generativelanguage.googleapis.com/v1beta}
+      REASONING_EFFORT: ${REASONING_EFFORT:-}
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - "fetch('http://127.0.0.1:8000/health').then(r=>process.exit(r.ok?0:1),()=>process.exit(1))"
+      interval: 5s
+      timeout: 5s
+      retries: 24
+      start_period: 5s

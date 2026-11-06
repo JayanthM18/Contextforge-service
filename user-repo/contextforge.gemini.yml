@@ -1,0 +1,54 @@
+# Gemini-backed sample configuration. The judge and sample RAG generation use
+# Google's OpenAI-compatible chat endpoint; embeddings use Gemini's native API.
+
+version: 1
+
+app:
+  compose_file: sample-rag-app/docker-compose.eval.yml
+  service: rag-app
+  port: 8000
+  health_path: /health
+  query_path: /query
+  startup_timeout: 300
+  query_timeout: 180
+  env_passthrough:
+    - PROVIDER
+    - GEMINI_API_KEY
+    - OPENAI_BASE_URL
+    - GEMINI_EMBEDDING_BASE_URL
+    - GENERATION_MODEL
+    - EMBEDDING_MODEL
+    - REASONING_EFFORT
+    - TOP_K
+
+dataset:
+  path: benchmark/testcases.json
+  source_docs: sample-rag-app/docs/knowledge-base
+  size: 40
+
+evaluation:
+  metrics: [context_precision, context_recall, faithfulness, answer_relevancy]
+  judge:
+    provider: openai
+    model: gemini-2.5-flash
+    base_url: https://generativelanguage.googleapis.com/v1beta/openai
+    api_key_env: GEMINI_API_KEY
+    temperature: 0
+    seed: 42
+  embeddings:
+    provider: gemini
+    model: gemini-embedding-001
+    api_key_env: GEMINI_API_KEY
+  runs: 1
+  concurrency: 2
+
+thresholds:
+  mean_drop:
+    context_precision: 0.05
+    context_recall: 0.05
+    faithfulness: 0.05
+    answer_relevancy: 0.05
+  absolute_floor:
+    faithfulness: 0.70
+  case_drop: 0.30
+  max_regressed_cases: 3

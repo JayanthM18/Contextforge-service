@@ -1,0 +1,19 @@
+{
+  "name": "@contextforge/service",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc --build",
+    "start": "node --env-file=../../../.env dist/server.js"
+  },
+  "dependencies": {
+    "@contextforge/shared": "workspace:*",
+    "zod": "4.6.5"
+  }
+}

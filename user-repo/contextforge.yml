@@ -1,0 +1,51 @@
+# Reference configuration, pointing at the sample app in this directory.
+# The schema is specified in pipeline/docs/DESIGN.md section 2.
+#
+# Paths resolve against the directory holding this file, not the working
+# directory, so the config means the same thing wherever it is run from.
+
+version: 1
+
+app:
+  compose_file: sample-rag-app/docker-compose.eval.yml
+  service: rag-app
+  port: 8000
+  health_path: /health
+  query_path: /query
+  startup_timeout: 120
+  # Compose sees only these variables. PROVIDER lets the sample app run
+  # offline (PROVIDER=local) for checks that need no model.
+  env_passthrough: [OPENAI_API_KEY, PROVIDER]
+
+dataset:
+  # The frozen test set: generated in stage 4, reviewed and edited by hand.
+  path: benchmark/testcases.json
+  source_docs: sample-rag-app/docs/knowledge-base
+  size: 40
+
+evaluation:
+  metrics: [context_precision, context_recall, faithfulness, answer_relevancy]
+  judge:
+    provider: openai
+    model: gpt-4o-mini
+    base_url: null
+    api_key_env: OPENAI_API_KEY
+    temperature: 0
+    seed: 42
+  embeddings:
+    provider: openai
+    model: text-embedding-3-small
+    base_url: null
+    api_key_env: OPENAI_API_KEY
+  runs: 1
+  concurrency: 4
+
+thresholds:
+  mean_drop:
+    context_precision: 0.05
+    context_recall: 0.05
+    faithfulness: 0.05
+    answer_relevancy: 0.05
+  absolute_floor:
+    faithfulness: 0.70
+  max_regressed_cases: 3

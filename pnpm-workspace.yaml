@@ -1,6 +1,6 @@
 packages:
-  - packages/*
-  - examples/*
+  - pipeline/packages/*
+  - user-repo/*
 
 # pnpm 10 blocks dependency build scripts by default. Vitest needs esbuild's
 # platform binary, so that one is allowed explicitly; nothing else is.

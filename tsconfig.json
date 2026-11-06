@@ -1,8 +1,8 @@
 {
   "files": [],
   "references": [
-    { "path": "./packages/shared" },
-    { "path": "./packages/cli" },
-    { "path": "./packages/action" }
+    { "path": "./pipeline/packages/shared" },
+    { "path": "./pipeline/packages/cli" },
+    { "path": "./pipeline/packages/service" }
   ]
 }

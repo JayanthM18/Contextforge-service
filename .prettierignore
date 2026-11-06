@@ -3,14 +3,16 @@ coverage/
 node_modules/
 .cache/
 .contextforge/
-evaluator/.venv/
+pipeline/evaluator/.venv/
 # Frozen data, written by the tool that owns it. A formatter reflowing the
 # test set would make a pull request look like it changed the exam.
-benchmark/
+user-repo/benchmark/
 pnpm-lock.yaml
+.env.example
+pipeline/deploy/
 
 # Hand-wrapped prose. These are the specs, not code; the formatter must not
 # reflow them out from under a reviewer reading a diff.
-docs/
+pipeline/docs/
 CLAUDE.md
 README.md

@@ -1,53 +1,32 @@
-# Stage 0 CI: lints, typechecks and tests this repository only. It does not
-# build or evaluate any RAG app — that arrives with the benchmark and
-# pr-check workflows in later stages (docs/TASKS.md).
-name: ci
+name: ContextForge development CI
 
 on:
+  pull_request:
   push:
     branches: [main]
-  pull_request:
 
 permissions:
   contents: read
 
-concurrency:
-  group: ci-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
-  check:
+  quality:
+    name: Typecheck, test, ESLint, and build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
       - uses: pnpm/action-setup@v4
+        with:
+          version: 10.34.5
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 26
+          node-version: 20
           cache: pnpm
 
-      - name: Install
-        run: pnpm install --frozen-lockfile
-
-      - name: Lint
-        run: pnpm lint
-
-      - name: Typecheck
-        run: pnpm typecheck
-
-      - name: Test
-        run: pnpm test
-
-  evaluator:
-    # The Python evaluator is tested inside its own image, so CI proves the
-    # pinned environment works, not just the source.
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Build and run the evaluator tests
-        run: |
-          docker build --target test --tag contextforge-evaluator-test evaluator
-          docker run --rm contextforge-evaluator-test
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm typecheck
+      - run: pnpm test
+      - run: pnpm exec eslint .
+      - run: pnpm build
+      - run: pnpm test:evaluator

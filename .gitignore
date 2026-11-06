@@ -3,12 +3,12 @@ dist/
 coverage/
 *.tsbuildinfo
 
-# Secrets never enter the repo (docs/RULES.md). .env.example documents the names.
+# Secrets never enter the repo (pipeline/docs/RULES.md). .env.example documents the names.
 .env
 .env.*
 !.env.example
 
-# Run output. Benchmarks under benchmark/ are committed; scratch results are not.
+# Run output. Frozen customer test data is committed under user-repo/benchmark/.
 .contextforge/
 results.json
 *.local.json
@@ -20,6 +20,6 @@ results.json
 
 # Local scratch: downloaded wheels, virtualenvs.
 .cache/
-evaluator/.venv/
+pipeline/evaluator/.venv/
 __pycache__/
 .pytest_cache/
