@@ -16,18 +16,25 @@ DEFAULT_BASE_URL = "https://api.openai.com/v1"
 PLACEHOLDER_KEY = "not-needed"
 GROQ_GPT_OSS_120B = "openai/gpt-oss-120b"
 GROQ_GPT_OSS_120B_REQUESTS_PER_MINUTE = 20
+OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
+# OpenRouter free/low-credit accounts enforce a budget for requests that are
+# still being processed upstream. Ragas can fan one metric into several calls,
+# so one HTTP request at a time with a ten-second gap prevents retry bursts.
+OPENROUTER_REQUESTS_PER_MINUTE = 6
+OPENROUTER_MAX_IN_FLIGHT_REQUESTS = 1
 
 
 class PacedAsyncTransport:
-    """Space outbound judge requests so Groq's 30 RPM limit is never approached."""
+    """Space and cap concurrent outbound judge requests at the HTTP boundary."""
 
-    def __init__(self, requests_per_minute: int) -> None:
+    def __init__(self, requests_per_minute: int, max_in_flight: int | None = None) -> None:
         import httpx
 
         self._transport = httpx.AsyncHTTPTransport()
         self._interval = 60 / requests_per_minute
         self._next_request_at = 0.0
         self._lock = asyncio.Lock()
+        self._in_flight = asyncio.Semaphore(max_in_flight) if max_in_flight is not None else None
 
     async def handle_async_request(self, request: Any) -> Any:
         async with self._lock:
@@ -36,7 +43,10 @@ class PacedAsyncTransport:
             self._next_request_at = max(now, self._next_request_at) + self._interval
         if delay:
             await asyncio.sleep(delay)
-        return await self._transport.handle_async_request(request)
+        if self._in_flight is None:
+            return await self._transport.handle_async_request(request)
+        async with self._in_flight:
+            return await self._transport.handle_async_request(request)
 
     async def aclose(self) -> None:
         await self._transport.aclose()
@@ -72,6 +82,13 @@ def make_client(endpoint: Endpoint, env: Mapping[str, str], role: str) -> Any:
     if role == "judge" and endpoint.model == GROQ_GPT_OSS_120B:
         http_client = httpx.AsyncClient(
             transport=PacedAsyncTransport(GROQ_GPT_OSS_120B_REQUESTS_PER_MINUTE),
+        )
+    elif role == "judge" and resolve_base_url(endpoint).rstrip("/") == OPENROUTER_BASE_URL:
+        http_client = httpx.AsyncClient(
+            transport=PacedAsyncTransport(
+                OPENROUTER_REQUESTS_PER_MINUTE,
+                max_in_flight=OPENROUTER_MAX_IN_FLIGHT_REQUESTS,
+            ),
         )
 
     return AsyncOpenAI(

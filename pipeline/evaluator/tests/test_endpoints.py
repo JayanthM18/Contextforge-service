@@ -6,6 +6,9 @@ from app.contract import Endpoint
 from app.endpoints import (
     DEFAULT_BASE_URL,
     GROQ_GPT_OSS_120B,
+    OPENROUTER_BASE_URL,
+    OPENROUTER_MAX_IN_FLIGHT_REQUESTS,
+    OPENROUTER_REQUESTS_PER_MINUTE,
     PacedAsyncTransport,
     PLACEHOLDER_KEY,
     make_client,
@@ -43,6 +46,16 @@ def test_groq_gpt_oss_120b_judge_uses_the_paced_transport() -> None:
     client = make_client(Endpoint(model=GROQ_GPT_OSS_120B), {}, "judge")
 
     assert isinstance(client._client._transport, PacedAsyncTransport)
+
+
+def test_openrouter_judge_serialises_and_paces_requests() -> None:
+    client = make_client(Endpoint(model="openai/gpt-4.1-mini", base_url=OPENROUTER_BASE_URL), {}, "judge")
+
+    transport = client._client._transport
+    assert isinstance(transport, PacedAsyncTransport)
+    assert transport._interval == pytest.approx(60 / OPENROUTER_REQUESTS_PER_MINUTE)
+    assert transport._in_flight is not None
+    assert transport._in_flight._value == OPENROUTER_MAX_IN_FLIGHT_REQUESTS
 
 
 def test_other_endpoints_keep_the_default_transport() -> None:
