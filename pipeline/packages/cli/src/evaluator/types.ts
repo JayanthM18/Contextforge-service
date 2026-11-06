@@ -32,7 +32,7 @@ export const scoreRequestSchema = z.strictObject({
   metrics: z.array(metricSchema).min(1),
   judge: judgeEndpointSchema.extend({
     temperature: z.number(),
-    seed: z.number().int(),
+    seed: z.number().int().nullable(),
     reasoning_effort: z.string().nullable(),
   }),
   embeddings: embeddingsEndpointSchema.nullable(),
@@ -71,7 +71,7 @@ export const generateRequestSchema = z.strictObject({
   size: z.number().int().min(1),
   judge: judgeEndpointSchema.extend({
     temperature: z.number(),
-    seed: z.number().int(),
+    seed: z.number().int().nullable(),
     reasoning_effort: z.string().nullable(),
   }),
   embeddings: embeddingsEndpointSchema,

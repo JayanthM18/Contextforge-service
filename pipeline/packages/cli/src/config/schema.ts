@@ -48,7 +48,7 @@ const judgeSchema = z.strictObject({
   ...endpoint,
   provider: z.literal("openai").default("openai"),
   temperature: z.number().min(0).max(2).default(0),
-  seed: z.number().int().default(42),
+  seed: z.number().int().nullable().default(42),
   /**
    * OpenAI's reasoning-effort parameter, sent only when set. Reasoning models
    * such as Qwen3 otherwise think before every verdict: slower, and the

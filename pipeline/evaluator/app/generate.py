@@ -91,7 +91,7 @@ class RagasSampleGenerator:
                 base_url=resolve_base_url(judge),
                 api_key=resolve_api_key(judge, self._env, "judge"),
                 temperature=judge.temperature,
-                seed=judge.seed,
+                **({} if judge.seed is None else {"seed": judge.seed}),
                 **({} if judge.reasoning_effort is None else {"reasoning_effort": judge.reasoning_effort}),
                 max_retries=5,
             )

@@ -113,7 +113,7 @@ export type CaseRecord = z.infer<typeof caseRecordSchema>;
 export const judgeFingerprintSchema = z.strictObject({
   model: z.string(),
   temperature: z.number(),
-  seed: z.number(),
+  seed: z.number().nullable(),
   /** Thinking on or off changes the verdicts, so it is part of the judge. */
   reasoning_effort: z.string().nullable(),
 });

@@ -128,12 +128,12 @@ class RagasScorer:
         from .gemini_embeddings import GeminiEmbeddings
         from .endpoints import resolve_api_key
         judge = request.judge
-        # Temperature and seed are passed explicitly: Ragas defaults to 0.01.
+        # Temperature is explicit because Ragas defaults to 0.01; seed is endpoint-dependent.
         llm = llm_factory(
             judge.model,
             client=make_client(judge, env, "judge"),
             temperature=judge.temperature,
-            seed=judge.seed,
+            **({} if judge.seed is None else {"seed": judge.seed}),
             # Only when set: non-reasoning models reject the parameter.
             **({} if judge.reasoning_effort is None else {"reasoning_effort": judge.reasoning_effort}),
         )
