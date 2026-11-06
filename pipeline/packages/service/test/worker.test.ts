@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 
+import { ServiceError } from "../src/errors.js";
 import { runEvaluationJob } from "../src/worker.js";
 import type { EvaluationJob, EvaluationJobDependencies } from "../src/types.js";
 
@@ -136,6 +137,38 @@ describe("evaluation job orchestration", () => {
     ]);
     expect(logger.error).toHaveBeenCalledOnce();
     expect(JSON.stringify(completed)).not.toContain("provider secret");
+  });
+
+  it("reports safe ServiceError details in the check and service log", async () => {
+    const { deps, completed, logger } = dependencies({
+      worker: {
+        evaluate: vi.fn(() =>
+          Promise.reject(
+            new ServiceError(
+              "LOCAL_EVALUATION_FAILED",
+              "The evaluation CLI exited with status 2: Gemini embedding quota exceeded (HTTP 429).",
+              500,
+            ),
+          ),
+        ),
+      },
+    });
+
+    await runEvaluationJob(job, deps);
+
+    expect(completed).toEqual([
+      {
+        status: "tool_error",
+        code: "LOCAL_EVALUATION_FAILED",
+        safeMessage: "The evaluation CLI exited with status 2: Gemini embedding quota exceeded (HTTP 429).",
+      },
+    ]);
+    expect(logger.error).toHaveBeenCalledWith("Isolated evaluation failed", {
+      job_id: job.id,
+      error_name: "ServiceError",
+      error_code: "LOCAL_EVALUATION_FAILED",
+      error_message: "The evaluation CLI exited with status 2: Gemini embedding quota exceeded (HTTP 429).",
+    });
   });
 
   it("reports storage failures instead of returning a success-shaped result", async () => {

@@ -22,6 +22,27 @@ interface ProcessOptions {
 
 const OUTPUT_LIMIT = 2 * 1024 * 1024;
 const SHA_PATTERN = /^[0-9a-f]{40}$/i;
+const FAILURE_SUMMARY_LIMIT = 2_000;
+
+function redactedFailureSummary(result: ProcessResult, environment: NodeJS.ProcessEnv): string {
+  let output = `${result.stderr}\n${result.stdout}`
+    .replace(/\u001B\[[0-?]*[ -/]*[@-~]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  for (const value of Object.values(environment)) {
+    if (typeof value === "string" && value.length >= 8) {
+      output = output.split(value).join("[redacted]");
+    }
+  }
+  output = output
+    .replace(/\b(?:sk|gsk|AIza|AQ)_[A-Za-z0-9_-]+\b/g, "[redacted]")
+    .replace(/\b(Bearer\s+)[^\s]+/gi, "$1[redacted]")
+    .replace(/\b([A-Z][A-Z0-9_]*?(?:TOKEN|SECRET|KEY))=\S+/g, "$1=[redacted]");
+
+  if (output.length > FAILURE_SUMMARY_LIMIT) output = `…${output.slice(-FAILURE_SUMMARY_LIMIT)}`;
+  return output === "" ? "The evaluation CLI produced no diagnostic output." : output;
+}
 
 function runProcess(
   command: string,
@@ -250,7 +271,7 @@ export class LocalEvaluationWorker implements EvaluationWorker {
       if (result.code !== 0 && result.code !== 1) {
         throw new ServiceError(
           "LOCAL_EVALUATION_FAILED",
-          `The evaluation CLI exited with status ${String(result.code)}. Check the local service log for its output.`,
+          `The evaluation CLI exited with status ${String(result.code)}: ${redactedFailureSummary(result, this.options.environment)}`,
           500,
         );
       }

@@ -7,6 +7,13 @@ import type {
   JobCompletion,
 } from "./types.js";
 
+function errorDetails(error: unknown): Record<string, unknown> {
+  if (error instanceof ServiceError) {
+    return { error_code: error.code, error_message: error.message };
+  }
+  return {};
+}
+
 export async function runEvaluationJob(
   job: EvaluationJob,
   dependencies: EvaluationJobDependencies,
@@ -35,12 +42,15 @@ export async function runEvaluationJob(
       dependencies.logger.error("Isolated evaluation failed", {
         job_id: job.id,
         error_name: error instanceof Error ? error.name : "unknown",
+        ...errorDetails(error),
       });
       outcome = {
         status: "tool_error",
         code: error instanceof ServiceError ? error.code : "WORKER_FAILED",
         safeMessage:
-          "ContextForge could not complete this evaluation. Review service logs or retry.",
+          error instanceof ServiceError
+            ? error.message
+            : "ContextForge could not complete this evaluation. Review service logs or retry.",
       };
     }
 
