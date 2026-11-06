@@ -30,7 +30,7 @@ evaluation:
   metrics: [context_precision, context_recall, faithfulness, answer_relevancy]
   judge:
     provider: openai
-    model: gemini-2.5-flash
+    model: gemini-3.8-flash
     base_url: https://generativelanguage.googleapis.com/v1beta/openai
     api_key_env: GEMINI_API_KEY
     temperature: 0

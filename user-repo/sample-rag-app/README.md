@@ -37,7 +37,7 @@ Node 26 runs TypeScript directly, so there is no build step.
 | | `openai` (default) | `gemini` | `local` |
 |---|---|---|---|
 | Embeddings | `text-embedding-3-small` | `gemini-embedding-001` | hashed TF-IDF bag of words |
-| Generation | `gpt-4o-mini`, temperature 0 | `gemini-2.5-flash`, temperature 0 | extractive sentence picking |
+| Generation | `gpt-4o-mini`, temperature 0 | `gemini-3.8-flash`, temperature 0 | extractive sentence picking |
 | Needs a key | yes | yes | no |
 | Network | yes | yes | no |
 

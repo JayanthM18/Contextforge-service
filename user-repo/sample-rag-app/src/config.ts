@@ -103,7 +103,7 @@ export function loadConfig(env: Env = process.env): AppConfig {
     generationModel: text(
       env,
       "GENERATION_MODEL",
-      providerRaw === "gemini" ? "gemini-2.5-flash" : "gpt-4o-mini",
+      providerRaw === "gemini" ? "gemini-3.8-flash" : "gpt-4o-mini",
     ),
     apiKey,
     apiBaseUrl: text(

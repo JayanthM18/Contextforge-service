@@ -20,7 +20,7 @@ describe("loadConfig", () => {
 
     expect(config.provider).toBe("gemini");
     expect(config.embeddingModel).toBe("gemini-embedding-001");
-    expect(config.generationModel).toBe("gemini-2.5-flash");
+    expect(config.generationModel).toBe("gemini-3.8-flash");
     expect(config.apiBaseUrl).toBe("https://generativelanguage.googleapis.com/v1beta/openai");
     expect(() => loadConfig({ PROVIDER: "gemini" })).toThrow(/GEMINI_API_KEY/);
   });
