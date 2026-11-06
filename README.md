@@ -146,9 +146,11 @@ The quick tunnel URL is temporary. Keep the tunnel terminal open while the
 demo is running.
 
 Install Node.js 20.6 or newer, pnpm 10, Git, and Docker Desktop (or Docker
-Engine with Compose v2). Make sure this repository has an `origin` pointing
-at `JayanthM18/ContextForge`, full Git history, and credentials that can fetch
-the PR commits. The local service evaluates fetched commits, not uncommitted
+Engine with Compose v2). Keep the service code in the `contextforge-service` checkout. Set
+`CONTEXTFORGE_REPOSITORY_PATH` below to the separate
+`ContextForge-application` checkout, whose `origin` must point at
+`JayanthM18/ContextForge-application`; it needs full Git history and credentials
+that can fetch the PR commits. The local service evaluates fetched commits, not uncommitted
 working-tree changes.
 
 **1. Install and build.** Run from the ContextForge repository root:
@@ -156,7 +158,7 @@ working-tree changes.
 ```powershell
 pnpm install --frozen-lockfile
 pnpm build
-pnpm exec node --env-file=.env pipeline/packages/cli/dist/bin.js validate --config user-repo/contextforge.gemini.yml
+pnpm exec node --env-file=.env pipeline/packages/cli/dist/bin.js validate --config ../ContextForge-application/contextforge.gemini.yml
 ```
 
 Keep your existing `.env`; if you do not have one, create it without
@@ -176,9 +178,9 @@ GEMINI_API_KEY=<your Gemini API key>
 GITHUB_APP_ID=<GitHub App numeric ID>
 GITHUB_APP_PRIVATE_KEY=<PEM contents on one line, with newlines written as \n>
 CONTEXTFORGE_WEBHOOK_SECRET=<the webhook secret you choose>
-CONTEXTFORGE_GITHUB_REPOSITORY=JayanthM18/ContextForge
-CONTEXTFORGE_REPOSITORY_PATH=C:\Users\<you>\Downloads\ContextForge
-CONTEXTFORGE_CONFIG_PATH=user-repo/contextforge.gemini.yml
+CONTEXTFORGE_GITHUB_REPOSITORY=JayanthM18/ContextForge-application
+CONTEXTFORGE_REPOSITORY_PATH=C:\Users\<you>\Downloads\ContextForge-application
+CONTEXTFORGE_CONFIG_PATH=contextforge.gemini.yml
 CONTEXTFORGE_PUBLIC_URL=https://<the-current-quick-tunnel-hostname>
 CONTEXTFORGE_HOST=127.0.0.1
 CONTEXTFORGE_PORT=3000
@@ -197,7 +199,7 @@ which is the default in the general sample config, so the template includes a
 place for its key. It is not required for this Gemini setup: the Gemini config
 uses `GEMINI_API_KEY` for the judge, evaluator embeddings, and sample app.
 Leave `OPENAI_API_KEY` blank when using Gemini. If you switch to OpenAI, set
-`PROVIDER=openai`, use `user-repo/contextforge.yml`, set `OPENAI_API_KEY`, and
+`PROVIDER=openai`, use `contextforge.yml` in the application checkout, set `OPENAI_API_KEY`, and
 update the two environment allowlists to include it instead of the Gemini
 variables.
 
