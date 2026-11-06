@@ -137,90 +137,146 @@ pull requests. Only use it with repositories and contributors you trust:
 Docker is not a strong boundary against malicious Dockerfiles or Compose
 configuration.
 
-### 1. Prepare the machine
+### Run the complete local PR demo
 
-Install Node.js 20.6 or newer, pnpm 10, Git, Docker Desktop (or Docker Engine
-with Compose v2), and Caddy or another HTTPS reverse proxy. Clone the target
-GitHub repository onto this machine with full history, configure its `origin`
-to that GitHub repository, and authenticate Git so this account can fetch PR
-commits. The service uses this local clone only as a Git object store; its
-uncommitted working files are not evaluated.
+This walkthrough uses the Gemini sample config in this repository. It handles
+a real same-repository pull-request webhook, runs the actual evaluation for
+the PR commits, and posts the outcome to GitHub; it does not inject a verdict.
+The quick tunnel URL is temporary. Keep the tunnel terminal open while the
+demo is running.
 
-In the ContextForge checkout, install/build and prepare the environment file:
+Install Node.js 20.6 or newer, pnpm 10, Git, and Docker Desktop (or Docker
+Engine with Compose v2). Make sure this repository has an `origin` pointing
+at `JayanthM18/ContextForge`, full Git history, and credentials that can fetch
+the PR commits. The local service evaluates fetched commits, not uncommitted
+working-tree changes.
+
+**1. Install and build.** Run from the ContextForge repository root:
 
 ```powershell
 pnpm install --frozen-lockfile
 pnpm build
-Copy-Item .env.example .env
+pnpm exec node --env-file=.env pipeline/packages/cli/dist/bin.js validate --config user-repo/contextforge.gemini.yml
 ```
 
-Edit `.env` and set:
+Keep your existing `.env`; if you do not have one, create it without
+overwriting an existing file:
 
-- `GITHUB_APP_ID`, `GITHUB_APP_PRIVATE_KEY`, and `CONTEXTFORGE_WEBHOOK_SECRET`
-  from a GitHub App you create.
-- `CONTEXTFORGE_GITHUB_REPOSITORY` to the exact `owner/name` of the target
-  repo; `CONTEXTFORGE_REPOSITORY_PATH` to its local clone root.
-- `CONTEXTFORGE_CONFIG_PATH` to the path of its config, relative to that
-  repository root (for this monorepo's sample fixture:
-  `user-repo/contextforge.yml`).
-- `CONTEXTFORGE_PUBLIC_URL` to the public HTTPS origin that proxies to the
-  service. Keep `CONTEXTFORGE_HOST=127.0.0.1` when the proxy is on the same
-  machine; set `CONTEXTFORGE_PORT` to the proxy's upstream port (default 3000).
-- `OPENAI_API_KEY` or the keys required by the configured judge/embeddings.
-  Add only intended variable names to `CONTEXTFORGE_EVALUATION_ENV_KEYS` and
-  `CONTEXTFORGE_APP_ENV_KEYS`. The service excludes `GITHUB_*`,
-  `CONTEXTFORGE_*`, and `RUNNER_*` names from those lists.
+```powershell
+if (-not (Test-Path .env)) { Copy-Item .env.example .env }
+notepad .env
+```
 
-Keep `.env` private. The service requires the configured app and evaluator
-variables explicitly; it does not pass the service's GitHub App credentials
-to the CLI or customer containers.
+For the Gemini demo, set these values in `.env` (keep the private key and API
+key private):
 
-### 2. Configure the GitHub App and HTTPS proxy
+```dotenv
+PROVIDER=gemini
+GEMINI_API_KEY=<your Gemini API key>
+GITHUB_APP_ID=<GitHub App numeric ID>
+GITHUB_APP_PRIVATE_KEY=<PEM contents on one line, with newlines written as \n>
+CONTEXTFORGE_WEBHOOK_SECRET=<the webhook secret you choose>
+CONTEXTFORGE_GITHUB_REPOSITORY=JayanthM18/ContextForge
+CONTEXTFORGE_REPOSITORY_PATH=C:\Users\<you>\Downloads\ContextForge
+CONTEXTFORGE_CONFIG_PATH=user-repo/contextforge.gemini.yml
+CONTEXTFORGE_PUBLIC_URL=https://<the-current-quick-tunnel-hostname>
+CONTEXTFORGE_HOST=127.0.0.1
+CONTEXTFORGE_PORT=3000
+CONTEXTFORGE_EVALUATION_ENV_KEYS=GEMINI_API_KEY
+CONTEXTFORGE_APP_ENV_KEYS=PROVIDER,GEMINI_API_KEY,OPENAI_BASE_URL,GEMINI_EMBEDDING_BASE_URL,GENERATION_MODEL,EMBEDDING_MODEL,REASONING_EFFORT,TOP_K
+```
+
+Keep the other existing `.env` entries unless you have a reason to change
+them. `CONTEXTFORGE_DATA_DIR` can stay blank to use the default under the
+target repository's `.contextforge/service` directory. The config path is
+relative to the target repository root. Set the repository path to the
+absolute path of the local clone used for fetching PR commits.
+
+**Why is `OPENAI_API_KEY=` in `.env`?** ContextForge also supports OpenAI,
+which is the default in the general sample config, so the template includes a
+place for its key. It is not required for this Gemini setup: the Gemini config
+uses `GEMINI_API_KEY` for the judge, evaluator embeddings, and sample app.
+Leave `OPENAI_API_KEY` blank when using Gemini. If you switch to OpenAI, set
+`PROVIDER=openai`, use `user-repo/contextforge.yml`, set `OPENAI_API_KEY`, and
+update the two environment allowlists to include it instead of the Gemini
+variables.
+
+The allowlists control which process variables may cross into the evaluator
+and sample app; GitHub credentials are never passed into those containers.
+Do not put API keys in the YAML config or commit `.env`.
+
+**2. Start a quick HTTPS tunnel.** Open a second PowerShell terminal and run:
+
+```powershell
+cloudflared tunnel --url http://127.0.0.1:3000
+```
+
+If PowerShell cannot find `cloudflared`, run the installed executable directly:
+
+```powershell
+& "$env:LOCALAPPDATA\Microsoft\WinGet\Packages\Cloudflare.cloudflared_Microsoft.Winget.Source_8wekyb3d8bbwe\cloudflared.exe" tunnel --url http://127.0.0.1:3000
+```
+
+Copy the `https://....trycloudflare.com` URL printed by cloudflared. Put that
+origin in `CONTEXTFORGE_PUBLIC_URL` in `.env` (no path), and use
+`<origin>/webhooks/github` as the GitHub webhook URL. If the tunnel stops and
+you start another quick tunnel, it will likely get a different URL; update
+both `.env` and the GitHub App webhook settings.
+
+**3. Configure and install a GitHub App.**
 
 Create a GitHub App for the target repository with **Contents: read**,
 **Pull requests: read**, **Checks: read and write**, and **Issues: read and
 write** permissions. Subscribe to the **Pull request** webhook event. Generate
-an App private key and set its webhook secret to the same value as
-`CONTEXTFORGE_WEBHOOK_SECRET`. Install the App only on the configured
-repository. Configure its webhook URL as
-`https://<your-domain>/webhooks/github`.
+an App private key and set its webhook secret to the same value you entered as
+`CONTEXTFORGE_WEBHOOK_SECRET`. In `.env`, encode newlines in the PEM key as
+literal `\n` sequences. Install the App on the configured repository and set
+its webhook URL to `<tunnel-origin>/webhooks/github`.
 
-The service itself listens on HTTP at `127.0.0.1:3000` by default. A reverse
-proxy terminates HTTPS and forwards requests for `/webhooks/github`, `/reports/*`,
-and `/health`. GitHub cannot send webhooks directly to a loopback address: use
-a publicly reachable HTTPS reverse proxy or tunnel that forwards to the local
-listener. For Caddy, copy
-[`pipeline/deploy/Caddyfile.example`](pipeline/deploy/Caddyfile.example) and
-set `CONTEXTFORGE_DOMAIN`; ensure the machine is reachable on ports 80 and 443
-so Caddy can provision its certificate. Set `CONTEXTFORGE_PUBLIC_URL` to
-`https://<your-domain>` (origin only, no path).
-
-### 3. Start the service and open a real PR
-
-Make sure the target clone's `origin` points at the configured repository and
-that Docker is running. Then start the service from the ContextForge checkout:
+**4. Start the service.** In the ContextForge repository root, open another
+PowerShell terminal:
 
 ```powershell
 pnpm --filter @contextforge/service start
 ```
 
-`GET https://<your-domain>/health` should return `{"status":"ok"}`. Open or
-update a **same-repository** pull request (not a fork PR; fork evaluations are
-disabled by the local service). GitHub delivers the real webhook, the service
-fetches the event's exact head and base commits, runs the configured CLI
-evaluation against them, and publishes the actual pass/regression/tool-error
-result. No verdict is seeded or simulated. The Check Run is attached to the
-evaluated head commit, and one ContextForge PR comment is created or updated
-with that commit's outcome and report link. Full reports are written under
-`CONTEXTFORGE_DATA_DIR` (default: `<target-clone>/.contextforge/service`) and
-served at unguessable HTTPS report URLs. Anyone with a report URL can read its
-answers, contexts, and scores, so treat the URL and local report directory as
-private data.
+Check `http://127.0.0.1:3000/health` locally or
+`<tunnel-origin>/health` publicly; it should return `{"status":"ok"}`. A 502
+from the tunnel means the service is not listening or has not started
+successfully yet.
+
+```powershell
+Invoke-RestMethod http://127.0.0.1:3000/health
+```
+
+**5. Open or update a same-repository PR.** Do not use a fork PR; this local
+development service refuses fork PRs. GitHub sends the event, the service
+fetches the event's exact head and base commits, runs the configured four
+metrics, and publishes the actual pass/regression/tool-error result. Look for
+the ContextForge Check Run and its single updated PR comment with the report
+link. No result is seeded or simulated.
+
+Full reports are written under `CONTEXTFORGE_DATA_DIR` (default:
+`<target-clone>/.contextforge/service`) and served at unguessable HTTPS report
+URLs. Anyone with a report URL can read its answers, contexts, and scores, so
+treat the URL and local report directory as private data.
+
+**6. Stop the demo.** Press `Ctrl+C` in the service terminal, then press
+`Ctrl+C` in the tunnel terminal. Quick tunnels are temporary and can be
+recreated by repeating step 2.
 
 The service runs one job at a time and stores its queue state in a local JSON
 file. Keep one service instance running for this data directory. It does not
 support multiple replicas, fork PRs, push-triggered evaluation, public
 multi-tenant use, or VM-grade isolation.
+
+For a stable domain instead of a quick tunnel, use Caddy or another HTTPS
+reverse proxy to forward `/webhooks/github`, `/reports/*`, and `/health` to
+`127.0.0.1:3000`. For Caddy, copy
+[`pipeline/deploy/Caddyfile.example`](pipeline/deploy/Caddyfile.example) and
+set `CONTEXTFORGE_DOMAIN`; ensure the machine is reachable on ports 80 and 443
+so Caddy can provision its certificate. Set `CONTEXTFORGE_PUBLIC_URL` to
+`https://<your-domain>` (origin only, no path).
 
 ## Local developer demo
 

@@ -18,6 +18,26 @@ an entry here before the pull request is opened.
 
 ---
 
+## 2026-11-06 — stage 8 — document complete local PR demo
+
+**Changed:** Expanded the README with a PowerShell end-to-end quick-tunnel and
+GitHub App walkthrough, documented Gemini `.env` values and allowlists, and
+explained why the optional `OPENAI_API_KEY` placeholder exists. Clarified the
+provider notes in `.env.example`.
+**Why:** The local demonstration should be reproducible without guessing how
+to connect the tunnel, GitHub webhook, Gemini credentials, and PR-triggered
+evaluation service.
+**Decisions:** Keep `OPENAI_API_KEY` in the template for users choosing
+OpenAI; Gemini mode needs only `GEMINI_API_KEY`. Preserve any existing `.env`
+and never print its secret values. Document the quick tunnel as ephemeral and
+the local service as trusted-repository development only.
+**Deferred:** No values in `.env` were inspected or changed. Starting the
+service and opening a live PR still require the user to complete GitHub App
+credentials and trigger the webhook.
+**Notes:** This is documentation-only; no tests required.
+
+---
+
 ## 2026-11-06 — stage 8 — support Gemini evaluation
 
 **Changed:** Added a Gemini sample config, native Gemini embedding clients for
