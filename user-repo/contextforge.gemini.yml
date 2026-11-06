@@ -6,7 +6,7 @@ version: 1
 app:
   compose_file: sample-rag-app/docker-compose.eval.yml
   service: rag-app
-  port: 8000
+  port: 18000
   health_path: /health
   query_path: /query
   startup_timeout: 300

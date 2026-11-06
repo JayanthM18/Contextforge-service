@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "8000:8000"
+      - "127.0.0.1:18000:8000"
     environment:
       PORT: 8000
       # openai and gemini need their respective API keys. local runs offline
