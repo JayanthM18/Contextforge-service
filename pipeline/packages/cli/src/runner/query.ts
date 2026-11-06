@@ -5,6 +5,16 @@ import type { CaseRecord, TestCase } from "@contextforge/shared";
 import type { Logger } from "../util/logger.js";
 import { queryResponseSchema } from "./contract.js";
 
+function positiveIntegerEnv(name: string, fallback: number): number {
+  const raw = process.env[name];
+  if (raw === undefined || raw === "") return fallback;
+  const value = Number(raw);
+  return Number.isSafeInteger(value) && value > 0 ? value : fallback;
+}
+
+const REQUEST_BATCH_SIZE = positiveIntegerEnv("QUERY_BATCH_SIZE", 20);
+const REQUEST_BATCH_DELAY_MS = positiveIntegerEnv("QUERY_BATCH_DELAY_MS", 60_000);
+
 export interface QueryOptions {
   readonly baseUrl: string;
   readonly queryPath: string;
@@ -105,6 +115,15 @@ export async function queryAll(
       options.logger.info("queried", { done: index + 1, total: cases.length });
     }
     records.push(record);
+
+    if ((index + 1) % REQUEST_BATCH_SIZE === 0 && index + 1 < cases.length) {
+      options.logger.info("pausing between request batches", {
+        done: index + 1,
+        total: cases.length,
+        delay_ms: REQUEST_BATCH_DELAY_MS,
+      });
+      await new Promise((resolve) => setTimeout(resolve, REQUEST_BATCH_DELAY_MS));
+    }
   }
   return records;
 }
