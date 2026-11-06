@@ -19,8 +19,9 @@ GROQ_GPT_OSS_120B_REQUESTS_PER_MINUTE = 20
 OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
 # OpenRouter free/low-credit accounts enforce a budget for requests that are
 # still being processed upstream. Ragas can fan one metric into several calls,
-# so one HTTP request at a time with a ten-second gap prevents retry bursts.
-OPENROUTER_REQUESTS_PER_MINUTE = 6
+# so one HTTP request at a time with a five-second gap prevents retry bursts
+# while keeping compact PR smoke checks within about ten minutes.
+OPENROUTER_REQUESTS_PER_MINUTE = 12
 OPENROUTER_MAX_IN_FLIGHT_REQUESTS = 1
 
 
