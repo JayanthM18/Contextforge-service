@@ -207,6 +207,29 @@ The allowlists control which process variables may cross into the evaluator
 and sample app; GitHub credentials are never passed into those containers.
 Do not put API keys in the YAML config or commit `.env`.
 
+### Split-provider setup: Groq answers, OpenRouter judge, Gemini embeddings
+
+The application configuration can deliberately use separate provider quotas:
+Groq for answer generation, OpenRouter for Ragas scoring, and Gemini for
+embeddings. Keep the Groq key out of the evaluator allowlist, and keep the
+OpenRouter key out of the app allowlist:
+
+```dotenv
+OPENAI_API_KEY=<Groq API key>
+OPENROUTER_API_KEY=<OpenRouter API key>
+GEMINI_API_KEY=<Gemini API key>
+PROVIDER=openai
+OPENAI_BASE_URL=https://api.groq.com/openai/v1
+GENERATION_MODEL=openai/gpt-oss-20b
+EMBEDDING_MODEL=gemini-embedding-001
+CONTEXTFORGE_EVALUATION_ENV_KEYS=OPENROUTER_API_KEY,GEMINI_API_KEY
+CONTEXTFORGE_APP_ENV_KEYS=PROVIDER,OPENAI_API_KEY,GEMINI_API_KEY,OPENAI_BASE_URL,GEMINI_EMBEDDING_BASE_URL,GENERATION_MODEL,EMBEDDING_MODEL,REASONING_EFFORT,TOP_K
+```
+
+Set the evaluator judge's `base_url` to `https://openrouter.ai/api/v1` and
+its `api_key_env` to `OPENROUTER_API_KEY`. The application config must retain
+the Gemini embedding endpoint and key.
+
 **2. Start a quick HTTPS tunnel.** Open a second PowerShell terminal and run:
 
 ```powershell
