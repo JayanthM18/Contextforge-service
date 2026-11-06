@@ -17,6 +17,7 @@ interface ProcessOptions {
   readonly cwd?: string;
   readonly env?: NodeJS.ProcessEnv;
   readonly timeoutMs: number;
+  readonly onStderrLine?: (line: string) => void;
 }
 
 const OUTPUT_LIMIT = 2 * 1024 * 1024;
@@ -37,6 +38,7 @@ function runProcess(
 
     let stdout = "";
     let stderr = "";
+    let stderrLine = "";
     let outputBytes = 0;
     let failure: Error | undefined;
     const timer = setTimeout(() => {
@@ -50,8 +52,15 @@ function runProcess(
         child.kill();
         return;
       }
-      if (target === "stdout") stdout += chunk.toString("utf8");
-      else stderr += chunk.toString("utf8");
+      const text = chunk.toString("utf8");
+      if (target === "stdout") stdout += text;
+      else {
+        stderr += text;
+        stderrLine += text;
+        const lines = stderrLine.split("\n");
+        stderrLine = lines.pop() ?? "";
+        for (const line of lines) options.onStderrLine?.(line);
+      }
     };
 
     child.stdout.on("data", (chunk: Buffer) => {
@@ -117,10 +126,15 @@ export interface LocalWorkerOptions {
   readonly timeoutMs: number;
   readonly environmentKeys: readonly string[];
   readonly environment: NodeJS.ProcessEnv;
+  readonly onProgress?: (job: EvaluationJob, stage: string) => Promise<void>;
 }
 
 export class LocalEvaluationWorker implements EvaluationWorker {
   constructor(private readonly options: LocalWorkerOptions) {}
+
+  private reportProgress(job: EvaluationJob, stage: string): Promise<void> {
+    return this.options.onProgress?.(job, stage) ?? Promise.resolve();
+  }
 
   async evaluate(job: EvaluationJob): Promise<EvaluationOutcome> {
     if (job.pullRequestNumber === null || job.baseSha === null) {
@@ -152,6 +166,7 @@ export class LocalEvaluationWorker implements EvaluationWorker {
       );
     }
 
+    await this.reportProgress(job, "Checking local repository");
     const repositoryRoot = await this.repositoryRoot();
     const remote = await this.git(repositoryRoot, ["config", "--get", "remote.origin.url"]);
     if (this.remoteRepositoryName(remote) !== this.options.repositoryName.toLowerCase()) {
@@ -161,6 +176,7 @@ export class LocalEvaluationWorker implements EvaluationWorker {
         500,
       );
     }
+    await this.reportProgress(job, "Fetching pull-request commit");
     await this.fetchCommits(repositoryRoot, job.commitSha, job.baseSha);
     const mergeBase = await this.mergeBase(repositoryRoot, job.commitSha, job.baseSha);
     const worktreeParent = await mkdtemp(path.join(os.tmpdir(), "contextforge-local-job-"));
@@ -178,6 +194,7 @@ export class LocalEvaluationWorker implements EvaluationWorker {
     let outcome: EvaluationOutcome | undefined;
     const cleanupFailures: unknown[] = [];
     try {
+      await this.reportProgress(job, "Creating clean checkout");
       await mkdir(outputDirectory, { recursive: true });
       await this.git(repositoryRoot, ["worktree", "add", "--detach", checkout, job.commitSha]);
       worktreeAdded = true;
@@ -191,6 +208,23 @@ export class LocalEvaluationWorker implements EvaluationWorker {
       }
 
       const configPath = this.configInCheckout(checkout);
+      let progressTail = Promise.resolve();
+      const updateFromOutput = (line: string) => {
+        const stage =
+          line.includes("building and starting the app")
+            ? "Building application container"
+            : line.includes("app is healthy; asking every question")
+              ? "Querying RAG application"
+              : line.includes("pausing between request batches")
+                ? "Waiting for model rate limit"
+                : line.includes("scoring")
+                  ? "Scoring answers with judge"
+                  : line.includes("verdict:")
+                    ? "Finalizing evaluation"
+                    : null;
+        if (stage !== null) progressTail = progressTail.then(() => this.reportProgress(job, stage));
+      };
+      await this.reportProgress(job, "Starting evaluation pipeline");
       const result = await runProcess(
         process.execPath,
         [
@@ -209,8 +243,10 @@ export class LocalEvaluationWorker implements EvaluationWorker {
           cwd: checkout,
           env: safeEnvironment(this.options.environment, this.options.environmentKeys),
           timeoutMs: this.options.timeoutMs,
+          onStderrLine: updateFromOutput,
         },
       );
+      await progressTail;
       if (result.code !== 0 && result.code !== 1) {
         throw new ServiceError(
           "LOCAL_EVALUATION_FAILED",
@@ -219,6 +255,7 @@ export class LocalEvaluationWorker implements EvaluationWorker {
         );
       }
 
+      await this.reportProgress(job, "Reading evaluation report");
       const [reportMarkdown, reportJson] = await Promise.all([
         readFile(path.join(outputDirectory, "report.md"), "utf8"),
         readFile(path.join(outputDirectory, "results.json"), "utf8"),

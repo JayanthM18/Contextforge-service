@@ -69,6 +69,7 @@ describe("FileJobStore", () => {
         commitSha: job.commitSha,
         pullRequestNumber: 7,
         status: "queued",
+        stage: "Queued",
         result: null,
       },
     ]);
@@ -86,6 +87,7 @@ describe("FileJobStore", () => {
       commitSha: job.commitSha,
       pullRequestNumber: 7,
       status: "completed",
+      stage: "Passed",
       result: { status: "pass", reportUrl: "https://reports.example.test/report/1" },
     });
     expect(summary).not.toHaveProperty("deliveryId");

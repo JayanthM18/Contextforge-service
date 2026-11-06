@@ -132,6 +132,7 @@ export interface DashboardJob {
   readonly commitSha: string;
   readonly pullRequestNumber: number | null;
   readonly status: "queued" | "running" | "completed";
+  readonly stage: string;
   readonly result: CheckRunResult | null;
 }
 

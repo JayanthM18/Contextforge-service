@@ -54,15 +54,21 @@ const completionSchema = z.object({
   notificationsDelivered: z.boolean().default(false),
 });
 
+const progressSchema = z.object({
+  stage: z.string().min(1).max(100),
+  updatedAt: z.string().datetime(),
+});
+
 const stateSchema = z.object({
   jobs: z.array(jobSchema),
   active: z.array(z.string()),
   completions: z.record(z.string(), completionSchema),
+  progress: z.record(z.string(), progressSchema).default({}),
 });
 
 type StoreState = z.infer<typeof stateSchema>;
 
-const emptyState = (): StoreState => ({ jobs: [], active: [], completions: {} });
+const emptyState = (): StoreState => ({ jobs: [], active: [], completions: {}, progress: {} });
 
 function isMissingFile(error: unknown): boolean {
   return error instanceof Error && "code" in error && error.code === "ENOENT";
@@ -178,6 +184,17 @@ export class FileJobStore implements JobQueue, JobExecutionStore, DashboardReade
           commitSha: job.commitSha,
           pullRequestNumber: job.pullRequestNumber,
           status,
+          stage:
+            state.progress[job.id]?.stage ??
+            (status === "queued"
+              ? "Queued"
+              : status === "running"
+                ? "Starting evaluation"
+                : completion?.result.status === "pass"
+                  ? "Passed"
+                  : completion?.result.status === "regression"
+                    ? "Regression found"
+                    : "Evaluation failed"),
           result: completion?.result ?? null,
         };
       });
@@ -192,6 +209,7 @@ export class FileJobStore implements JobQueue, JobExecutionStore, DashboardReade
       if (existing !== undefined) return { job: existing, created: false };
       const validated = jobSchema.parse(job);
       state.jobs.push(validated);
+      state.progress[validated.id] = { stage: "Queued", updatedAt: new Date().toISOString() };
       await this.save(state);
       return { job: validated, created: true };
     });
@@ -214,6 +232,7 @@ export class FileJobStore implements JobQueue, JobExecutionStore, DashboardReade
       }
       if (state.active.includes(jobId)) return { status: "busy" };
       state.active.push(jobId);
+      state.progress[jobId] = { stage: "Starting evaluation", updatedAt: new Date().toISOString() };
       await this.save(state);
       return { status: "acquired" };
     });
@@ -226,6 +245,15 @@ export class FileJobStore implements JobQueue, JobExecutionStore, DashboardReade
         throw new ServiceError("JOB_NOT_FOUND", `Evaluation job ${jobId} is not queued.`, 404);
       }
       state.completions[jobId] = completionSchema.parse(completion);
+      state.progress[jobId] = {
+        stage:
+          completion.result.status === "pass"
+            ? "Passed"
+            : completion.result.status === "regression"
+              ? "Regression found"
+              : "Evaluation failed",
+        updatedAt: new Date().toISOString(),
+      };
       await this.save(state);
     });
   }
@@ -251,6 +279,17 @@ export class FileJobStore implements JobQueue, JobExecutionStore, DashboardReade
     return this.exclusive(async () => {
       const state = await this.load();
       state.active = state.active.filter((activeId) => activeId !== jobId);
+      await this.save(state);
+    });
+  }
+
+  async setProgress(jobId: string, stage: string): Promise<void> {
+    return this.exclusive(async () => {
+      const state = await this.load();
+      if (!state.jobs.some((job) => job.id === jobId)) {
+        throw new ServiceError("JOB_NOT_FOUND", `Evaluation job ${jobId} is not queued.`, 404);
+      }
+      state.progress[jobId] = progressSchema.parse({ stage, updatedAt: new Date().toISOString() });
       await this.save(state);
     });
   }

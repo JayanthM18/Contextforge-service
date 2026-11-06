@@ -93,7 +93,8 @@ export const DASHBOARD_HTML = `<!doctype html>
         const detail=document.createElement("div");
         const repo=document.createElement("div");repo.className="repo";repo.textContent=job.repository+(job.pullRequestNumber===null?"":" · PR #"+job.pullRequestNumber);
         const sha=document.createElement("div");sha.className="meta commit";sha.textContent="Commit "+job.commitSha.slice(0,12);
-        detail.append(repo,sha);
+        const stage=document.createElement("div");stage.className="meta";stage.textContent=job.stage;
+        detail.append(repo,sha,stage);
         const right=document.createElement("div");right.className="right";
         const status=document.createElement("span");status.className="badge "+job.status;status.textContent=job.result?.status??job.status;
         right.append(status);

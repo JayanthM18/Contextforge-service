@@ -279,6 +279,7 @@ export async function startLocalService(environment = process.env): Promise<() =
       timeoutMs: config.workerTimeoutMs,
       environmentKeys: config.environmentKeys,
       environment: config.environment,
+      onProgress: (job, stage) => store.setProgress(job.id, stage),
     });
     const server = createWebhookServer(
       {
